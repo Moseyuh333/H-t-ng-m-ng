@@ -563,21 +563,30 @@ scene.fog = new THREE.FogExp2(0x060a14, 0.005);
 var camera = new THREE.PerspectiveCamera(48, W/H, 0.1, 600);
 
 // Lights
-scene.add(new THREE.AmbientLight(0x1a2040, 1.5));
-var dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+scene.add(new THREE.AmbientLight(0x2a3050, 2.0));
+var dirLight = new THREE.DirectionalLight(0xfff8f0, 0.9);
 dirLight.position.set(50, -30, 60);
 dirLight.castShadow = true;
 dirLight.shadow.mapSize.set(2048, 2048);
+dirLight.shadow.camera.left = -50;
+dirLight.shadow.camera.right = 70;
+dirLight.shadow.camera.top = 50;
+dirLight.shadow.camera.bottom = -20;
+dirLight.shadow.camera.far = 150;
 scene.add(dirLight);
-scene.add(new THREE.HemisphereLight(0x0d1b3e, 0x080612, 0.5));
+// Secondary fill light from opposite side
+var dirLight2 = new THREE.DirectionalLight(0xddeeff, 0.3);
+dirLight2.position.set(-30, 40, 40);
+scene.add(dirLight2);
+scene.add(new THREE.HemisphereLight(0x4466aa, 0x111122, 0.7));
 
 var coreGlow = new THREE.PointLight(0x2563eb, 0.8, 40);
 coreGlow.position.set(30, 10, 8);
 scene.add(coreGlow);
-var b1Glow = new THREE.PointLight(0x3b82f6, 0.4, 30);
+var b1Glow = new THREE.PointLight(0x3b82f6, 0.5, 35);
 b1Glow.position.set(10, 8, 6);
 scene.add(b1Glow);
-var b2Glow = new THREE.PointLight(0x22c55e, 0.4, 30);
+var b2Glow = new THREE.PointLight(0x22c55e, 0.5, 35);
 b2Glow.position.set(50, 8, 6);
 scene.add(b2Glow);
 
@@ -807,26 +816,369 @@ function createCable(p1, p2, color, radius, addParticles) {
   return mesh;
 }
 
-// -- BUILDING SHELL --
+// -- OFFICE BUILDING SHELL (Realistic) --
 function createBuildingShell(x, y, z, w, d, h, wallColor, floorColor, opacity) {
   opacity = opacity || 0.12;
-  var floorGeo = new THREE.BoxGeometry(w, d, 0.08);
-  var floorMat = new THREE.MeshStandardMaterial({color:floorColor, transparent:true, opacity:0.5, roughness:0.9});
+  var g = new THREE.Group();
+  var wallThick = 0.15;
+  var concreteColor = 0x8a8a8a;
+  var concreteColorDark = 0x6a6a72;
+  var windowFrame = 0x445566;
+  var windowGlass = wallColor;
+  var ceilingH = h - 0.1;
+
+  // === FLOOR (polished tile/carpet) ===
+  var floorGeo = new THREE.BoxGeometry(w, d, 0.1);
+  var floorMat = new THREE.MeshStandardMaterial({color:floorColor, roughness:0.35, metalness:0.05});
   var floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.position.set(x+w/2, y+d/2, z+0.04);
+  floor.position.set(x+w/2, y+d/2, z+0.05);
   floor.receiveShadow = true;
-  scene.add(floor);
-  var wallGeo = new THREE.BoxGeometry(w, d, h);
-  var wallMat = new THREE.MeshStandardMaterial({color:wallColor, transparent:true, opacity:opacity, side:THREE.DoubleSide, depthWrite:false});
-  var walls = new THREE.Mesh(wallGeo, wallMat);
-  walls.position.set(x+w/2, y+d/2, z+h/2);
-  scene.add(walls);
-  var edgeGeo = new THREE.EdgesGeometry(wallGeo);
-  var edgeMat = new THREE.LineBasicMaterial({color:wallColor, transparent:true, opacity:0.6});
-  var edges = new THREE.LineSegments(edgeGeo, edgeMat);
-  edges.position.copy(walls.position);
-  scene.add(edges);
-  return { floor:floor, walls:walls, edges:edges };
+  g.add(floor);
+
+  // Floor tile pattern lines
+  var tileMat = new THREE.MeshStandardMaterial({color:0x444455, roughness:0.5});
+  for (var tx = 0; tx < Math.floor(w/2); tx++) {
+    var tGeo = new THREE.BoxGeometry(0.02, d-0.4, 0.005);
+    var t = new THREE.Mesh(tGeo, tileMat);
+    t.position.set(x + 1 + tx * 2, y + d/2, z + 0.11);
+    g.add(t);
+  }
+  for (var ty = 0; ty < Math.floor(d/2); ty++) {
+    var tGeo2 = new THREE.BoxGeometry(w-0.4, 0.02, 0.005);
+    var t2 = new THREE.Mesh(tGeo2, tileMat);
+    t2.position.set(x + w/2, y + 1 + ty * 2, z + 0.11);
+    g.add(t2);
+  }
+
+  // === CEILING ===
+  var ceilGeo = new THREE.BoxGeometry(w - 0.3, d - 0.3, 0.08);
+  var ceilMat = new THREE.MeshStandardMaterial({color:0xd8d8de, roughness:0.9, metalness:0.0, side:THREE.DoubleSide});
+  var ceil = new THREE.Mesh(ceilGeo, ceilMat);
+  ceil.position.set(x+w/2, y+d/2, z+ceilingH);
+  g.add(ceil);
+
+  // Ceiling grid lines (drop ceiling tiles look)
+  var cGridMat = new THREE.MeshStandardMaterial({color:0xbbbbcc, roughness:0.7});
+  for (var cx = 0; cx < Math.floor(w/2.5); cx++) {
+    var cgGeo = new THREE.BoxGeometry(0.02, d-1, 0.02);
+    var cg = new THREE.Mesh(cgGeo, cGridMat);
+    cg.position.set(x + 1.25 + cx * 2.5, y+d/2, z+ceilingH-0.04);
+    g.add(cg);
+  }
+  for (var cy = 0; cy < Math.floor(d/2.5); cy++) {
+    var cgGeo2 = new THREE.BoxGeometry(w-1, 0.02, 0.02);
+    var cg2 = new THREE.Mesh(cgGeo2, cGridMat);
+    cg2.position.set(x+w/2, y + 1.25 + cy * 2.5, z+ceilingH-0.04);
+    g.add(cg2);
+  }
+
+  // === 4 CONCRETE EXTERIOR WALLS with windows ===
+  var cwMat = new THREE.MeshStandardMaterial({color:concreteColor, roughness:0.75, metalness:0.05});
+  var cwDkMat = new THREE.MeshStandardMaterial({color:concreteColorDark, roughness:0.8});
+  // Spandrel (lower solid strip + upper solid strip) with glass curtain in between
+  var spandrelH = 0.6; // solid bottom strip
+  var headerH = 0.4;   // solid top strip
+  var windowH = h - spandrelH - headerH; // glass area
+
+  // Front wall (y = min) - with entrance gap in center
+  var entranceW = 2.5;
+  // Left section
+  var leftW = (w - entranceW) / 2;
+  // Front left
+  var flGeo = new THREE.BoxGeometry(leftW, wallThick, spandrelH);
+  var fl = new THREE.Mesh(flGeo, cwMat);
+  fl.position.set(x + leftW/2, y + wallThick/2, z + spandrelH/2);
+  fl.castShadow = true; g.add(fl);
+  // Front left glass
+  var numWL = Math.floor(leftW / 1.8);
+  var glassMat = new THREE.MeshStandardMaterial({color:windowGlass, transparent:true, opacity:0.25, roughness:0.05, metalness:0.4, side:THREE.DoubleSide});
+  var frameMat = new THREE.MeshStandardMaterial({color:windowFrame, roughness:0.4, metalness:0.5});
+  for (var wi = 0; wi < numWL; wi++) {
+    var wGeo = new THREE.BoxGeometry(1.2, 0.02, windowH - 0.1);
+    var wMesh = new THREE.Mesh(wGeo, glassMat);
+    wMesh.position.set(x + 0.8 + wi * 1.8, y + wallThick/2, z + spandrelH + windowH/2);
+    g.add(wMesh);
+    // Mullion (vertical frame)
+    var mGeo = new THREE.BoxGeometry(0.04, wallThick + 0.02, windowH);
+    var mullion = new THREE.Mesh(mGeo, frameMat);
+    mullion.position.set(x + 0.2 + wi * 1.8, y + wallThick/2, z + spandrelH + windowH/2);
+    g.add(mullion);
+  }
+  // Front left header
+  var flhGeo = new THREE.BoxGeometry(leftW, wallThick, headerH);
+  var flh = new THREE.Mesh(flhGeo, cwDkMat);
+  flh.position.set(x + leftW/2, y + wallThick/2, z + h - headerH/2);
+  g.add(flh);
+
+  // Front right
+  var fr = new THREE.Mesh(flGeo, cwMat);
+  fr.position.set(x + w - leftW/2, y + wallThick/2, z + spandrelH/2);
+  fr.castShadow = true; g.add(fr);
+  for (var wi2 = 0; wi2 < numWL; wi2++) {
+    var wG2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.02, windowH - 0.1), glassMat);
+    wG2.position.set(x + w - leftW + 0.8 + wi2 * 1.8, y + wallThick/2, z + spandrelH + windowH/2);
+    g.add(wG2);
+    var mul2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, wallThick+0.02, windowH), frameMat);
+    mul2.position.set(x + w - leftW + 0.2 + wi2 * 1.8, y + wallThick/2, z + spandrelH + windowH/2);
+    g.add(mul2);
+  }
+  var frh = new THREE.Mesh(flhGeo, cwDkMat);
+  frh.position.set(x + w - leftW/2, y + wallThick/2, z + h - headerH/2);
+  g.add(frh);
+
+  // Entrance glass doors
+  var doorGlassMat = new THREE.MeshStandardMaterial({color:0xaaddff, transparent:true, opacity:0.35, roughness:0.05, metalness:0.3});
+  var doorGeo = new THREE.BoxGeometry(1.0, 0.04, 2.5);
+  var door1 = new THREE.Mesh(doorGeo, doorGlassMat);
+  door1.position.set(x + w/2 - 0.6, y + 0.04, z + 1.25);
+  g.add(door1);
+  var door2 = new THREE.Mesh(doorGeo, doorGlassMat);
+  door2.position.set(x + w/2 + 0.6, y + 0.04, z + 1.25);
+  g.add(door2);
+  // Door frame
+  var doorFrameGeo = new THREE.BoxGeometry(entranceW + 0.2, wallThick + 0.04, 0.08);
+  var doorFrame = new THREE.Mesh(doorFrameGeo, frameMat);
+  doorFrame.position.set(x + w/2, y + wallThick/2, z + 2.6);
+  g.add(doorFrame);
+  var headerAboveDoor = new THREE.Mesh(new THREE.BoxGeometry(entranceW, wallThick, h - 2.7), cwDkMat);
+  headerAboveDoor.position.set(x + w/2, y + wallThick/2, z + 2.7 + (h - 2.7)/2);
+  g.add(headerAboveDoor);
+
+  // Back wall (y = max) - solid with windows
+  var bwSpandrel = new THREE.Mesh(new THREE.BoxGeometry(w, wallThick, spandrelH), cwMat);
+  bwSpandrel.position.set(x+w/2, y+d-wallThick/2, z+spandrelH/2);
+  bwSpandrel.castShadow = true; g.add(bwSpandrel);
+  var numWB = Math.floor(w / 1.8);
+  for (var bwi = 0; bwi < numWB; bwi++) {
+    var bwG = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.02, windowH-0.1), glassMat);
+    bwG.position.set(x + 0.8 + bwi*1.8, y+d-wallThick/2, z+spandrelH+windowH/2);
+    g.add(bwG);
+    var bwM = new THREE.Mesh(new THREE.BoxGeometry(0.04, wallThick+0.02, windowH), frameMat);
+    bwM.position.set(x + 0.2 + bwi*1.8, y+d-wallThick/2, z+spandrelH+windowH/2);
+    g.add(bwM);
+  }
+  var bwHeader = new THREE.Mesh(new THREE.BoxGeometry(w, wallThick, headerH), cwDkMat);
+  bwHeader.position.set(x+w/2, y+d-wallThick/2, z+h-headerH/2);
+  g.add(bwHeader);
+
+  // Left wall (x = min)
+  var lwSpandrel = new THREE.Mesh(new THREE.BoxGeometry(wallThick, d, spandrelH), cwMat);
+  lwSpandrel.position.set(x+wallThick/2, y+d/2, z+spandrelH/2);
+  lwSpandrel.castShadow = true; g.add(lwSpandrel);
+  var numWS = Math.floor(d / 2.0);
+  for (var lwi = 0; lwi < numWS; lwi++) {
+    var lwG = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.4, windowH-0.1), glassMat);
+    lwG.position.set(x+wallThick/2, y+0.8+lwi*2.0, z+spandrelH+windowH/2);
+    g.add(lwG);
+    var lwM = new THREE.Mesh(new THREE.BoxGeometry(wallThick+0.02, 0.04, windowH), frameMat);
+    lwM.position.set(x+wallThick/2, y+0.2+lwi*2.0, z+spandrelH+windowH/2);
+    g.add(lwM);
+  }
+  var lwHeader = new THREE.Mesh(new THREE.BoxGeometry(wallThick, d, headerH), cwDkMat);
+  lwHeader.position.set(x+wallThick/2, y+d/2, z+h-headerH/2);
+  g.add(lwHeader);
+
+  // Right wall (x = max)
+  var rwSpandrel = new THREE.Mesh(new THREE.BoxGeometry(wallThick, d, spandrelH), cwMat);
+  rwSpandrel.position.set(x+w-wallThick/2, y+d/2, z+spandrelH/2);
+  rwSpandrel.castShadow = true; g.add(rwSpandrel);
+  for (var rwi = 0; rwi < numWS; rwi++) {
+    var rwG = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.4, windowH-0.1), glassMat);
+    rwG.position.set(x+w-wallThick/2, y+0.8+rwi*2.0, z+spandrelH+windowH/2);
+    g.add(rwG);
+    var rwM = new THREE.Mesh(new THREE.BoxGeometry(wallThick+0.02, 0.04, windowH), frameMat);
+    rwM.position.set(x+w-wallThick/2, y+0.2+rwi*2.0, z+spandrelH+windowH/2);
+    g.add(rwM);
+  }
+  var rwHeader = new THREE.Mesh(new THREE.BoxGeometry(wallThick, d, headerH), cwDkMat);
+  rwHeader.position.set(x+w-wallThick/2, y+d/2, z+h-headerH/2);
+  g.add(rwHeader);
+
+  // === STRUCTURAL COLUMNS at corners + mid-spans ===
+  var colMat = new THREE.MeshStandardMaterial({color:0x7a7a82, roughness:0.6, metalness:0.1});
+  var colGeo = new THREE.BoxGeometry(0.3, 0.3, h);
+  var colPositions = [
+    [x+0.15, y+0.15], [x+w-0.15, y+0.15],
+    [x+0.15, y+d-0.15], [x+w-0.15, y+d-0.15],
+    [x+w/2, y+0.15], [x+w/2, y+d-0.15],
+  ];
+  colPositions.forEach(function(cp) {
+    var col = new THREE.Mesh(colGeo, colMat);
+    col.position.set(cp[0], cp[1], z+h/2);
+    col.castShadow = true;
+    g.add(col);
+  });
+
+  // === BASEBOARD TRIM around floor edges ===
+  var baseMat = new THREE.MeshStandardMaterial({color:0x4a4a55, roughness:0.7});
+  // Front/back baseboards
+  var bbGeo = new THREE.BoxGeometry(w, 0.04, 0.12);
+  var bbF = new THREE.Mesh(bbGeo, baseMat);
+  bbF.position.set(x+w/2, y+0.2, z+0.17);
+  g.add(bbF);
+  var bbB = new THREE.Mesh(bbGeo, baseMat);
+  bbB.position.set(x+w/2, y+d-0.2, z+0.17);
+  g.add(bbB);
+  // Left/right baseboards
+  var bbSGeo = new THREE.BoxGeometry(0.04, d, 0.12);
+  var bbL = new THREE.Mesh(bbSGeo, baseMat);
+  bbL.position.set(x+0.2, y+d/2, z+0.17);
+  g.add(bbL);
+  var bbR = new THREE.Mesh(bbSGeo, baseMat);
+  bbR.position.set(x+w-0.2, y+d/2, z+0.17);
+  g.add(bbR);
+
+  scene.add(g);
+  return { group:g, floor:floor };
+}
+
+// -- BUILDING ROOF & EXTERIOR --
+function addBuildingRoof(bx, by, bw, bd, totalH, bldgNum) {
+  var g = new THREE.Group();
+  var roofMat = new THREE.MeshStandardMaterial({color:0x6a6a72, roughness:0.85, metalness:0.1});
+  // Main roof slab
+  var roofSlab = new THREE.Mesh(new THREE.BoxGeometry(bw + 0.6, bd + 0.6, 0.2), roofMat);
+  roofSlab.position.set(bx + bw/2, by + bd/2, totalH + 0.1);
+  roofSlab.receiveShadow = true;
+  g.add(roofSlab);
+  // Roof parapet (raised edge)
+  var parapetMat = new THREE.MeshStandardMaterial({color:0x7a7a82, roughness:0.8});
+  var pH = 0.5;
+  var pFront = new THREE.Mesh(new THREE.BoxGeometry(bw + 0.8, 0.15, pH), parapetMat);
+  pFront.position.set(bx+bw/2, by-0.1, totalH + 0.2 + pH/2);
+  g.add(pFront);
+  var pBack = new THREE.Mesh(new THREE.BoxGeometry(bw + 0.8, 0.15, pH), parapetMat);
+  pBack.position.set(bx+bw/2, by+bd+0.1, totalH + 0.2 + pH/2);
+  g.add(pBack);
+  var pLeft = new THREE.Mesh(new THREE.BoxGeometry(0.15, bd + 0.8, pH), parapetMat);
+  pLeft.position.set(bx-0.1, by+bd/2, totalH + 0.2 + pH/2);
+  g.add(pLeft);
+  var pRight = new THREE.Mesh(new THREE.BoxGeometry(0.15, bd + 0.8, pH), parapetMat);
+  pRight.position.set(bx+bw+0.1, by+bd/2, totalH + 0.2 + pH/2);
+  g.add(pRight);
+
+  // Rooftop AC condensing units
+  var acMat = new THREE.MeshStandardMaterial({color:0xdddddd, roughness:0.5, metalness:0.2});
+  var acFanMat = new THREE.MeshStandardMaterial({color:0x333333, roughness:0.4});
+  for (var ai = 0; ai < 3; ai++) {
+    var acBox = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, 0.8), acMat);
+    acBox.position.set(bx + 3 + ai * 5, by + bd - 3, totalH + 0.6);
+    g.add(acBox);
+    var acFan = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.05, 12), acFanMat);
+    acFan.position.set(bx + 3 + ai * 5, by + bd - 3, totalH + 1.02);
+    g.add(acFan);
+    // Fan grill
+    var grill = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.28, 12), new THREE.MeshBasicMaterial({color:0x444444, side:THREE.DoubleSide}));
+    grill.position.set(bx + 3 + ai * 5, by + bd - 3, totalH + 1.05);
+    grill.rotation.x = 0;
+    g.add(grill);
+  }
+
+  // Communication antenna / satellite dish
+  var antBaseMat = new THREE.MeshStandardMaterial({color:0x888888, metalness:0.5, roughness:0.3});
+  var antBase = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.3, 8), antBaseMat);
+  antBase.position.set(bx + bw - 3, by + 3, totalH + 0.35);
+  g.add(antBase);
+  var antPole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.5, 6), antBaseMat);
+  antPole.position.set(bx + bw - 3, by + 3, totalH + 1.45);
+  g.add(antPole);
+  // Small dishes
+  var dishMat = new THREE.MeshStandardMaterial({color:0xcccccc, roughness:0.3, metalness:0.5, side:THREE.DoubleSide});
+  var dish = new THREE.Mesh(new THREE.CircleGeometry(0.25, 12), dishMat);
+  dish.position.set(bx + bw - 3.1, by + 3, totalH + 2.3);
+  dish.rotation.y = 0.3;
+  g.add(dish);
+
+  // Elevator machine room (small box on roof)
+  var emrMat = new THREE.MeshStandardMaterial({color:0x7a7a82, roughness:0.8});
+  var emr = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.2, 1.5), emrMat);
+  emr.position.set(bx + 1.5, by + 1.5, totalH + 0.95);
+  g.add(emr);
+  var emrDoor = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.04, 1.2), new THREE.MeshStandardMaterial({color:0x666666, metalness:0.3}));
+  emrDoor.position.set(bx + 1.5, by + 2.62, totalH + 0.8);
+  g.add(emrDoor);
+
+  // Solar panels (optional, realistic touch)
+  var panelMat = new THREE.MeshStandardMaterial({color:0x1a1a4a, roughness:0.2, metalness:0.5});
+  for (var sp = 0; sp < 4; sp++) {
+    var panel = new THREE.Mesh(new THREE.BoxGeometry(2.5, 1.2, 0.05), panelMat);
+    panel.position.set(bx + 5 + sp * 3.5, by + 3, totalH + 0.5);
+    panel.rotation.x = -0.25;
+    g.add(panel);
+  }
+
+  scene.add(g);
+  return g;
+}
+
+// -- ENTRANCE CANOPY & GROUND FEATURES --
+function addBuildingEntrance(bx, by, bw, bldgNum) {
+  var g = new THREE.Group();
+
+  // Glass canopy over entrance
+  var canopyMat = new THREE.MeshStandardMaterial({color:0xaaddff, transparent:true, opacity:0.35, roughness:0.05, metalness:0.4, side:THREE.DoubleSide});
+  var canopy = new THREE.Mesh(new THREE.BoxGeometry(4, 2.5, 0.06), canopyMat);
+  canopy.position.set(bx + bw/2, by - 1.2, 3.0);
+  g.add(canopy);
+  // Canopy support rods
+  var rodMat = new THREE.MeshStandardMaterial({color:0x888888, metalness:0.6, roughness:0.3});
+  [[-1.8, -2.2], [1.8, -2.2]].forEach(function(off) {
+    var rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.5, 6), rodMat);
+    rod.position.set(bx + bw/2 + off[0], by + off[1], 2.3);
+    rod.rotation.x = 0.15;
+    g.add(rod);
+  });
+
+  // Entrance steps (3 steps)
+  var stepMat = new THREE.MeshStandardMaterial({color:0x999999, roughness:0.7, metalness:0.1});
+  for (var si = 0; si < 3; si++) {
+    var step = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.4 + si * 0.15, 0.12), stepMat);
+    step.position.set(bx + bw/2, by - 0.5 - si * 0.35, 0.06 + si * 0.12);
+    g.add(step);
+  }
+
+  // Sidewalk path leading to entrance
+  var sidewalkMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.8});
+  var sidewalk = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.03), sidewalkMat);
+  sidewalk.position.set(bx + bw/2, by - 3, 0.015);
+  g.add(sidewalk);
+
+  // Building name sign on facade
+  var signBg = new THREE.Mesh(
+    new THREE.BoxGeometry(5, 0.06, 1.0),
+    new THREE.MeshStandardMaterial({color:0x1a1a3a, roughness:0.5, metalness:0.2})
+  );
+  signBg.position.set(bx + bw/2, by - 0.05, 4.0);
+  g.add(signBg);
+  var bName = bldgNum === 1 ? 'TOA NHA A' : 'TOA NHA B';
+  var signLabel = makeSmallLabel(bName, bx + bw/2, by - 0.3, 4.0, bldgNum === 1 ? '#60a5fa' : '#4ade80');
+  signLabel.scale.set(3, 0.8, 1);
+  g.add(signLabel);
+
+  // Bollards along sidewalk
+  var bollardMat = new THREE.MeshStandardMaterial({color:0x555555, roughness:0.6, metalness:0.3});
+  for (var bi = 0; bi < 5; bi++) {
+    var bollard = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.5, 8), bollardMat);
+    bollard.position.set(bx + bw/2 - 2 + bi, by - 1.2, 0.25);
+    g.add(bollard);
+  }
+
+  // Outdoor lights at entrance
+  var lightPoleMat = new THREE.MeshStandardMaterial({color:0x444444, metalness:0.5});
+  [-3, 3].forEach(function(xoff) {
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 3.5, 6), lightPoleMat);
+    pole.position.set(bx + bw/2 + xoff, by - 1, 1.75);
+    g.add(pole);
+    var lampHead = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.15, 0.06), new THREE.MeshStandardMaterial({color:0xdddddd}));
+    lampHead.position.set(bx + bw/2 + xoff, by - 1, 3.5);
+    g.add(lampHead);
+    var lampGlow = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.01), new THREE.MeshBasicMaterial({color:0xffffcc, transparent:true, opacity:0.6}));
+    lampGlow.position.set(bx + bw/2 + xoff, by - 1, 3.44);
+    g.add(lampGlow);
+  });
+
+  scene.add(g);
+  return g;
 }
 
 // -- TEXT SPRITE --
@@ -1162,127 +1514,490 @@ function createWaterCooler() {
 }
 
 // =====================================================================
-// ADD FLOOR INTERIOR
+// ADD FLOOR INTERIOR (Realistic Office)
 // =====================================================================
 function addFloorInterior(group, bx, by, fz, vlans, bldgNum) {
   var BW = 22, BD = 16, FH = 4.5;
   var partColor = bldgNum === 1 ? 0x4488cc : 0x44cc88;
+  var wallIntMat = new THREE.MeshStandardMaterial({color:0xd4d0c8, roughness:0.8, metalness:0.02});
+  var wallIntMat2 = new THREE.MeshStandardMaterial({color:0xc8c4bc, roughness:0.8, metalness:0.02});
+  var solidDoorMat = new THREE.MeshStandardMaterial({color:0x6b5b4b, roughness:0.5, metalness:0.1});
+  var carpetMat = new THREE.MeshStandardMaterial({color:0x3a3a55, roughness:0.95});
+  var corridorY = by + 2.5; // corridor along front
+  var officeStartY = by + 2.8;
+  var PART_H = 3.2;
 
-  // --- Room partition walls between VLAN zones ---
-  // Each VLAN zone starts at bx + 3 + vi * 6.5, zones are ~6.5 wide
+  // === CORRIDOR FLOOR (different material - darker carpet/tile) ===
+  var corrFloor = new THREE.Mesh(
+    new THREE.BoxGeometry(BW - 1, 2.0, 0.02),
+    carpetMat
+  );
+  corrFloor.position.set(bx + BW/2, by + 1.5, fz + 0.12);
+  group.add(corrFloor);
+
+  // === CORRIDOR WALL (solid drywall with glass top) ===
+  var corrWallSolid = new THREE.Mesh(
+    new THREE.BoxGeometry(BW - 2, 0.1, 1.5),
+    wallIntMat
+  );
+  corrWallSolid.position.set(bx + BW/2, corridorY, fz + 0.75);
+  corrWallSolid.castShadow = true;
+  group.add(corrWallSolid);
+  // Glass strip on top of corridor wall
+  var corrGlass = new THREE.Mesh(
+    new THREE.BoxGeometry(BW - 2, 0.04, 1.5),
+    new THREE.MeshStandardMaterial({color:0x88bbdd, transparent:true, opacity:0.15, roughness:0.05, metalness:0.3, side:THREE.DoubleSide})
+  );
+  corrGlass.position.set(bx + BW/2, corridorY, fz + 2.25);
+  group.add(corrGlass);
+  // Metal transom bar
+  var transomBar = new THREE.Mesh(
+    new THREE.BoxGeometry(BW - 2, 0.12, 0.04),
+    new THREE.MeshStandardMaterial({color:0x888899, roughness:0.4, metalness:0.5})
+  );
+  transomBar.position.set(bx + BW/2, corridorY, fz + 1.5);
+  group.add(transomBar);
+
+  // === ROOM PARTITION WALLS between VLAN zones ===
   for (var pi = 1; pi < vlans.length; pi++) {
-    var wallX = bx + 3 + pi * 6.5 - 0.7;
-    var partition = createPartition(BD - 3, 3.5, partColor);
-    partition.position.set(wallX, by + BD / 2, fz + 0.05);
-    group.add(partition);
+    var wallX = bx + 2.5 + pi * 6.5 - 0.3;
+    // Solid lower wall
+    var partSolid = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1, BD - 4, 1.5),
+      wallIntMat2
+    );
+    partSolid.position.set(wallX, by + BD/2 + 1, fz + 0.75);
+    partSolid.castShadow = true;
+    group.add(partSolid);
+    // Frosted glass upper
+    var partGlass = new THREE.Mesh(
+      new THREE.BoxGeometry(0.04, BD - 4, PART_H - 1.5),
+      new THREE.MeshStandardMaterial({color:partColor, transparent:true, opacity:0.12, roughness:0.1, metalness:0.2, side:THREE.DoubleSide, depthWrite:false})
+    );
+    partGlass.position.set(wallX, by + BD/2 + 1, fz + 1.5 + (PART_H - 1.5)/2);
+    group.add(partGlass);
+    // Aluminum frame at top
+    var partFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(0.06, BD - 4, 0.04),
+      new THREE.MeshStandardMaterial({color:0x999999, roughness:0.3, metalness:0.6})
+    );
+    partFrame.position.set(wallX, by + BD/2 + 1, fz + PART_H);
+    group.add(partFrame);
   }
 
-  // --- Corridor wall (separating front corridor from offices) ---
-  var corridorWall = createPartition(BW - 2, 2.5, 0x88aacc);
-  corridorWall.position.set(bx + BW / 2, by + 1.8, fz + 0.05);
-  corridorWall.rotation.z = Math.PI / 2;
-  group.add(corridorWall);
+  // === DOOR for each room in corridor wall ===
+  vlans.forEach(function(vid, vi) {
+    var doorX = bx + 3.5 + vi * 6.5;
+    // Door frame
+    var dFrameMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.4, metalness:0.5});
+    var dFrame = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.14, 2.3), dFrameMat);
+    dFrame.position.set(doorX, corridorY, fz + 1.15);
+    group.add(dFrame);
+    // Actual door
+    var door = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.06, 2.1), solidDoorMat);
+    door.position.set(doorX, corridorY - 0.04, fz + 1.05);
+    group.add(door);
+    // Door handle
+    var handle = new THREE.Mesh(
+      new THREE.BoxGeometry(0.12, 0.06, 0.03),
+      new THREE.MeshStandardMaterial({color:0xcccccc, metalness:0.8, roughness:0.2})
+    );
+    handle.position.set(doorX + 0.3, corridorY - 0.08, fz + 1.0);
+    group.add(handle);
+    // Room number sign above door
+    var vInfo = VLAN_DB[vid];
+    if (vInfo) {
+      var roomNum = makeSmallLabel((bldgNum * 100 + Math.round(fz/FH)*10 + vi + 1).toString(), doorX, corridorY - 0.15, fz + 2.4, '#ffffff');
+      roomNum.scale.set(0.8, 0.25, 1);
+      group.add(roomNum);
+    }
+  });
 
-  // --- Desks and chairs for each PC ---
+  // === DESKS & CHAIRS for each PC ===
   var floorKey = 'B' + bldgNum + '_F' + (Math.round(fz / FH) + 1);
   var floorPCs = FLOOR_PCS[floorKey];
   if (floorPCs) {
     floorPCs.forEach(function(pc, i) {
-      var vi = 0;
-      for (var v = 0; v < vlans.length; v++) {
-        if (pc.vlan === vlans[v]) { vi = v; break; }
-      }
-      var vlx = bx + 3 + vi * 6.5;
-      var pi2 = i % PCS_PER_VLAN;
       var localVi = vlans.indexOf(pc.vlan);
       var vlanPCsBefore = 0;
-      for (var vv = 0; vv < localVi; vv++) {
-        vlanPCsBefore += PCS_PER_VLAN;
-      }
+      for (var vv = 0; vv < localVi; vv++) vlanPCsBefore += PCS_PER_VLAN;
       var inVlanIdx = i - vlanPCsBefore;
       var px = bx + 3 + localVi * 6.5 + (inVlanIdx % 2) * 2.8;
-      var py = by + 3 + Math.floor(inVlanIdx / 2) * 3.5;
+      var py = by + 3.5 + Math.floor(inVlanIdx / 2) * 3.5;
 
-      // Desk under each PC
-      var vColor = VLAN_DB[pc.vlan] ? VLAN_DB[pc.vlan].color : 0x5c3d2e;
-      var deskColor = 0x5c3d2e + (pc.vlan % 3) * 0x080808;
-      var desk = createDesk(1.8, 0.9, 0.42, deskColor);
-      desk.position.set(px, py, fz + 0.05);
+      // Desk
+      var deskColors = [0x8B6F47, 0x7A6B5A, 0x6B5B4B, 0x9C8260];
+      var desk = createDesk(1.8, 0.9, 0.42, deskColors[inVlanIdx % 4]);
+      desk.position.set(px, py, fz + 0.1);
       group.add(desk);
 
-      // Chair behind desk
-      var chairColors = [0x1a1a3e, 0x2a1a1a, 0x1a2a1a, 0x2a2a1a];
+      // Chair
+      var chairColors = [0x1a1a3e, 0x333344, 0x2a2a3a, 0x252540];
       var chair = createChair(chairColors[inVlanIdx % 4]);
-      chair.position.set(px, py + 0.8, fz + 0.05);
+      chair.position.set(px, py + 0.85, fz + 0.1);
       group.add(chair);
 
-      // Phone on desk (every other PC)
+      // Phone on even desks
       if (inVlanIdx % 2 === 0) {
         var phone = createPhone();
-        phone.position.set(px + 0.6, py - 0.2, fz + 0.47);
+        phone.position.set(px + 0.6, py - 0.22, fz + 0.54);
         group.add(phone);
+      }
+
+      // Desk lamp on odd desks
+      if (inVlanIdx % 2 === 1) {
+        var lampBase = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.06, 0.08, 0.03, 8),
+          new THREE.MeshStandardMaterial({color:0x222222, metalness:0.5})
+        );
+        lampBase.position.set(px + 0.55, py - 0.25, fz + 0.55);
+        group.add(lampBase);
+        var lampArm = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.01, 0.01, 0.35, 6),
+          new THREE.MeshStandardMaterial({color:0x555555, metalness:0.6})
+        );
+        lampArm.position.set(px + 0.55, py - 0.25, fz + 0.73);
+        group.add(lampArm);
+        var lampShade = new THREE.Mesh(
+          new THREE.ConeGeometry(0.08, 0.06, 8, 1, true),
+          new THREE.MeshStandardMaterial({color:0x444444, side:THREE.DoubleSide})
+        );
+        lampShade.position.set(px + 0.55, py - 0.25, fz + 0.93);
+        lampShade.rotation.x = Math.PI;
+        group.add(lampShade);
       }
     });
   }
 
-  // --- Network rack near the access switch (center of floor) ---
-  var rack = createRack(bldgNum === 1 ? 0x101830 : 0x103018);
-  rack.position.set(bx + BW / 2 + 2, by + BD / 2, fz + 0.05);
-  group.add(rack);
+  // === NETWORK RACK (in IDF closet area, near switch) ===
+  var rackColor = bldgNum === 1 ? 0x101830 : 0x103018;
+  var rack1 = createRack(rackColor);
+  rack1.position.set(bx + BW/2 + 1.5, by + BD/2, fz + 0.1);
+  group.add(rack1);
+  var rack2 = createRack(rackColor);
+  rack2.position.set(bx + BW/2 + 2.8, by + BD/2, fz + 0.1);
+  group.add(rack2);
+  // IDF closet walls
+  var idfWallL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.5, PART_H), wallIntMat2);
+  idfWallL.position.set(bx + BW/2 + 0.5, by + BD/2, fz + PART_H/2);
+  group.add(idfWallL);
+  var idfWallR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.5, PART_H), wallIntMat2);
+  idfWallR.position.set(bx + BW/2 + 3.7, by + BD/2, fz + PART_H/2);
+  group.add(idfWallR);
+  var idfLabel = makeSmallLabel('IDF Closet', bx+BW/2+2.1, by+BD/2-1.5, fz+2.5, '#ff6b35');
+  idfLabel.scale.set(1.5, 0.4, 1);
+  group.add(idfLabel);
 
-  // --- Printer (one per VLAN zone) ---
+  // === PRINTERS (shared print area near corridor) ===
   vlans.forEach(function(vid, vi) {
     var printer = createPrinter(vi % 2 === 0 ? 0xe8e8e8 : 0xddddee);
-    var printerX = bx + 3 + vi * 6.5 + 4.5;
-    printer.position.set(printerX, by + BD - 3, fz + 0.05);
+    var printerX = bx + 3 + vi * 6.5 + 5;
+    var printerY = by + BD - 3;
+    printer.position.set(printerX, printerY, fz + 0.1);
     group.add(printer);
-    var pLabel = makeSmallLabel('Printer', printerX, by + BD - 3, fz + 0.5, '#aaa');
-    pLabel.scale.set(1.2, 0.3, 1);
-    group.add(pLabel);
+    // Printer stand
+    var pStand = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 0.5, 0.5),
+      new THREE.MeshStandardMaterial({color:0x555555, roughness:0.6})
+    );
+    pStand.position.set(printerX, printerY, fz + 0.35);
+    group.add(pStand);
+    // Printer on top of stand (reposition)
+    printer.position.set(printerX, printerY, fz + 0.6);
   });
 
-  // --- Whiteboard on back wall (one per VLAN zone) ---
+  // === WHITEBOARDS / DISPLAY SCREENS ===
   vlans.forEach(function(vid, vi) {
     var wb = createWhiteboard();
     var wbX = bx + 3 + vi * 6.5 + 1.5;
-    wb.position.set(wbX, by + BD - 0.5, fz + 1.5);
+    wb.position.set(wbX, by + BD - 0.3, fz + 1.3);
     group.add(wb);
   });
 
-  // --- Ceiling lights ---
-  for (var li = 0; li < 3; li++) {
-    var cl = createCeilingLight(BD - 4);
-    cl.position.set(bx + 4 + li * 7, by + BD / 2, fz + FH - 0.15);
-    group.add(cl);
+  // === MEETING ROOM (in first VLAN zone near back) ===
+  var mrX = bx + 3;
+  var mrY = by + BD - 4.5;
+  // Meeting room walls
+  var mrGlass = new THREE.MeshStandardMaterial({color:0x88ccff, transparent:true, opacity:0.18, roughness:0.05, metalness:0.3, side:THREE.DoubleSide, depthWrite:false});
+  var mrFrameMat = new THREE.MeshStandardMaterial({color:0x888899, roughness:0.3, metalness:0.6});
+  // Front glass wall
+  var mrFront = new THREE.Mesh(new THREE.BoxGeometry(4, 0.04, PART_H), mrGlass);
+  mrFront.position.set(mrX + 2, mrY, fz + PART_H/2);
+  group.add(mrFront);
+  var mrFrontFrame = new THREE.Mesh(new THREE.BoxGeometry(4, 0.06, 0.04), mrFrameMat);
+  mrFrontFrame.position.set(mrX + 2, mrY, fz + PART_H);
+  group.add(mrFrontFrame);
+  // Side glass wall
+  var mrSide = new THREE.Mesh(new THREE.BoxGeometry(0.04, 3.5, PART_H), mrGlass);
+  mrSide.position.set(mrX + 4, mrY + 1.75, fz + PART_H/2);
+  group.add(mrSide);
+  // Meeting table
+  var mtGeo = new THREE.BoxGeometry(2.5, 1.2, 0.05);
+  var mtMat = new THREE.MeshStandardMaterial({color:0x5a4a3a, roughness:0.5, metalness:0.05});
+  var meetTable = new THREE.Mesh(mtGeo, mtMat);
+  meetTable.position.set(mrX + 2, mrY + 2, fz + 0.55);
+  group.add(meetTable);
+  // Table legs
+  var mtLegGeo = new THREE.BoxGeometry(0.08, 0.08, 0.42);
+  var mtLegMat = new THREE.MeshStandardMaterial({color:0x888888, metalness:0.4});
+  [[-1.1,-0.5],[1.1,-0.5],[-1.1,0.5],[1.1,0.5]].forEach(function(off) {
+    var mtLeg = new THREE.Mesh(mtLegGeo, mtLegMat);
+    mtLeg.position.set(mrX+2+off[0], mrY+2+off[1], fz+0.32);
+    group.add(mtLeg);
+  });
+  // Meeting chairs around table
+  for (var mc = 0; mc < 6; mc++) {
+    var mcX, mcY;
+    if (mc < 3) { mcX = mrX + 0.8 + mc * 0.9; mcY = mrY + 1.2; }
+    else { mcX = mrX + 0.8 + (mc-3) * 0.9; mcY = mrY + 2.8; }
+    var meetChair = createChair(0x2a2a3e);
+    meetChair.position.set(mcX, mcY, fz + 0.1);
+    meetChair.scale.set(0.8, 0.8, 0.8);
+    group.add(meetChair);
+  }
+  // TV/Screen on meeting room wall
+  var tvGeo = new THREE.BoxGeometry(0.04, 1.5, 0.9);
+  var tvMat = new THREE.MeshStandardMaterial({color:0x111111, roughness:0.3});
+  var tv = new THREE.Mesh(tvGeo, tvMat);
+  tv.position.set(mrX + 0.3, mrY + 2, fz + 2.2);
+  group.add(tv);
+  var tvScreen = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.3, 0.75),
+    new THREE.MeshBasicMaterial({color:0x1144aa, transparent:true, opacity:0.5, side:THREE.DoubleSide})
+  );
+  tvScreen.position.set(mrX + 0.28, mrY + 2, fz + 2.2);
+  tvScreen.rotation.y = Math.PI/2;
+  group.add(tvScreen);
+  var mrLabel = makeSmallLabel('Phong Hop', mrX + 2, mrY - 0.3, fz + 2.8, '#ffffff');
+  mrLabel.scale.set(1.8, 0.45, 1);
+  group.add(mrLabel);
+
+  // === BREAK ROOM / PANTRY (near right back corner) ===
+  var brX = bx + BW - 4;
+  var brY = by + BD - 4;
+  // Break room walls
+  var brFront = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.08, PART_H - 0.5), wallIntMat);
+  brFront.position.set(brX + 1.75, brY, fz + (PART_H-0.5)/2);
+  group.add(brFront);
+  var brSide = new THREE.Mesh(new THREE.BoxGeometry(0.08, 3.5, PART_H - 0.5), wallIntMat);
+  brSide.position.set(brX, brY + 1.75, fz + (PART_H-0.5)/2);
+  group.add(brSide);
+  // Mini kitchen counter
+  var counterGeo = new THREE.BoxGeometry(2.5, 0.5, 0.55);
+  var counterMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.4, metalness:0.2});
+  var counter = new THREE.Mesh(counterGeo, counterMat);
+  counter.position.set(brX + 1.8, brY + 3.3, fz + 0.38);
+  group.add(counter);
+  // Sink
+  var sinkGeo = new THREE.BoxGeometry(0.4, 0.3, 0.04);
+  var sinkMat = new THREE.MeshStandardMaterial({color:0xcccccc, metalness:0.6, roughness:0.2});
+  var sink = new THREE.Mesh(sinkGeo, sinkMat);
+  sink.position.set(brX + 0.8, brY + 3.3, fz + 0.67);
+  group.add(sink);
+  // Microwave
+  var mwGeo = new THREE.BoxGeometry(0.35, 0.25, 0.25);
+  var mwMat = new THREE.MeshStandardMaterial({color:0xeeeeee, roughness:0.5});
+  var mw = new THREE.Mesh(mwGeo, mwMat);
+  mw.position.set(brX + 2.2, brY + 3.3, fz + 0.78);
+  group.add(mw);
+  // Small table
+  var brkTable = createDesk(1.2, 0.8, 0.42, 0xeeeeee);
+  brkTable.position.set(brX + 1.8, brY + 1.5, fz + 0.1);
+  group.add(brkTable);
+  // Water cooler in break room
+  var wc = createWaterCooler();
+  wc.position.set(brX + 3, brY + 2, fz + 0.1);
+  group.add(wc);
+  // Coffee machine
+  var coffeeMat = new THREE.MeshStandardMaterial({color:0x222222, roughness:0.6});
+  var coffee = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.35), coffeeMat);
+  coffee.position.set(brX + 1.5, brY + 3.3, fz + 0.83);
+  group.add(coffee);
+  var coffLed = new THREE.Mesh(
+    new THREE.SphereGeometry(0.015, 4, 4),
+    new THREE.MeshBasicMaterial({color:0x00ff00})
+  );
+  coffLed.position.set(brX + 1.5, brY + 3.14, fz + 0.95);
+  group.add(coffLed);
+  var brLabel = makeSmallLabel('Pantry', brX+1.75, brY-0.3, fz+2.5, '#fbbf24');
+  brLabel.scale.set(1.5, 0.4, 1);
+  group.add(brLabel);
+
+  // === ELEVATOR SHAFT (at left side of building) ===
+  var elX = bx + 0.5;
+  var elY = by + 0.8;
+  var elMat = new THREE.MeshStandardMaterial({color:0x555555, roughness:0.6, metalness:0.3});
+  // Shaft walls
+  var elBack = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.06, FH), elMat);
+  elBack.position.set(elX+0.9, elY, fz+FH/2);
+  group.add(elBack);
+  var elLeft = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.8, FH), elMat);
+  elLeft.position.set(elX, elY+0.9, fz+FH/2);
+  group.add(elLeft);
+  var elRight = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.8, FH), elMat);
+  elRight.position.set(elX+1.8, elY+0.9, fz+FH/2);
+  group.add(elRight);
+  // Elevator doors (stainless steel)
+  var elDoorMat = new THREE.MeshStandardMaterial({color:0xaaaaaa, roughness:0.2, metalness:0.7});
+  var elDoor1 = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.04, 2.4), elDoorMat);
+  elDoor1.position.set(elX+0.5, elY+1.8, fz+1.3);
+  group.add(elDoor1);
+  var elDoor2 = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.04, 2.4), elDoorMat);
+  elDoor2.position.set(elX+1.3, elY+1.8, fz+1.3);
+  group.add(elDoor2);
+  // Door seam line
+  var elSeam = new THREE.Mesh(
+    new THREE.BoxGeometry(0.01, 0.05, 2.4),
+    new THREE.MeshStandardMaterial({color:0x333333})
+  );
+  elSeam.position.set(elX+0.9, elY+1.82, fz+1.3);
+  group.add(elSeam);
+  // Call button
+  var elBtn = new THREE.Mesh(
+    new THREE.BoxGeometry(0.08, 0.03, 0.12),
+    new THREE.MeshStandardMaterial({color:0x333333, metalness:0.5})
+  );
+  elBtn.position.set(elX + 1.95, elY + 1.82, fz + 1.2);
+  group.add(elBtn);
+  var elBtnLight = new THREE.Mesh(
+    new THREE.SphereGeometry(0.015, 6, 4),
+    new THREE.MeshBasicMaterial({color:0xff4400})
+  );
+  elBtnLight.position.set(elX + 1.95, elY + 1.84, fz + 1.28);
+  group.add(elBtnLight);
+  var elLabel = makeSmallLabel('Thang May', elX+0.9, elY+2.1, fz+2.8, '#aaaaaa');
+  elLabel.scale.set(1.2, 0.3, 1);
+  group.add(elLabel);
+
+  // === FIRE EXIT STAIRS (at right side front) ===
+  var stX = bx + BW - 2.5;
+  var stY = by + 0.5;
+  // Stairwell walls
+  var stWallMat = new THREE.MeshStandardMaterial({color:0x999999, roughness:0.8});
+  var stBack = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.06, FH), stWallMat);
+  stBack.position.set(stX+1, stY, fz+FH/2);
+  group.add(stBack);
+  var stSide = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2.0, FH), stWallMat);
+  stSide.position.set(stX, stY+1, fz+FH/2);
+  group.add(stSide);
+  // Fire door
+  var fireDoorMat = new THREE.MeshStandardMaterial({color:0xbb3333, roughness:0.6});
+  var fireDoor = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.06, 2.2), fireDoorMat);
+  fireDoor.position.set(stX+1, stY+2, fz+1.2);
+  group.add(fireDoor);
+  // Stairs inside (simplified angled block)
+  var stairsGeo = new THREE.BoxGeometry(1.5, 1.5, 0.08);
+  var stairsMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.7, metalness:0.2});
+  var stairs = new THREE.Mesh(stairsGeo, stairsMat);
+  stairs.position.set(stX+1, stY+1, fz+FH*0.5);
+  stairs.rotation.x = 0.4;
+  group.add(stairs);
+  // Handrail
+  var hrMat = new THREE.MeshStandardMaterial({color:0xdddd00, roughness:0.3, metalness:0.5});
+  var hr = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 2.2, 6), hrMat);
+  hr.position.set(stX+0.3, stY+1, fz+1.5);
+  hr.rotation.x = 0.4;
+  group.add(hr);
+  // EXIT sign
+  var exitLabel = makeSmallLabel('EXIT', stX+1, stY+2.2, fz+2.6, '#ff3333');
+  exitLabel.scale.set(1.0, 0.3, 1);
+  group.add(exitLabel);
+
+  // === FIRE SPRINKLERS on ceiling ===
+  for (var si = 0; si < 4; si++) {
+    for (var sj = 0; sj < 3; sj++) {
+      var sprinklerMat = new THREE.MeshStandardMaterial({color:0xcccccc, metalness:0.6, roughness:0.3});
+      var sprHead = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.04, 0.06, 6), sprinklerMat);
+      sprHead.position.set(bx + 3 + si * 5, by + 3 + sj * 4.5, fz + FH - 0.2);
+      sprHead.rotation.x = Math.PI;
+      group.add(sprHead);
+      var sprPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.15, 4), sprinklerMat);
+      sprPipe.position.set(bx + 3 + si * 5, by + 3 + sj * 4.5, fz + FH - 0.12);
+      group.add(sprPipe);
+    }
   }
 
-  // --- Cable tray along ceiling (center spine) ---
+  // === CEILING RECESSED LIGHTS (realistic panel lights) ===
+  for (var lix = 0; lix < 4; lix++) {
+    for (var liy = 0; liy < 2; liy++) {
+      var lx = bx + 3 + lix * 5.2;
+      var ly = by + 4 + liy * 6;
+      // Light housing
+      var lHous = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.6, 0.04),
+        new THREE.MeshStandardMaterial({color:0xdddddd, roughness:0.7})
+      );
+      lHous.position.set(lx, ly, fz + FH - 0.17);
+      group.add(lHous);
+      // Light emitter
+      var lEmit = new THREE.Mesh(
+        new THREE.BoxGeometry(1.0, 0.5, 0.01),
+        new THREE.MeshBasicMaterial({color:0xfff8f0, transparent:true, opacity:0.65})
+      );
+      lEmit.position.set(lx, ly, fz + FH - 0.19);
+      group.add(lEmit);
+    }
+  }
+
+  // === CABLE TRAY (visible on ceiling) ===
   var cTray = createCableTray(BD - 2);
-  cTray.position.set(bx + BW / 2, by + BD / 2, fz + FH - 0.25);
+  cTray.position.set(bx + BW/2, by + BD/2, fz + FH - 0.25);
   group.add(cTray);
 
-  // --- Plants at corners ---
+  // === AC UNITS on ceiling ===
+  for (var ai = 0; ai < 2; ai++) {
+    var acMat = new THREE.MeshStandardMaterial({color:0xeeeeee, roughness:0.5});
+    var acUnit = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.6, 0.2), acMat);
+    acUnit.position.set(bx + 6 + ai * 10, by + BD/2, fz + FH - 0.2);
+    group.add(acUnit);
+    // AC vents
+    var ventMat = new THREE.MeshStandardMaterial({color:0xcccccc, roughness:0.6});
+    for (var av = 0; av < 3; av++) {
+      var vent = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.02), ventMat);
+      vent.position.set(bx + 5.5 + ai*10 + av*0.5, by + BD/2, fz + FH - 0.31);
+      group.add(vent);
+    }
+  }
+
+  // === POTTED PLANTS (decorative) ===
   var plantPositions = [
-    [bx + 1, by + 1], [bx + BW - 1, by + 1],
-    [bx + 1, by + BD - 1], [bx + BW - 1, by + BD - 1]
+    [bx + 2.7, by + 1.2], [bx + BW - 3.5, by + 1.2],
+    [bx + 2, by + BD - 1.5], [bx + BW - 2, by + BD - 1.5]
   ];
   plantPositions.forEach(function(pp) {
     var plant = createPlant();
-    plant.position.set(pp[0], pp[1], fz + 0.05);
+    plant.position.set(pp[0], pp[1], fz + 0.1);
     group.add(plant);
   });
 
-  // --- Water cooler (near corridor) ---
-  var wc = createWaterCooler();
-  wc.position.set(bx + BW - 2, by + 2.5, fz + 0.05);
-  group.add(wc);
+  // === TRASH CANS near corridor ===
+  for (var ti = 0; ti < 2; ti++) {
+    var trashMat = new THREE.MeshStandardMaterial({color:0x444444, roughness:0.6});
+    var trash = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.3, 8), trashMat);
+    trash.position.set(bx + 5 + ti * 10, by + 1, fz + 0.25);
+    group.add(trash);
+  }
 
-  // --- Room labels (door signs) for each VLAN zone ---
+  // === FIRE EXTINGUISHER on corridor wall ===
+  var feX = bx + BW/2 - 3;
+  var feMat = new THREE.MeshStandardMaterial({color:0xcc0000, roughness:0.5});
+  var fe = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.35, 8), feMat);
+  fe.position.set(feX, corridorY + 0.08, fz + 1.2);
+  group.add(fe);
+  // Bracket
+  var feBracket = new THREE.Mesh(
+    new THREE.BoxGeometry(0.08, 0.05, 0.15),
+    new THREE.MeshStandardMaterial({color:0x888888, metalness:0.5})
+  );
+  feBracket.position.set(feX, corridorY + 0.08, fz + 1.35);
+  group.add(feBracket);
+
+  // === ROOM NAME SIGNS (mounted on wall above doors) ===
   vlans.forEach(function(vid, vi) {
     var vInfo = VLAN_DB[vid];
     if (vInfo) {
-      var signX = bx + 3 + vi * 6.5 + 2.5;
-      var roomLabel = makeSmallLabel(vInfo.name, signX, by + 2.1, fz + 2.8, '#' + vInfo.color.toString(16).padStart(6, '0'));
+      var signX = bx + 3.5 + vi * 6.5;
+      var roomLabel = makeSmallLabel(vInfo.name, signX, corridorY - 0.2, fz + 2.8, '#' + vInfo.color.toString(16).padStart(6, '0'));
       roomLabel.scale.set(2, 0.5, 1);
       group.add(roomLabel);
     }
@@ -1320,7 +2035,7 @@ function buildBuilding1() {
     floorGroups[f.key] = group;
     scene.add(group);
     var shell = createBuildingShell(B1X, B1Y, f.z, BW, BD, FH, f.wColor, f.color, 0.08 + fi*0.02);
-    group.add(shell.floor); group.add(shell.walls); group.add(shell.edges);
+    group.add(shell.group);
     var flabel = makeSmallLabel(f.label + ' - ' + f.sw, B1X+BW/2, B1Y-1.2, f.z+FH/2, '#60a5fa');
     group.add(flabel);
     var swModel = createSwitchModel(C.acc, 0.8);
@@ -1376,6 +2091,10 @@ function buildBuilding1() {
   [0, FH, FH*2].forEach(function(fz) {
     createCable(distPos, [B1X+BW/2, B1Y+BD/2, fz + 0.6], C.trunk, 0.05);
   });
+
+  // Roof & entrance exterior
+  addBuildingRoof(B1X, B1Y, BW, BD, FH*3 + FH*0.6, 1);
+  addBuildingEntrance(B1X, B1Y, BW, 1);
 }
 
 // =====================================================================
@@ -1396,7 +2115,7 @@ function buildBuilding2() {
     floorGroups[f.key] = group;
     scene.add(group);
     var shell = createBuildingShell(B2X, B2Y, f.z, BW, BD, FH, f.wColor, f.color, 0.08 + fi*0.02);
-    group.add(shell.floor); group.add(shell.walls); group.add(shell.edges);
+    group.add(shell.group);
     var flabel = makeSmallLabel(f.label + ' - ' + f.sw, B2X+BW/2, B2Y-1.2, f.z+FH/2, '#4ade80');
     group.add(flabel);
     var swModel = createSwitchModel(C.acc, 0.8);
@@ -1449,6 +2168,10 @@ function buildBuilding2() {
   [0, FH, FH*2].forEach(function(fz) {
     createCable(distPos, [B2X+BW/2, B2Y+BD/2, fz+0.6], C.trunk, 0.05);
   });
+
+  // Roof & entrance exterior
+  addBuildingRoof(B2X, B2Y, BW, BD, FH*3 + FH*0.6, 2);
+  addBuildingEntrance(B2X, B2Y, BW, 2);
 }
 
 // =====================================================================
@@ -1595,6 +2318,72 @@ buildCoreRoom();
 buildDMZ();
 buildServerRoom();
 buildInternet();
+
+// Ground / landscape
+(function addGroundFeatures() {
+  // Main ground plane (asphalt/concrete campus)
+  var groundMat = new THREE.MeshStandardMaterial({color:0x2a2a2e, roughness:0.9, metalness:0.02});
+  var ground = new THREE.Mesh(new THREE.BoxGeometry(80, 50, 0.06), groundMat);
+  ground.position.set(30, 12, -0.03);
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // Road markings between buildings
+  var markMat = new THREE.MeshStandardMaterial({color:0xcccc55, roughness:0.7});
+  for (var rm = 0; rm < 8; rm++) {
+    var mark = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.15, 0.01), markMat);
+    mark.position.set(24 + rm * 2.2, -2, 0.01);
+    scene.add(mark);
+  }
+
+  // Parking spots near building 1
+  var parkMat = new THREE.MeshStandardMaterial({color:0x555555, roughness:0.8});
+  for (var pk = 0; pk < 4; pk++) {
+    var parkLine = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.5, 0.01), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.7}));
+    parkLine.position.set(B1X + 2 + pk * 2.5, B1Y - 3.5, 0.01);
+    scene.add(parkLine);
+  }
+  // Parking spots near building 2
+  for (var pk2 = 0; pk2 < 4; pk2++) {
+    var parkLine2 = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.5, 0.01), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.7}));
+    parkLine2.position.set(B2X + 2 + pk2 * 2.5, B2Y - 3.5, 0.01);
+    scene.add(parkLine2);
+  }
+
+  // Trees / landscaping between buildings
+  var trunkMat = new THREE.MeshStandardMaterial({color:0x5a3a1a, roughness:0.8});
+  var leafMat = new THREE.MeshStandardMaterial({color:0x2a7a3a, roughness:0.8});
+  var treePositions = [
+    [B1X + BW + 2, B1Y + 3], [B1X + BW + 2, B1Y + BD - 3],
+    [B2X - 2, B2Y + 3], [B2X - 2, B2Y + BD - 3],
+    [30, -3], [30, BD + 3],
+  ];
+  treePositions.forEach(function(tp) {
+    var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 1.5, 6), trunkMat);
+    trunk.position.set(tp[0], tp[1], 0.75);
+    scene.add(trunk);
+    var canopy = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8, 6), leafMat);
+    canopy.position.set(tp[0], tp[1], 2.0);
+    scene.add(canopy);
+  });
+
+  // Benches
+  var benchMat = new THREE.MeshStandardMaterial({color:0x6a4a2a, roughness:0.7});
+  var benchMetal = new THREE.MeshStandardMaterial({color:0x555555, metalness:0.5});
+  [30, 32].forEach(function(bx2) {
+    // Seat
+    var seat = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.4, 0.05), benchMat);
+    seat.position.set(bx2, -2, 0.4);
+    scene.add(seat);
+    // Legs
+    var leg1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.38), benchMetal);
+    leg1.position.set(bx2 - 0.6, -2, 0.19);
+    scene.add(leg1);
+    var leg2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.38), benchMetal);
+    leg2.position.set(bx2 + 0.6, -2, 0.19);
+    scene.add(leg2);
+  });
+})();
 
 // Add interior decoration to all building floors
 (function addAllInteriors() {
