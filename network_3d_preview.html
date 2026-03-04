@@ -314,7 +314,7 @@
   <div class="bb-item">Ket noi: <span class="bb-val" id="bb-links">0</span></div>
   <div class="bb-item">|</div>
   <div class="bb-item">Tong chi phi: <span class="bb-val" id="bb-cost">$0</span></div>
-  <div class="bb-item" style="margin-left:auto">Drag: Xoay | Scroll: Zoom | Right-drag: Pan | Click: Chi tiet</div>
+  <div class="bb-item" style="margin-left:auto">Drag: Xoay | Scroll: Zoom | Right-drag: Pan | WASD: Di chuyen | R: Reset | Click: Chi tiet</div>
 </div>
 
 <!-- CANVAS -->
@@ -867,6 +867,429 @@ function makeSmallLabel(text, x, y, z, color) {
 }
 
 // =====================================================================
+// INTERIOR FURNITURE & ROOM FACTORIES
+// =====================================================================
+
+// -- DESK --
+function createDesk(w, d, h, color) {
+  w = w || 1.6; d = d || 0.8; h = h || 0.45;
+  color = color || 0x5c3d2e;
+  var g = new THREE.Group();
+  // Table top
+  var topGeo = new THREE.BoxGeometry(w, d, 0.04);
+  var topMat = new THREE.MeshStandardMaterial({color:color, roughness:0.6, metalness:0.1});
+  var top = new THREE.Mesh(topGeo, topMat);
+  top.position.set(0, 0, h);
+  top.castShadow = true;
+  g.add(top);
+  // 4 Legs
+  var legGeo = new THREE.CylinderGeometry(0.025, 0.025, h, 6);
+  var legMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.5, metalness:0.4});
+  var offsets = [[-w/2+0.06, -d/2+0.06], [w/2-0.06, -d/2+0.06], [-w/2+0.06, d/2-0.06], [w/2-0.06, d/2-0.06]];
+  offsets.forEach(function(o) {
+    var leg = new THREE.Mesh(legGeo, legMat);
+    leg.position.set(o[0], o[1], h/2);
+    g.add(leg);
+  });
+  return g;
+}
+
+// -- OFFICE CHAIR --
+function createChair(color) {
+  color = color || 0x1a1a2e;
+  var g = new THREE.Group();
+  // Seat
+  var seatGeo = new THREE.BoxGeometry(0.4, 0.4, 0.06);
+  var seatMat = new THREE.MeshStandardMaterial({color:color, roughness:0.7});
+  var seat = new THREE.Mesh(seatGeo, seatMat);
+  seat.position.set(0, 0, 0.35);
+  g.add(seat);
+  // Backrest
+  var backGeo = new THREE.BoxGeometry(0.38, 0.04, 0.35);
+  var back = new THREE.Mesh(backGeo, seatMat);
+  back.position.set(0, 0.2, 0.55);
+  g.add(back);
+  // Pole
+  var poleGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.32, 6);
+  var poleMat = new THREE.MeshStandardMaterial({color:0x555555, metalness:0.6, roughness:0.4});
+  var pole = new THREE.Mesh(poleGeo, poleMat);
+  pole.position.set(0, 0, 0.16);
+  g.add(pole);
+  // Base star (5 legs)
+  for (var i = 0; i < 5; i++) {
+    var angle = (i / 5) * Math.PI * 2;
+    var armGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.2, 4);
+    var arm = new THREE.Mesh(armGeo, poleMat);
+    arm.position.set(Math.cos(angle) * 0.1, Math.sin(angle) * 0.1, 0.02);
+    arm.rotation.z = Math.PI / 2;
+    arm.rotation.y = angle;
+    g.add(arm);
+    // Wheel
+    var wheelGeo = new THREE.SphereGeometry(0.025, 6, 4);
+    var wheel = new THREE.Mesh(wheelGeo, new THREE.MeshStandardMaterial({color:0x222222}));
+    wheel.position.set(Math.cos(angle) * 0.18, Math.sin(angle) * 0.18, 0.02);
+    g.add(wheel);
+  }
+  return g;
+}
+
+// -- NETWORK RACK / CABINET --
+function createRack(color) {
+  color = color || 0x1a1a2a;
+  var g = new THREE.Group();
+  // Cabinet body
+  var bodyGeo = new THREE.BoxGeometry(0.6, 0.5, 1.5);
+  var bodyMat = new THREE.MeshStandardMaterial({color:color, roughness:0.5, metalness:0.4});
+  var body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.set(0, 0, 0.75);
+  body.castShadow = true;
+  g.add(body);
+  // Front panel (dark)
+  var panelGeo = new THREE.BoxGeometry(0.55, 0.01, 1.3);
+  var panelMat = new THREE.MeshStandardMaterial({color:0x0a0a15, roughness:0.8});
+  var panel = new THREE.Mesh(panelGeo, panelMat);
+  panel.position.set(0, -0.26, 0.75);
+  g.add(panel);
+  // Blinking LEDs on front
+  for (var i = 0; i < 8; i++) {
+    var ledGeo = new THREE.SphereGeometry(0.015, 4, 4);
+    var ledColor = [0x00ff00, 0x00ff00, 0x00aaff, 0x00ff00, 0xffaa00, 0x00ff00, 0x00ff00, 0x00aaff][i];
+    var led = new THREE.Mesh(ledGeo, new THREE.MeshBasicMaterial({color:ledColor}));
+    led.position.set(-0.15 + (i % 4) * 0.1, -0.27, 0.35 + Math.floor(i / 4) * 0.2);
+    g.add(led);
+  }
+  // Ventilation slots on top
+  for (var j = 0; j < 3; j++) {
+    var slotGeo = new THREE.BoxGeometry(0.35, 0.25, 0.01);
+    var slotMat = new THREE.MeshStandardMaterial({color:0x0d0d1a, roughness:0.9});
+    var slot = new THREE.Mesh(slotGeo, slotMat);
+    slot.position.set(-0.12 + j * 0.12, 0, 1.5);
+    g.add(slot);
+  }
+  return g;
+}
+
+// -- PRINTER --
+function createPrinter(color) {
+  color = color || 0xe8e8e8;
+  var g = new THREE.Group();
+  var bodyGeo = new THREE.BoxGeometry(0.5, 0.4, 0.2);
+  var bodyMat = new THREE.MeshStandardMaterial({color:color, roughness:0.6});
+  var body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.set(0, 0, 0.1);
+  g.add(body);
+  // Paper tray
+  var trayGeo = new THREE.BoxGeometry(0.35, 0.15, 0.01);
+  var trayMat = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.9});
+  var tray = new THREE.Mesh(trayGeo, trayMat);
+  tray.position.set(0, -0.15, 0.21);
+  tray.rotation.x = -0.15;
+  g.add(tray);
+  // Control panel
+  var cpGeo = new THREE.BoxGeometry(0.15, 0.02, 0.06);
+  var cpMat = new THREE.MeshBasicMaterial({color:0x2266ff});
+  var cp = new THREE.Mesh(cpGeo, cpMat);
+  cp.position.set(0.12, -0.21, 0.18);
+  g.add(cp);
+  var led = new THREE.Mesh(new THREE.SphereGeometry(0.012, 4, 4), new THREE.MeshBasicMaterial({color:0x00ff00}));
+  led.position.set(-0.15, -0.21, 0.18);
+  g.add(led);
+  return g;
+}
+
+// -- GLASS PARTITION WALL --
+function createPartition(length, height, color) {
+  height = height || 3.2;
+  color = color || 0x88ccff;
+  var g = new THREE.Group();
+  // Glass panel
+  var glassGeo = new THREE.BoxGeometry(0.06, length, height);
+  var glassMat = new THREE.MeshStandardMaterial({
+    color:color, transparent:true, opacity:0.12,
+    roughness:0.1, metalness:0.3, side:THREE.DoubleSide, depthWrite:false
+  });
+  var glass = new THREE.Mesh(glassGeo, glassMat);
+  glass.position.set(0, 0, height / 2);
+  g.add(glass);
+  // Top metal frame
+  var frameGeo = new THREE.BoxGeometry(0.08, length, 0.04);
+  var frameMat = new THREE.MeshStandardMaterial({color:0x888899, roughness:0.4, metalness:0.6});
+  var frameTop = new THREE.Mesh(frameGeo, frameMat);
+  frameTop.position.set(0, 0, height);
+  g.add(frameTop);
+  // Bottom frame
+  var frameBot = new THREE.Mesh(frameGeo, frameMat);
+  frameBot.position.set(0, 0, 0.02);
+  g.add(frameBot);
+  return g;
+}
+
+// -- CEILING LIGHT --
+function createCeilingLight(length) {
+  length = length || 3;
+  var g = new THREE.Group();
+  var tubeGeo = new THREE.BoxGeometry(0.12, length, 0.03);
+  var tubeMat = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.7});
+  var tube = new THREE.Mesh(tubeGeo, tubeMat);
+  g.add(tube);
+  // Housing
+  var housingGeo = new THREE.BoxGeometry(0.18, length, 0.04);
+  var housingMat = new THREE.MeshStandardMaterial({color:0xcccccc, roughness:0.6});
+  var housing = new THREE.Mesh(housingGeo, housingMat);
+  housing.position.set(0, 0, 0.035);
+  g.add(housing);
+  return g;
+}
+
+// -- WHITEBOARD --
+function createWhiteboard() {
+  var g = new THREE.Group();
+  // Board surface
+  var boardGeo = new THREE.BoxGeometry(0.04, 1.8, 1.0);
+  var boardMat = new THREE.MeshStandardMaterial({color:0xf0f0f0, roughness:0.3, metalness:0.05});
+  var board = new THREE.Mesh(boardGeo, boardMat);
+  board.position.set(0, 0, 0.5);
+  g.add(board);
+  // Frame
+  var frameMat = new THREE.MeshStandardMaterial({color:0x888888, roughness:0.4, metalness:0.5});
+  var ftGeo = new THREE.BoxGeometry(0.05, 1.85, 0.04);
+  var ft = new THREE.Mesh(ftGeo, frameMat);
+  ft.position.set(0, 0, 1.02);
+  g.add(ft);
+  var fb = new THREE.Mesh(ftGeo, frameMat);
+  fb.position.set(0, 0, -0.02);
+  g.add(fb);
+  // Marker tray
+  var trayGeo = new THREE.BoxGeometry(0.08, 0.6, 0.03);
+  var tray = new THREE.Mesh(trayGeo, frameMat);
+  tray.position.set(0.03, 0, -0.04);
+  g.add(tray);
+  return g;
+}
+
+// -- PLANT POT --
+function createPlant() {
+  var g = new THREE.Group();
+  // Pot
+  var potGeo = new THREE.CylinderGeometry(0.1, 0.08, 0.18, 8);
+  var potMat = new THREE.MeshStandardMaterial({color:0x8B4513, roughness:0.8});
+  var pot = new THREE.Mesh(potGeo, potMat);
+  pot.position.set(0, 0, 0.09);
+  g.add(pot);
+  // Soil
+  var soilGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.03, 8);
+  var soilMat = new THREE.MeshStandardMaterial({color:0x3a2a1a, roughness:0.9});
+  var soil = new THREE.Mesh(soilGeo, soilMat);
+  soil.position.set(0, 0, 0.19);
+  g.add(soil);
+  // Leaves (3 sphere clusters)
+  var leafMat = new THREE.MeshStandardMaterial({color:0x228B22, roughness:0.7});
+  var leafPositions = [[0, 0, 0.35], [0.06, 0.04, 0.42], [-0.05, -0.03, 0.38]];
+  leafPositions.forEach(function(p) {
+    var lGeo = new THREE.SphereGeometry(0.09 + Math.random() * 0.04, 6, 5);
+    var leaf = new THREE.Mesh(lGeo, leafMat);
+    leaf.position.set(p[0], p[1], p[2]);
+    g.add(leaf);
+  });
+  return g;
+}
+
+// -- PHONE --
+function createPhone() {
+  var g = new THREE.Group();
+  var baseGeo = new THREE.BoxGeometry(0.2, 0.18, 0.04);
+  var baseMat = new THREE.MeshStandardMaterial({color:0x1a1a25, roughness:0.6});
+  var base = new THREE.Mesh(baseGeo, baseMat);
+  base.position.set(0, 0, 0.02);
+  g.add(base);
+  // Screen
+  var scrGeo = new THREE.BoxGeometry(0.1, 0.06, 0.005);
+  var scrMat = new THREE.MeshBasicMaterial({color:0x1155cc});
+  var scr = new THREE.Mesh(scrGeo, scrMat);
+  scr.position.set(-0.02, -0.04, 0.045);
+  g.add(scr);
+  // Handset
+  var hsGeo = new THREE.BoxGeometry(0.04, 0.14, 0.025);
+  var hs = new THREE.Mesh(hsGeo, baseMat);
+  hs.position.set(0.06, 0, 0.055);
+  g.add(hs);
+  return g;
+}
+
+// -- CABLE TRAY (ceiling) --
+function createCableTray(length) {
+  length = length || 5;
+  var g = new THREE.Group();
+  var trayGeo = new THREE.BoxGeometry(0.3, length, 0.05);
+  var trayMat = new THREE.MeshStandardMaterial({color:0x555566, roughness:0.5, metalness:0.5});
+  var tray = new THREE.Mesh(trayGeo, trayMat);
+  g.add(tray);
+  // Side rails
+  var railGeo = new THREE.BoxGeometry(0.02, length, 0.08);
+  var r1 = new THREE.Mesh(railGeo, trayMat);
+  r1.position.set(-0.16, 0, 0);
+  g.add(r1);
+  var r2 = new THREE.Mesh(railGeo, trayMat);
+  r2.position.set(0.16, 0, 0);
+  g.add(r2);
+  // Cables inside tray
+  var colors = [0x0088ff, 0xff4444, 0x44ff44, 0xffaa00, 0xff44ff];
+  for (var i = 0; i < 4; i++) {
+    var cGeo = new THREE.CylinderGeometry(0.02, 0.02, length, 5);
+    var cMat = new THREE.MeshStandardMaterial({color:colors[i % colors.length], roughness:0.6});
+    var cab = new THREE.Mesh(cGeo, cMat);
+    cab.position.set(-0.09 + i * 0.06, 0, -0.01);
+    g.add(cab);
+  }
+  return g;
+}
+
+// -- WATER COOLER --
+function createWaterCooler() {
+  var g = new THREE.Group();
+  var bodyGeo = new THREE.CylinderGeometry(0.12, 0.14, 0.7, 8);
+  var bodyMat = new THREE.MeshStandardMaterial({color:0xdddddd, roughness:0.5});
+  var body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.set(0, 0, 0.35);
+  g.add(body);
+  // Water jug top
+  var jugGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.3, 8);
+  var jugMat = new THREE.MeshStandardMaterial({color:0x88ccff, transparent:true, opacity:0.5, roughness:0.1});
+  var jug = new THREE.Mesh(jugGeo, jugMat);
+  jug.position.set(0, 0, 0.85);
+  g.add(jug);
+  return g;
+}
+
+// =====================================================================
+// ADD FLOOR INTERIOR
+// =====================================================================
+function addFloorInterior(group, bx, by, fz, vlans, bldgNum) {
+  var BW = 22, BD = 16, FH = 4.5;
+  var partColor = bldgNum === 1 ? 0x4488cc : 0x44cc88;
+
+  // --- Room partition walls between VLAN zones ---
+  // Each VLAN zone starts at bx + 3 + vi * 6.5, zones are ~6.5 wide
+  for (var pi = 1; pi < vlans.length; pi++) {
+    var wallX = bx + 3 + pi * 6.5 - 0.7;
+    var partition = createPartition(BD - 3, 3.5, partColor);
+    partition.position.set(wallX, by + BD / 2, fz + 0.05);
+    group.add(partition);
+  }
+
+  // --- Corridor wall (separating front corridor from offices) ---
+  var corridorWall = createPartition(BW - 2, 2.5, 0x88aacc);
+  corridorWall.position.set(bx + BW / 2, by + 1.8, fz + 0.05);
+  corridorWall.rotation.z = Math.PI / 2;
+  group.add(corridorWall);
+
+  // --- Desks and chairs for each PC ---
+  var floorKey = 'B' + bldgNum + '_F' + (Math.round(fz / FH) + 1);
+  var floorPCs = FLOOR_PCS[floorKey];
+  if (floorPCs) {
+    floorPCs.forEach(function(pc, i) {
+      var vi = 0;
+      for (var v = 0; v < vlans.length; v++) {
+        if (pc.vlan === vlans[v]) { vi = v; break; }
+      }
+      var vlx = bx + 3 + vi * 6.5;
+      var pi2 = i % PCS_PER_VLAN;
+      var localVi = vlans.indexOf(pc.vlan);
+      var vlanPCsBefore = 0;
+      for (var vv = 0; vv < localVi; vv++) {
+        vlanPCsBefore += PCS_PER_VLAN;
+      }
+      var inVlanIdx = i - vlanPCsBefore;
+      var px = bx + 3 + localVi * 6.5 + (inVlanIdx % 2) * 2.8;
+      var py = by + 3 + Math.floor(inVlanIdx / 2) * 3.5;
+
+      // Desk under each PC
+      var vColor = VLAN_DB[pc.vlan] ? VLAN_DB[pc.vlan].color : 0x5c3d2e;
+      var deskColor = 0x5c3d2e + (pc.vlan % 3) * 0x080808;
+      var desk = createDesk(1.8, 0.9, 0.42, deskColor);
+      desk.position.set(px, py, fz + 0.05);
+      group.add(desk);
+
+      // Chair behind desk
+      var chairColors = [0x1a1a3e, 0x2a1a1a, 0x1a2a1a, 0x2a2a1a];
+      var chair = createChair(chairColors[inVlanIdx % 4]);
+      chair.position.set(px, py + 0.8, fz + 0.05);
+      group.add(chair);
+
+      // Phone on desk (every other PC)
+      if (inVlanIdx % 2 === 0) {
+        var phone = createPhone();
+        phone.position.set(px + 0.6, py - 0.2, fz + 0.47);
+        group.add(phone);
+      }
+    });
+  }
+
+  // --- Network rack near the access switch (center of floor) ---
+  var rack = createRack(bldgNum === 1 ? 0x101830 : 0x103018);
+  rack.position.set(bx + BW / 2 + 2, by + BD / 2, fz + 0.05);
+  group.add(rack);
+
+  // --- Printer (one per VLAN zone) ---
+  vlans.forEach(function(vid, vi) {
+    var printer = createPrinter(vi % 2 === 0 ? 0xe8e8e8 : 0xddddee);
+    var printerX = bx + 3 + vi * 6.5 + 4.5;
+    printer.position.set(printerX, by + BD - 3, fz + 0.05);
+    group.add(printer);
+    var pLabel = makeSmallLabel('Printer', printerX, by + BD - 3, fz + 0.5, '#aaa');
+    pLabel.scale.set(1.2, 0.3, 1);
+    group.add(pLabel);
+  });
+
+  // --- Whiteboard on back wall (one per VLAN zone) ---
+  vlans.forEach(function(vid, vi) {
+    var wb = createWhiteboard();
+    var wbX = bx + 3 + vi * 6.5 + 1.5;
+    wb.position.set(wbX, by + BD - 0.5, fz + 1.5);
+    group.add(wb);
+  });
+
+  // --- Ceiling lights ---
+  for (var li = 0; li < 3; li++) {
+    var cl = createCeilingLight(BD - 4);
+    cl.position.set(bx + 4 + li * 7, by + BD / 2, fz + FH - 0.15);
+    group.add(cl);
+  }
+
+  // --- Cable tray along ceiling (center spine) ---
+  var cTray = createCableTray(BD - 2);
+  cTray.position.set(bx + BW / 2, by + BD / 2, fz + FH - 0.25);
+  group.add(cTray);
+
+  // --- Plants at corners ---
+  var plantPositions = [
+    [bx + 1, by + 1], [bx + BW - 1, by + 1],
+    [bx + 1, by + BD - 1], [bx + BW - 1, by + BD - 1]
+  ];
+  plantPositions.forEach(function(pp) {
+    var plant = createPlant();
+    plant.position.set(pp[0], pp[1], fz + 0.05);
+    group.add(plant);
+  });
+
+  // --- Water cooler (near corridor) ---
+  var wc = createWaterCooler();
+  wc.position.set(bx + BW - 2, by + 2.5, fz + 0.05);
+  group.add(wc);
+
+  // --- Room labels (door signs) for each VLAN zone ---
+  vlans.forEach(function(vid, vi) {
+    var vInfo = VLAN_DB[vid];
+    if (vInfo) {
+      var signX = bx + 3 + vi * 6.5 + 2.5;
+      var roomLabel = makeSmallLabel(vInfo.name, signX, by + 2.1, fz + 2.8, '#' + vInfo.color.toString(16).padStart(6, '0'));
+      roomLabel.scale.set(2, 0.5, 1);
+      group.add(roomLabel);
+    }
+  });
+}
+
+// =====================================================================
 // SCENE LAYOUT
 // =====================================================================
 var B1X = 0, B1Y = 0;
@@ -1173,6 +1596,22 @@ buildDMZ();
 buildServerRoom();
 buildInternet();
 
+// Add interior decoration to all building floors
+(function addAllInteriors() {
+  var allFloors = [
+    {key:'B1_F1', z:0, bx:B1X, by:B1Y, vlans:[10,11,12], bldg:1},
+    {key:'B1_F2', z:FH, bx:B1X, by:B1Y, vlans:[12,13,14], bldg:1},
+    {key:'B1_F3', z:FH*2, bx:B1X, by:B1Y, vlans:[13,15,16], bldg:1},
+    {key:'B2_F1', z:0, bx:B2X, by:B2Y, vlans:[20,21,22], bldg:2},
+    {key:'B2_F2', z:FH, bx:B2X, by:B2Y, vlans:[23,24,25], bldg:2},
+    {key:'B2_F3', z:FH*2, bx:B2X, by:B2Y, vlans:[20,23,26], bldg:2},
+  ];
+  allFloors.forEach(function(fl) {
+    var group = floorGroups[fl.key];
+    if (group) addFloorInterior(group, fl.bx, fl.by, fl.z, fl.vlans, fl.bldg);
+  });
+})();
+
 document.getElementById('bb-devices').textContent = allMeshes.length;
 document.getElementById('bb-links').textContent = linkCount;
 
@@ -1451,11 +1890,51 @@ window.addEventListener('mousemove', function(e) {
   prevMouse = {x: e.clientX, y: e.clientY};
   handleHover(e);
 });
-canvasEl.addEventListener('wheel', function(e) {
-  spherical.r = Math.max(15, Math.min(150, spherical.r + e.deltaY * 0.06));
+// Enhanced wheel zoom with deltaMode normalization
+function handleWheelZoom(e) {
+  var delta = e.deltaY;
+  // Normalize based on deltaMode: 0=pixels, 1=lines, 2=pages
+  if (e.deltaMode === 1) delta *= 36;
+  else if (e.deltaMode === 2) delta *= 800;
+  spherical.r = Math.max(8, Math.min(200, spherical.r + delta * 0.07));
   updateCamera();
   e.preventDefault();
+  e.stopPropagation();
+}
+canvasEl.addEventListener('wheel', handleWheelZoom, {passive: false});
+container.addEventListener('wheel', handleWheelZoom, {passive: false});
+
+// Touch support for mobile
+var touchStart = null, pinchDist = 0;
+canvasEl.addEventListener('touchstart', function(e) {
+  if (e.touches.length === 1) {
+    touchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+  } else if (e.touches.length === 2) {
+    var dx = e.touches[0].clientX - e.touches[1].clientX;
+    var dy = e.touches[0].clientY - e.touches[1].clientY;
+    pinchDist = Math.sqrt(dx * dx + dy * dy);
+  }
+  e.preventDefault();
 }, {passive: false});
+canvasEl.addEventListener('touchmove', function(e) {
+  if (e.touches.length === 1 && touchStart) {
+    var dx = e.touches[0].clientX - touchStart.x;
+    var dy = e.touches[0].clientY - touchStart.y;
+    spherical.theta -= dx * 0.008;
+    spherical.phi = Math.max(0.1, Math.min(1.5, spherical.phi + dy * 0.008));
+    touchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    updateCamera();
+  } else if (e.touches.length === 2) {
+    var dx = e.touches[0].clientX - e.touches[1].clientX;
+    var dy = e.touches[0].clientY - e.touches[1].clientY;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    spherical.r = Math.max(8, Math.min(200, spherical.r - (dist - pinchDist) * 0.15));
+    pinchDist = dist;
+    updateCamera();
+  }
+  e.preventDefault();
+}, {passive: false});
+canvasEl.addEventListener('touchend', function() { touchStart = null; });
 
 // Click to select
 canvasEl.addEventListener('click', function(e) {
@@ -1542,10 +2021,30 @@ function handleResize() {
 window.addEventListener('resize', handleResize);
 setTimeout(handleResize, 100);
 
+// Keyboard controls: WASD/Arrows for pan, +/- for zoom, Escape to close panels
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.getElementById('search-results').style.display = 'none';
-    closeDetail();
+  // Don't capture keys when typing in search
+  if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+    if (e.key === 'Escape') { document.activeElement.blur(); }
+    return;
+  }
+  var step = 2;
+  switch (e.key) {
+    case 'w': case 'W': case 'ArrowUp':    panOffset.y += step; updateCamera(); e.preventDefault(); break;
+    case 's': case 'S': case 'ArrowDown':  panOffset.y -= step; updateCamera(); e.preventDefault(); break;
+    case 'a': case 'A': case 'ArrowLeft':  panOffset.x -= step; updateCamera(); e.preventDefault(); break;
+    case 'd': case 'D': case 'ArrowRight': panOffset.x += step; updateCamera(); e.preventDefault(); break;
+    case '+': case '=': spherical.r = Math.max(8, spherical.r - 5); updateCamera(); break;
+    case '-': case '_': spherical.r = Math.min(200, spherical.r + 5); updateCamera(); break;
+    case 'r': case 'R': // Reset view
+      spherical = {theta: -0.5, phi: 0.85, r: 65};
+      panOffset = {x: 30, y: 12};
+      updateCamera();
+      break;
+    case 'Escape':
+      document.getElementById('search-results').style.display = 'none';
+      closeDetail();
+      break;
   }
 });
 </script>
