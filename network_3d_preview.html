@@ -160,6 +160,7 @@ container.appendChild(renderer.domElement);
 var scene=new THREE.Scene();
 scene.fog=new THREE.FogExp2(0x060a14,0.003);
 var camera=new THREE.PerspectiveCamera(45,W/H,0.1,800);
+camera.up.set(0,0,1);
 
 scene.add(new THREE.AmbientLight(0x2a3050,2.0));
 var dl=new THREE.DirectionalLight(0xfff8f0,1.0);
@@ -202,7 +203,7 @@ function makeRouter(color,s){
   s=s||1;var g=new THREE.Group();
   var body=new THREE.Mesh(new THREE.BoxGeometry(1.6*s,.35*s,.4*s),new THREE.MeshStandardMaterial({color:color,roughness:0.3,metalness:0.5}));
   body.castShadow=true;g.add(body);
-  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02*s,0.02*s,0.6*s,6),new THREE.MeshStandardMaterial({color:0x444444}));ant.position.set(i*0.6*s,0,0.5*s);g.add(ant);}
+  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02*s,0.02*s,0.6*s,6),new THREE.MeshStandardMaterial({color:0x444444}));ant.rotation.x=Math.PI/2;ant.position.set(i*0.6*s,0,0.5*s);g.add(ant);}
   for(var j=0;j<3;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.025*s,6,4),new THREE.MeshBasicMaterial({color:j<2?0x00ff00:0xffaa00}));led.position.set(-0.3*s+j*0.2*s,-0.18*s,0.1*s);g.add(led);}
   return g;
 }
@@ -234,7 +235,7 @@ function makePC(s){
 function makeAP(s){
   s=s||1;var g=new THREE.Group();
   var body=new THREE.Mesh(new THREE.CylinderGeometry(0.18*s,0.2*s,0.05*s,12),new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.4}));
-  body.castShadow=true;g.add(body);
+  body.rotation.x=Math.PI/2;body.castShadow=true;g.add(body);
   var led=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.05*s,12),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));
   led.position.z=0.03*s;g.add(led);
   for(var i=1;i<=2;i++){var ring=new THREE.Mesh(new THREE.RingGeometry(0.1*s*i,0.1*s*i+0.008*s,16),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:0.25/i,side:THREE.DoubleSide}));ring.position.z=0.04*s+0.04*s*i;g.add(ring);}
@@ -263,7 +264,7 @@ function makeGenerator(s){
   var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,1.0*s,1.1*s),new THREE.MeshStandardMaterial({color:0x4a4a2a,roughness:0.6}));
   body.position.z=0.55*s;body.castShadow=true;g.add(body);
   var exhaust=new THREE.Mesh(new THREE.CylinderGeometry(0.06*s,0.06*s,0.4*s,8),new THREE.MeshStandardMaterial({color:0x555555}));
-  exhaust.position.set(0.7*s,0,1.3*s);g.add(exhaust);
+  exhaust.rotation.x=Math.PI/2;exhaust.position.set(0.7*s,0,1.3*s);g.add(exhaust);
   return g;
 }
 function makeCRAC(s){
@@ -279,7 +280,7 @@ function makeChiller(s){
   s=s||1;var g=new THREE.Group();
   var body=new THREE.Mesh(new THREE.BoxGeometry(2.5*s,1.2*s,1.0*s),new THREE.MeshStandardMaterial({color:0xcccccc,roughness:0.5}));
   body.position.z=0.5*s;body.castShadow=true;g.add(body);
-  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.3*s,0.3*s,0.05*s,16),new THREE.MeshStandardMaterial({color:0x444444}));fan.position.set(-0.5*s+i*1.0*s,0,1.03*s);g.add(fan);}
+  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.3*s,0.3*s,0.05*s,16),new THREE.MeshStandardMaterial({color:0x444444}));fan.rotation.x=Math.PI/2;fan.position.set(-0.5*s+i*1.0*s,0,1.03*s);g.add(fan);}
   return g;
 }
 function makeRack(){
@@ -528,7 +529,7 @@ function buildUnderground(){
   // Manholes
   var mm=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.8});
   [{x:-15,y:3},{x:15,y:3},{x:W1_X+5,y:3},{x:W2_X-5,y:3}].forEach(function(p){
-    var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.12,16),mm);mh.position.set(p.x,p.y,0.06);scene.add(mh);
+    var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.12,16),mm);mh.rotation.x=Math.PI/2;mh.position.set(p.x,p.y,0.06);scene.add(mh);
   });
   sLabel("40G FIBER UNDERGROUND",{x:0,y:3,z:-0.3},"#3b82f6",3);
 }
@@ -548,7 +549,7 @@ function buildGround(){
   var trM=new THREE.MeshStandardMaterial({color:0x5c3a1a,roughness:0.8});
   var lfM=new THREE.MeshStandardMaterial({color:0x1a5a1a,roughness:0.7});
   [{x:-28,y:14},{x:-18,y:17},{x:18,y:14},{x:28,y:17},{x:-38,y:-17},{x:38,y:-17},{x:-55,y:10},{x:55,y:10}].forEach(function(p){
-    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.25,1.8,6),trM);tr.position.set(p.x,p.y,0.9);tr.castShadow=true;scene.add(tr);
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.25,1.8,6),trM);tr.rotation.x=Math.PI/2;tr.position.set(p.x,p.y,0.9);tr.castShadow=true;scene.add(tr);
     var lf=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,6),lfM);lf.position.set(p.x,p.y,2.5);lf.castShadow=true;scene.add(lf);
   });
 
@@ -559,7 +560,7 @@ function buildGround(){
   // Street lights
   var pm=new THREE.MeshStandardMaterial({color:0x666666,metalness:0.5});
   [{x:-22,y:-14},{x:0,y:-14},{x:22,y:-14}].forEach(function(p){
-    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,4.5,6),pm);pole.position.set(p.x,p.y,2.25);scene.add(pole);
+    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,4.5,6),pm);pole.rotation.x=Math.PI/2;pole.position.set(p.x,p.y,2.25);scene.add(pole);
     var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.25,8,6),new THREE.MeshBasicMaterial({color:0xffee88}));lamp.position.set(p.x,p.y,4.7);scene.add(lamp);
     var lt=new THREE.PointLight(0xffee88,0.25,12);lt.position.set(p.x,p.y,4.5);scene.add(lt);
   });
@@ -672,7 +673,7 @@ function toggleFloor(building,floor){
 // =====================================================================
 // CAMERA CONTROLS
 // =====================================================================
-var camTheta=Math.PI/4,camPhi=Math.PI/3,camDist=80;
+var camTheta=Math.PI/4,camPhi=Math.PI/4,camDist=120;
 var camTarget=new THREE.Vector3(0,0,5);
 var isDrag=false,isRDrag=false,lmx=0,lmy=0;
 
@@ -730,7 +731,7 @@ document.addEventListener("keydown",function(e){
   if(e.key==="s"||e.key==="S"){camTarget.addScaledVector(dir,-spd);updateCamera();}
   if(e.key==="a"||e.key==="A"){camTarget.addScaledVector(rt,-spd);updateCamera();}
   if(e.key==="d"||e.key==="D"){camTarget.addScaledVector(rt,spd);updateCamera();}
-  if(e.key==="r"||e.key==="R"){camTheta=Math.PI/4;camPhi=Math.PI/3;camDist=80;camTarget.set(0,0,5);updateCamera();}
+  if(e.key==="r"||e.key==="R"){camTheta=Math.PI/4;camPhi=Math.PI/4;camDist=120;camTarget.set(0,0,5);updateCamera();}
   if(e.key==="Escape")closeDetail();
   if(e.key==="1")toggleFloor("admin");
   if(e.key==="2")toggleFloor("work1");
