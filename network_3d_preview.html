@@ -9,44 +9,41 @@
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
 #header{position:fixed;top:0;left:0;right:0;z-index:200;height:44px;background:rgba(6,10,20,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:14px}
-#header .logo{font-size:11px;font-weight:700;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;font-family:monospace}
+#header .logo{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;font-family:monospace}
 #header .sub{font-size:11px;color:var(--muted)}
-.search-box{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px}
+.search-box{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px}
 .search-box:focus-within{border-color:var(--accent)}
 .search-box input{background:none;border:none;outline:none;color:var(--text);font-size:12px;width:180px}
 .search-box input::placeholder{color:var(--dim)}
-#sidebar{position:fixed;left:0;top:44px;bottom:0;width:270px;z-index:150;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+#sidebar{position:fixed;left:0;top:44px;bottom:0;width:260px;z-index:150;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
 .sb-section{padding:10px 12px;border-bottom:1px solid var(--border)}
-.sb-title{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;font-family:monospace;cursor:pointer;user-select:none}
-.sb-title .badge{font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,0.15);color:var(--accent);font-weight:400;margin-left:4px}
+.sb-title{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-family:monospace;cursor:pointer;user-select:none}
+.sb-title .badge{font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,.15);color:var(--accent);font-weight:400;margin-left:4px}
 .dev-item{display:flex;align-items:center;gap:6px;padding:4px 8px;margin:1px 0;border-radius:4px;cursor:pointer;font-size:11px;transition:background .15s}
-.dev-item:hover{background:rgba(255,255,255,0.06)}
-.dev-item.sel{background:rgba(0,212,255,0.12)}
+.dev-item:hover{background:rgba(255,255,255,.06)}
+.dev-item.sel{background:rgba(0,212,255,.12)}
 #detail-panel{position:fixed;right:0;top:44px;bottom:0;width:340px;z-index:150;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:none;padding:16px}
 #detail-panel p{font-size:12px;margin:3px 0;line-height:1.5}
 #detail-panel p b{color:var(--muted);margin-right:4px}
 #legend{position:fixed;right:12px;bottom:40px;z-index:100;background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-width:180px;font-size:10px}
-#legend h3{font-size:9px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;font-family:monospace}
+#legend h3{font-size:9px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:monospace}
 .leg-item{display:flex;align-items:center;gap:6px;margin-bottom:3px}
 .leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 .leg-line{width:18px;height:3px;border-radius:2px;flex-shrink:0}
-.leg-cat{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:5px 0 2px;font-family:monospace}
-#tooltip{position:fixed;z-index:300;background:rgba(6,10,20,0.95);border:1px solid var(--accent);border-radius:6px;padding:6px 10px;font-size:11px;pointer-events:none;display:none;color:var(--accent);font-weight:600}
-#bottom-bar{position:fixed;bottom:0;left:270px;right:0;height:28px;z-index:100;background:rgba(6,10,20,0.95);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:14px;font-size:10px;color:var(--muted);font-family:monospace}
+.leg-cat{font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:5px 0 2px;font-family:monospace}
+#tooltip{position:fixed;z-index:300;background:rgba(6,10,20,.95);border:1px solid var(--accent);border-radius:6px;padding:6px 10px;font-size:11px;pointer-events:none;display:none;color:var(--accent);font-weight:600}
+#bottom-bar{position:fixed;bottom:0;left:260px;right:0;height:28px;z-index:100;background:rgba(6,10,20,.95);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:14px;font-size:10px;color:var(--muted);font-family:monospace}
 #bottom-bar .v{color:var(--text)}
-#canvas-container{position:fixed;left:270px;top:44px;right:0;bottom:28px}
+#canvas-container{position:fixed;left:260px;top:44px;right:0;bottom:28px}
 canvas{display:block}
-#search-results{position:fixed;top:44px;right:60px;z-index:250;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:260px;overflow-y:auto;width:280px;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+#search-results{position:fixed;top:44px;right:60px;z-index:250;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:260px;overflow-y:auto;width:280px;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
 <div id="header">
   <div class="logo">HA TANG MANG 3D</div>
   <div class="sub">Enterprise Campus Network &middot; UPS Kep A/B &middot; Cap Ngam &middot; VRRP + HA</div>
-  <div class="search-box">
-    <span style="color:var(--muted)">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="Tim thiet bi, IP, model...">
-  </div>
+  <div class="search-box"><span style="color:var(--muted)">&#128269;</span><input type="text" id="searchInput" placeholder="Tim thiet bi, IP, model..."></div>
 </div>
 <div id="search-results"></div>
 <div id="sidebar">
@@ -78,78 +75,69 @@ canvas{display:block}
   <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>May phat dien</div>
   <div class="leg-item"><div class="leg-dot" style="background:#38bdf8"></div>He thong tan nhiet</div>
   <div class="leg-cat">Cap ngam</div>
-  <div class="leg-item"><div class="leg-line" style="background:#3b82f6;opacity:0.5;border:1px dashed #3b82f6"></div>Ong luon cap ngam</div>
+  <div class="leg-item"><div class="leg-line" style="background:#3b82f6;opacity:.5;border:1px dashed #3b82f6"></div>Ong luon cap ngam</div>
 </div>
 <div id="tooltip"></div>
 <div id="bottom-bar">
-  <span>Thiet bi: <span class="v" id="bb-devices">0</span></span>
-  <span>|</span>
-  <span>Ket noi: <span class="v" id="bb-links">0</span></span>
-  <span>|</span>
-  <span>Toa nha: <span class="v">3</span></span>
-  <span>|</span>
+  <span>Thiet bi: <span class="v" id="bb-devices">0</span></span><span>|</span>
+  <span>Ket noi: <span class="v" id="bb-links">0</span></span><span>|</span>
+  <span>Toa nha: <span class="v">3</span></span><span>|</span>
   <span>UPS: <span class="v">Kep A/B</span></span>
   <span style="margin-left:auto">Drag:Xoay | Scroll:Zoom | Right-drag:Pan | R:Reset | DblClick:Chi tiet</span>
 </div>
 <div id="canvas-container"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 "use strict";
-// =====================================================================
-// DEVICE DATABASE — Matching Design.txt
-// =====================================================================
-var DEVICES={
-ISP1:{type:"ISP Router",building:"admin",name:"ISP 1 (Duong chinh)",model:"ISP Primary Fiber",ip:"WAN (ISP1)"},
-ISP2:{type:"ISP Router",building:"admin",name:"ISP 2 (Duong phu)",model:"ISP Secondary Fiber",ip:"WAN (ISP2)"},
-LTE_Modem:{type:"Router",building:"admin",name:"LTE/4G Modem",model:"Industrial LTE Modem",ip:"DHCP(4G)",role:"OOB cho Console Server"},
-MikroTik1:{type:"Router",building:"admin",name:"MikroTik CCR2216 #1",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.1",role:"VRRP Master",ha:"VRRP",ports:"1xGbE+12x25G+2x100G",features:"BGP,OSPF,MPLS,NAT"},
-MikroTik2:{type:"Router",building:"admin",name:"MikroTik CCR2216 #2",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.2",role:"VRRP Backup",ha:"VRRP",ports:"1xGbE+12x25G+2x100G",features:"BGP,OSPF,MPLS,NAT"},
-ConsoleServer:{type:"Server",building:"admin",name:"Console Server",model:"Opengear IM7200",ip:"192.168.250.1",role:"OOB Management",ports:"48xSerial+2xGbE+4G"},
-FortiGate1:{type:"Firewall",building:"admin",name:"FortiGate 600F #1",model:"FortiGate 600F",ip:"10.0.1.1",role:"HA Primary",ha:"Active/Passive",throughput:"36Gbps FW",features:"IPS,AV,WebFilter,SSL-VPN"},
-FortiGate2:{type:"Firewall",building:"admin",name:"FortiGate 600F #2",model:"FortiGate 600F",ip:"10.0.1.2",role:"HA Secondary",ha:"Active/Passive",throughput:"36Gbps FW",features:"IPS,AV,WebFilter,SSL-VPN"},
-CoreSW1:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #1",model:"Catalyst 9500-48Y4C",ip:"10.10.10.1",role:"StackWise Virtual #1",ha:"StackWise",ports:"48x25G+4x100G",features:"L3 OSPF/BGP,HSRP,QoS,MACsec"},
-CoreSW2:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #2",model:"Catalyst 9500-48Y4C",ip:"10.10.10.2",role:"StackWise Virtual #2",ha:"StackWise",ports:"48x25G+4x100G",features:"L3 OSPF/BGP,HSRP,QoS,MACsec"},
-ROSEServer1:{type:"Server",building:"admin",name:"ROSE Server #1",model:"Dell PowerEdge R760",ip:"10.50.50.10",role:"AD Primary,DHCP,DNS,File Server",capacity:"512GB DDR5,8x1.92TB NVMe"},
-ROSEServer2:{type:"Server",building:"admin",name:"ROSE Server #2",model:"Dell PowerEdge R760",ip:"10.50.50.11",role:"AD Secondary,DNS,Backup,Monitor",capacity:"512GB DDR5,8x1.92TB NVMe"},
-ADServer:{type:"Server",building:"admin",name:"AD/DHCP/DNS",model:"VM tren ROSE Server",ip:"10.50.50.20",role:"Domain Services"},
-CentralNVR:{type:"Server",building:"admin",name:"Central NVR/VMS",model:"Milestone XProtect Corporate",ip:"10.60.60.10",role:"Camera Recording,Analytics",capacity:"64GB DDR4"},
-StorageNAS:{type:"Server",building:"admin",name:"Storage NAS",model:"Synology HD6500 (60-bay)",ip:"10.60.60.11",role:"Camera Storage,Backup,iSCSI",capacity:"60x18TB=1.08PB Raw"},
-DistSW1:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #1",model:"Catalyst 9300-48UXM",ip:"10.10.20.1",role:"IDF1 Distribution #1",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
-DistSW2:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #2",model:"Catalyst 9300-48UXM",ip:"10.10.20.2",role:"IDF1 Distribution #2",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
-NVRLocal1:{type:"Server",building:"work1",name:"NVR Local (Toa 1)",model:"Dahua NVR608H-32-XI",ip:"10.60.61.10",role:"Local Camera Recording"},
-DistSW3:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #3",model:"Catalyst 9300-48UXM",ip:"10.10.30.1",role:"IDF2 Distribution #3",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
-DistSW4:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #4",model:"Catalyst 9300-48UXM",ip:"10.10.30.2",role:"IDF2 Distribution #4",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
-NVRLocal2:{type:"Server",building:"work2",name:"NVR Local (Toa 2)",model:"Dahua NVR608H-32-XI",ip:"10.60.62.10",role:"Local Camera Recording"},
-UPS_A:{type:"UPS",building:"admin",name:"UPS Feed A",model:"APC Symmetra PX 40kW",ip:"10.99.1.10",redundancy:"N+1",features:"Online Double-Conversion"},
-UPS_B:{type:"UPS",building:"admin",name:"UPS Feed B",model:"APC Symmetra PX 40kW",ip:"10.99.1.11",redundancy:"N+1",features:"Online Double-Conversion"},
-Generator:{type:"Generator",building:"admin",name:"May Phat Dien",model:"Cummins C150D5 (150kVA)",features:"ATS tu dong,Diesel,Runtime 24h"},
-CRAC1:{type:"CRAC",building:"admin",name:"CRAC Unit #1",model:"Schneider InRow RD 30kW",cooling:"In-Row,Chilled Water"},
-CRAC2:{type:"CRAC",building:"admin",name:"CRAC Unit #2",model:"Schneider InRow RD 30kW",cooling:"N+1 Redundancy"},
-RoofChiller:{type:"Chiller",building:"admin",name:"Roof Chiller",model:"Daikin EWAD-C 120kW",cooling:"Water-Cooled,Variable Speed"}
+
+/* ============ DEVICE DATABASE ============ */
+var DEVICES = {
+ISP1:{type:"ISP Router",building:"isp",name:"ISP 1 (Duong chinh)",model:"ISP Primary Fiber",ip:"WAN1"},
+ISP2:{type:"ISP Router",building:"isp",name:"ISP 2 (Duong phu)",model:"ISP Secondary Fiber",ip:"WAN2"},
+LTE_Modem:{type:"Router",building:"isp",name:"LTE/4G Modem",model:"Industrial LTE Modem",ip:"DHCP(4G)",role:"OOB cho Console Server"},
+MikroTik1:{type:"Router",building:"admin",name:"MikroTik CCR2216 #1",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.1",role:"VRRP Master",ha:"VRRP"},
+MikroTik2:{type:"Router",building:"admin",name:"MikroTik CCR2216 #2",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.2",role:"VRRP Backup",ha:"VRRP"},
+ConsoleServer:{type:"Server",building:"admin",name:"Console Server (OOB)",model:"Opengear IM7200",ip:"192.168.250.1",role:"Out-of-Band Mgmt",ports:"48xSerial+2xGbE+4G"},
+FortiGate1:{type:"Firewall",building:"admin",name:"FortiGate 600F #1",model:"FortiGate 600F",ip:"10.0.1.1",role:"HA Primary",ha:"Active/Passive",throughput:"36Gbps"},
+FortiGate2:{type:"Firewall",building:"admin",name:"FortiGate 600F #2",model:"FortiGate 600F",ip:"10.0.1.2",role:"HA Secondary",ha:"Active/Passive",throughput:"36Gbps"},
+CoreSW1:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #1",model:"Catalyst 9500-48Y4C",ip:"10.10.10.1",role:"StackWise Virtual #1",ha:"StackWise",ports:"48x25G+4x100G"},
+CoreSW2:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #2",model:"Catalyst 9500-48Y4C",ip:"10.10.10.2",role:"StackWise Virtual #2",ha:"StackWise",ports:"48x25G+4x100G"},
+ROSEServer1:{type:"Server",building:"admin",name:"ROSE Server #1",model:"Dell PowerEdge R760",ip:"10.50.50.10",role:"AD Primary,DHCP,DNS"},
+ROSEServer2:{type:"Server",building:"admin",name:"ROSE Server #2",model:"Dell PowerEdge R760",ip:"10.50.50.11",role:"AD Secondary,Backup,Monitor"},
+ADServer:{type:"Server",building:"admin",name:"AD/DHCP/DNS VM",model:"VM tren ROSE Server",ip:"10.50.50.20",role:"Domain Services"},
+CentralNVR:{type:"Server",building:"admin",name:"Central NVR/VMS",model:"Milestone XProtect Corporate",ip:"10.60.60.10",role:"Camera Recording,Analytics"},
+StorageNAS:{type:"Server",building:"admin",name:"Storage NAS",model:"Synology HD6500 (60-bay)",ip:"10.60.60.11",role:"Camera Storage,Backup,iSCSI",capacity:"60x18TB=1.08PB"},
+UPS_A:{type:"UPS",building:"power",name:"UPS Feed A",model:"APC Symmetra PX 40kW",ip:"10.99.1.10"},
+UPS_B:{type:"UPS",building:"power",name:"UPS Feed B",model:"APC Symmetra PX 40kW",ip:"10.99.1.11"},
+Generator:{type:"Generator",building:"power",name:"May Phat Dien",model:"Cummins C150D5 (150kVA)"},
+CRAC1:{type:"CRAC",building:"power",name:"CRAC Unit #1",model:"Schneider InRow RD 30kW"},
+CRAC2:{type:"CRAC",building:"power",name:"CRAC Unit #2",model:"Schneider InRow RD 30kW"},
+RoofChiller:{type:"Chiller",building:"power",name:"Roof Chiller",model:"Daikin EWAD-C 120kW"},
+DistSW1:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #1",model:"Catalyst 9300-48UXM",ip:"10.10.20.1",role:"IDF1 Distribution"},
+DistSW2:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #2",model:"Catalyst 9300-48UXM",ip:"10.10.20.2",role:"IDF1 Distribution"},
+NVRLocal1:{type:"Server",building:"work1",name:"NVR Local (Toa 1)",model:"Dahua NVR608H-32-XI",ip:"10.60.61.10"},
+DistSW3:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #3",model:"Catalyst 9300-48UXM",ip:"10.10.30.1",role:"IDF2 Distribution"},
+DistSW4:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #4",model:"Catalyst 9300-48UXM",ip:"10.10.30.2",role:"IDF2 Distribution"},
+NVRLocal2:{type:"Server",building:"work2",name:"NVR Local (Toa 2)",model:"Dahua NVR608H-32-XI",ip:"10.60.62.10"}
 };
 
-// Generate access switches per floor (Design.txt: Cisco 9200L)
-var FLOORS_B1=[{key:1,label:"Tang 1",z:0,sw:2,pcs:6,aps:2,cctv:3},{key:2,label:"Tang 2",z:5,sw:2,pcs:6,aps:2,cctv:3},{key:3,label:"Tang 3",z:10,sw:2,pcs:6,aps:2,cctv:3}];
-var FLOORS_B2=[{key:1,label:"Tang 1",z:0,sw:2,pcs:6,aps:2,cctv:3},{key:2,label:"Tang 2",z:5,sw:2,pcs:6,aps:2,cctv:3},{key:3,label:"Tang 3",z:10,sw:2,pcs:6,aps:2,cctv:3}];
-FLOORS_B1.forEach(function(f){
-  for(var i=1;i<=f.sw;i++){var k="W1_F"+f.key+"_AccSW"+i;DEVICES[k]={type:"Access Switch",building:"work1",name:"Cisco 9200L (T"+f.key+" Toa1 #"+i+")",model:"Catalyst 9200L-48P-4X",ip:"10.10."+f.key+"0."+(i),ports:"48x1G PoE++4x10G",floor:f.key};}
-  for(var j=1;j<=f.pcs;j++){DEVICES["W1_F"+f.key+"_PC"+j]={type:"PC",building:"work1",name:"PC T"+f.key+" Toa1 #"+j,floor:f.key};}
-  for(var a=1;a<=f.aps;a++){DEVICES["W1_F"+f.key+"_AP"+a]={type:"AP",building:"work1",name:"Wi-Fi AP T"+f.key+" Toa1 #"+a,model:"Cisco Meraki MR46",floor:f.key};}
-  for(var c=1;c<=f.cctv;c++){DEVICES["W1_F"+f.key+"_CCTV"+c]={type:"CCTV",building:"work1",name:"CCTV T"+f.key+" Toa1 #"+c,model:"Dahua IPC-HFW5442H",floor:f.key};}
-});
-FLOORS_B2.forEach(function(f){
-  for(var i=1;i<=f.sw;i++){var k="W2_F"+f.key+"_AccSW"+i;DEVICES[k]={type:"Access Switch",building:"work2",name:"Cisco 9200L (T"+f.key+" Toa2 #"+i+")",model:"Catalyst 9200L-48P-4X",ip:"10.20."+f.key+"0."+(i),ports:"48x1G PoE++4x10G",floor:f.key};}
-  for(var j=1;j<=f.pcs;j++){DEVICES["W2_F"+f.key+"_PC"+j]={type:"PC",building:"work2",name:"PC T"+f.key+" Toa2 #"+j,floor:f.key};}
-  for(var a=1;a<=f.aps;a++){DEVICES["W2_F"+f.key+"_AP"+a]={type:"AP",building:"work2",name:"Wi-Fi AP T"+f.key+" Toa2 #"+a,model:"Cisco Meraki MR46",floor:f.key};}
-  for(var c=1;c<=f.cctv;c++){DEVICES["W2_F"+f.key+"_CCTV"+c]={type:"CCTV",building:"work2",name:"CCTV T"+f.key+" Toa2 #"+c,model:"Dahua IPC-HFW5442H",floor:f.key};}
+/* Floor devices for work buildings */
+var FLOORS=[{key:1,label:"Tang 1",sw:2,pcs:6,aps:2,cctv:3},{key:2,label:"Tang 2",sw:2,pcs:6,aps:2,cctv:3},{key:3,label:"Tang 3",sw:2,pcs:6,aps:2,cctv:3}];
+["work1","work2"].forEach(function(b){
+  var pre=b==="work1"?"W1":"W2";
+  FLOORS.forEach(function(f){
+    for(var i=1;i<=f.sw;i++) DEVICES[pre+"_F"+f.key+"_AccSW"+i]={type:"Access Switch",building:b,name:"Cisco 9200L (T"+f.key+" "+pre+" #"+i+")",model:"Catalyst 9200L-48P-4X",ip:"10."+(b==="work1"?"10":"20")+"."+f.key+"0."+i,floor:f.key};
+    for(var j=1;j<=f.pcs;j++) DEVICES[pre+"_F"+f.key+"_PC"+j]={type:"PC",building:b,name:"PC T"+f.key+" "+pre+" #"+j,floor:f.key};
+    for(var a=1;a<=f.aps;a++) DEVICES[pre+"_F"+f.key+"_AP"+a]={type:"AP",building:b,name:"Wi-Fi AP T"+f.key+" "+pre+" #"+a,model:"Cisco Meraki MR46",floor:f.key};
+    for(var c=1;c<=f.cctv;c++) DEVICES[pre+"_F"+f.key+"_CCTV"+c]={type:"CCTV",building:b,name:"CCTV T"+f.key+" "+pre+" #"+c,model:"Dahua IPC-HFW5442H",floor:f.key};
+  });
 });
 
-// =====================================================================
-// THREE.JS INIT
-// =====================================================================
+/* ============ THREE.JS SETUP ============ */
 var container=document.getElementById("canvas-container");
-var W=container.clientWidth,H=container.clientHeight;
-var renderer=new THREE.WebGLRenderer({antialias:true});
+var W=container.clientWidth, H=container.clientHeight;
+var renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(W,H);
 renderer.shadowMap.enabled=true;
@@ -158,471 +146,611 @@ renderer.setClearColor(0x060a14);
 container.appendChild(renderer.domElement);
 
 var scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x060a14,0.0008);
-var camera=new THREE.PerspectiveCamera(50,W/H,0.1,1200);
+scene.fog=new THREE.FogExp2(0x060a14,0.0006);
+var camera=new THREE.PerspectiveCamera(50,W/H,0.5,2000);
 camera.up.set(0,0,1);
 
-scene.add(new THREE.AmbientLight(0x2a3050,2.0));
-var dl=new THREE.DirectionalLight(0xfff8f0,1.0);
-dl.position.set(60,-40,80);dl.castShadow=true;
-dl.shadow.mapSize.set(2048,2048);
-dl.shadow.camera.left=-150;dl.shadow.camera.right=150;
-dl.shadow.camera.top=120;dl.shadow.camera.bottom=-120;
-dl.shadow.camera.far=400;
-scene.add(dl);
-scene.add(new THREE.DirectionalLight(0xddeeff,0.4)).position.set(-40,50,50);
-scene.add(new THREE.HemisphereLight(0x4466aa,0x111122,0.6));
+/* Lighting */
+scene.add(new THREE.AmbientLight(0x4466aa,1.5));
+var sun=new THREE.DirectionalLight(0xfff8f0,1.2);
+sun.position.set(80,60,120);sun.castShadow=true;
+sun.shadow.mapSize.set(4096,4096);
+sun.shadow.camera.left=-200;sun.shadow.camera.right=200;
+sun.shadow.camera.top=200;sun.shadow.camera.bottom=-200;
+sun.shadow.camera.far=500;
+scene.add(sun);
+var fill=new THREE.DirectionalLight(0xddeeff,0.5);fill.position.set(-60,-40,80);scene.add(fill);
+scene.add(new THREE.HemisphereLight(0x4466aa,0x111122,0.8));
 
-var grid=new THREE.GridHelper(200,100,0x1a2540,0x0d1520);
-grid.rotation.x=Math.PI/2;grid.position.z=-0.1;scene.add(grid);
+/* Grid */
+var grid=new THREE.GridHelper(400,200,0x1a2540,0x0d1520);
+grid.rotation.x=Math.PI/2;grid.position.z=-0.05;scene.add(grid);
 
-// Global state
+/* State */
 var allMeshes=[],deviceMeshMap={},floorGroups=[],connectionLines=[];
-var COL={core:0x2563eb,dist:0x16a34a,acc:0x0ea5e9,router:0xf97316,fw:0xeab308,server:0xa855f7,pc:0x94a3b8,isp:0xfbbf24,ups:0x22d3ee,cool:0x38bdf8,gen:0xf59e0b,cctv:0xef4444,ap:0x8b5cf6};
+var C={core:0x2563eb,dist:0x16a34a,acc:0x0ea5e9,router:0xf97316,fw:0xeab308,server:0xa855f7,pc:0x94a3b8,isp:0xfbbf24,ups:0x22d3ee,cool:0x38bdf8,gen:0xf59e0b,cctv:0xef4444,ap:0x8b5cf6};
 
 function addD(mesh,key,fg){
   mesh.userData.deviceKey=key;
   mesh.traverse(function(c){if(c.isMesh)c.userData.deviceKey=key;});
-  deviceMeshMap[key]=mesh;
-  allMeshes.push(mesh);
-  if(fg){fg.add(mesh);}else{scene.add(mesh);}
+  deviceMeshMap[key]=mesh;allMeshes.push(mesh);
+  if(fg)fg.add(mesh);else scene.add(mesh);
   return mesh;
 }
 
-// =====================================================================
-// 3D MODEL FACTORIES
-// =====================================================================
+/* ============ 3D MODEL FACTORIES (LARGE, DETAILED) ============ */
+function Mat(color,r,m){return new THREE.MeshStandardMaterial({color:color,roughness:r||0.4,metalness:m||0.5});}
+
 function makeSwitch(color,s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,.4*s,.3*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.6}));
-  body.castShadow=true;g.add(body);
-  for(var i=0;i<8;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:i%3===2?0xffaa00:0x00ff00}));led.position.set(-0.8*s+i*0.22*s,-0.21*s,0.12*s);g.add(led);}
-  return g;
-}
-function makeRouter(color,s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(1.6*s,.35*s,.4*s),new THREE.MeshStandardMaterial({color:color,roughness:0.3,metalness:0.5}));
-  body.castShadow=true;g.add(body);
-  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02*s,0.02*s,0.6*s,6),new THREE.MeshStandardMaterial({color:0x444444}));ant.rotation.x=Math.PI/2;ant.position.set(i*0.6*s,0,0.5*s);g.add(ant);}
-  for(var j=0;j<3;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.025*s,6,4),new THREE.MeshBasicMaterial({color:j<2?0x00ff00:0xffaa00}));led.position.set(-0.3*s+j*0.2*s,-0.18*s,0.1*s);g.add(led);}
-  return g;
-}
-function makeFirewall(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.0*s,.45*s,.45*s),new THREE.MeshStandardMaterial({color:0xeab308,roughness:0.3,metalness:0.5}));
-  body.castShadow=true;g.add(body);
-  var shield=new THREE.Mesh(new THREE.CircleGeometry(0.15*s,6),new THREE.MeshBasicMaterial({color:0xff4444,side:THREE.DoubleSide}));
-  shield.position.set(0,-0.23*s,0.08*s);g.add(shield);
-  return g;
-}
-function makeServer(color,s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.6*s,0.9*s,1.6*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.5}));
-  body.position.z=0.8*s;body.castShadow=true;g.add(body);
-  for(var i=0;i<4;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:i%2===0?0x00ff00:0x0088ff}));led.position.set(0.2*s,-0.46*s,0.3*s+i*0.3*s);g.add(led);}
-  return g;
-}
-function makePC(s){
-  s=s||1;var g=new THREE.Group();
-  var mon=new THREE.Mesh(new THREE.BoxGeometry(0.5*s,0.04*s,0.35*s),new THREE.MeshStandardMaterial({color:0x222222}));
-  mon.position.z=0.4*s;mon.castShadow=true;g.add(mon);
-  var scr=new THREE.Mesh(new THREE.PlaneGeometry(0.42*s,0.28*s),new THREE.MeshBasicMaterial({color:0x1a5588,transparent:true,opacity:0.6,side:THREE.DoubleSide}));
-  scr.position.set(0,-0.025*s,0.4*s);scr.rotation.x=Math.PI/2;g.add(scr);
-  var tower=new THREE.Mesh(new THREE.BoxGeometry(0.15*s,0.25*s,0.3*s),new THREE.MeshStandardMaterial({color:0x2a2a30}));
-  tower.position.set(0.35*s,0,0.15*s);g.add(tower);
-  return g;
-}
-function makeAP(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.18*s,0.2*s,0.05*s,12),new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.4}));
-  body.rotation.x=Math.PI/2;body.castShadow=true;g.add(body);
-  var led=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.05*s,12),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));
-  led.position.z=0.03*s;g.add(led);
-  for(var i=1;i<=2;i++){var ring=new THREE.Mesh(new THREE.RingGeometry(0.1*s*i,0.1*s*i+0.008*s,16),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:0.25/i,side:THREE.DoubleSide}));ring.position.z=0.04*s+0.04*s*i;g.add(ring);}
-  return g;
-}
-function makeCCTV(s){
-  s=s||1;var g=new THREE.Group();
-  var mount=new THREE.Mesh(new THREE.BoxGeometry(0.05*s,0.05*s,0.12*s),new THREE.MeshStandardMaterial({color:0x555555}));g.add(mount);
-  var cam=new THREE.Mesh(new THREE.CylinderGeometry(0.04*s,0.06*s,0.15*s,8),new THREE.MeshStandardMaterial({color:0xdddddd}));
-  cam.rotation.x=Math.PI/2;cam.position.set(0,-0.1*s,-0.02*s);g.add(cam);
-  var ir=new THREE.Mesh(new THREE.RingGeometry(0.015*s,0.03*s,8),new THREE.MeshBasicMaterial({color:0xff2200,side:THREE.DoubleSide}));
-  ir.position.set(0,-0.18*s,-0.02*s);ir.rotation.x=Math.PI/2;g.add(ir);
-  return g;
-}
-function makeUPS(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.8*s,0.5*s,1.6*s),new THREE.MeshStandardMaterial({color:0x1a3a4a,roughness:0.4}));
-  body.position.z=0.8*s;body.castShadow=true;g.add(body);
-  var scr=new THREE.Mesh(new THREE.BoxGeometry(0.2*s,0.01*s,0.12*s),new THREE.MeshBasicMaterial({color:0x22d3ee}));
-  scr.position.set(0,-0.26*s,1.4*s);g.add(scr);
-  for(var i=0;i<3;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:0x00ff00}));led.position.set(-0.15*s+i*0.12*s,-0.26*s,1.2*s);g.add(led);}
-  return g;
-}
-function makeGenerator(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,1.0*s,1.1*s),new THREE.MeshStandardMaterial({color:0x4a4a2a,roughness:0.6}));
-  body.position.z=0.55*s;body.castShadow=true;g.add(body);
-  var exhaust=new THREE.Mesh(new THREE.CylinderGeometry(0.06*s,0.06*s,0.4*s,8),new THREE.MeshStandardMaterial({color:0x555555}));
-  exhaust.rotation.x=Math.PI/2;exhaust.position.set(0.7*s,0,1.3*s);g.add(exhaust);
-  return g;
-}
-function makeCRAC(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.7*s,0.5*s,1.7*s),new THREE.MeshStandardMaterial({color:0xddddee,roughness:0.4}));
-  body.position.z=0.85*s;body.castShadow=true;g.add(body);
-  for(var i=0;i<3;i++){var vent=new THREE.Mesh(new THREE.BoxGeometry(0.5*s,0.01*s,0.1*s),new THREE.MeshStandardMaterial({color:0x888899}));vent.position.set(0,-0.26*s,0.3*s+i*0.4*s);g.add(vent);}
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.25*s,0.015*s,0.15*s),new THREE.MeshBasicMaterial({color:0x38bdf8}));
-  panel.position.set(0,-0.26*s,1.5*s);g.add(panel);
-  return g;
-}
-function makeChiller(s){
-  s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.5*s,1.2*s,1.0*s),new THREE.MeshStandardMaterial({color:0xcccccc,roughness:0.5}));
-  body.position.z=0.5*s;body.castShadow=true;g.add(body);
-  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.3*s,0.3*s,0.05*s,16),new THREE.MeshStandardMaterial({color:0x444444}));fan.rotation.x=Math.PI/2;fan.position.set(-0.5*s+i*1.0*s,0,1.03*s);g.add(fan);}
-  return g;
-}
-function makeRack(){
-  var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.5,1.5),new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:0.5,metalness:0.4}));
-  body.position.z=0.75;body.castShadow=true;g.add(body);
-  for(var i=0;i<6;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.012,4,4),new THREE.MeshBasicMaterial({color:[0x00ff00,0x00aaff,0xffaa00][i%3]}));led.position.set(-0.15+(i%3)*0.1,-0.26,0.3+Math.floor(i/3)*0.3);g.add(led);}
+  var body=new THREE.Mesh(new THREE.BoxGeometry(4*s,0.7*s,0.5*s),Mat(color,0.3,0.6));body.castShadow=true;g.add(body);
+  /* Front panel */
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(3.6*s,0.02*s,0.35*s),Mat(0x111111));panel.position.set(0,-0.36*s,0);g.add(panel);
+  /* Ports */
+  for(var i=0;i<12;i++){var port=new THREE.Mesh(new THREE.BoxGeometry(0.2*s,0.02*s,0.12*s),Mat(0x333344));port.position.set(-1.5*s+i*0.28*s,-0.37*s,0.08*s);g.add(port);}
+  /* LEDs */
+  for(var j=0;j<6;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.04*s,6,4),new THREE.MeshBasicMaterial({color:j%3===2?0xffaa00:0x00ff44}));led.position.set(-1.2*s+j*0.4*s,-0.37*s,-0.12*s);g.add(led);}
   return g;
 }
 
-// =====================================================================
-// CABLE UTILITIES
-// =====================================================================
+function makeRouter(color,s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(3*s,0.6*s,0.7*s),Mat(color,0.3,0.5));body.castShadow=true;g.add(body);
+  /* Antennas */
+  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.03*s,0.03*s,1.0*s,6),Mat(0x444444));ant.rotation.x=Math.PI/2;ant.position.set(i*1.1*s,0,0.8*s);g.add(ant);}
+  /* Panel */
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(2.6*s,0.02*s,0.5*s),Mat(0x111111));panel.position.set(0,-0.32*s,0);g.add(panel);
+  for(var j=0;j<4;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.04*s,6,4),new THREE.MeshBasicMaterial({color:j<3?0x00ff44:0xffaa00}));led.position.set(-0.5*s+j*0.3*s,-0.33*s,0.15*s);g.add(led);}
+  return g;
+}
+
+function makeFirewall(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(3.5*s,0.8*s,0.7*s),Mat(0xeab308,0.25,0.5));body.castShadow=true;g.add(body);
+  /* Shield emblem */
+  var shield=new THREE.Mesh(new THREE.CircleGeometry(0.2*s,6),new THREE.MeshBasicMaterial({color:0xff4444,side:THREE.DoubleSide}));shield.position.set(0,-0.42*s,0.1*s);g.add(shield);
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(3*s,0.02*s,0.5*s),Mat(0x222200));panel.position.set(0,-0.42*s,0);g.add(panel);
+  for(var j=0;j<5;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.035*s,6,4),new THREE.MeshBasicMaterial({color:j<4?0x00ff44:0xff4444}));led.position.set(-0.6*s+j*0.28*s,-0.43*s,-0.15*s);g.add(led);}
+  return g;
+}
+
+function makeServer(color,s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.0*s,1.6*s,2.8*s),Mat(color,0.35,0.5));body.position.z=1.4*s;body.castShadow=true;g.add(body);
+  /* Drive bays */
+  for(var r=0;r<3;r++)for(var c=0;c<2;c++){var bay=new THREE.Mesh(new THREE.BoxGeometry(0.02*s,0.3*s,0.35*s),Mat(0x333344));bay.position.set(-0.52*s,-0.4*s+c*0.6*s,0.5*s+r*0.7*s);g.add(bay);}
+  /* LEDs */
+  for(var i=0;i<4;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:i%2===0?0x00ff44:0x0088ff}));led.position.set(-0.52*s,0.5*s,0.4*s+i*0.5*s);g.add(led);}
+  return g;
+}
+
+function makeRack(s){
+  s=s||1;var g=new THREE.Group();
+  /* Frame */
+  var frame=new THREE.Mesh(new THREE.BoxGeometry(1.2*s,0.8*s,3.0*s),Mat(0x1a1a2e,0.5,0.4));frame.position.z=1.5*s;frame.castShadow=true;g.add(frame);
+  /* Rails */
+  for(var i=-1;i<=1;i+=2){var rail=new THREE.Mesh(new THREE.BoxGeometry(0.04*s,0.04*s,2.8*s),Mat(0x555566));rail.position.set(i*0.5*s,0,1.5*s);g.add(rail);}
+  /* Blanking panels */
+  for(var j=0;j<6;j++){var bp=new THREE.Mesh(new THREE.BoxGeometry(1.0*s,0.02*s,0.3*s),Mat(0x222233));bp.position.set(0,-0.42*s,0.4*s+j*0.42*s);g.add(bp);}
+  for(var k=0;k<8;k++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,4,4),new THREE.MeshBasicMaterial({color:[0x00ff44,0x0088ff,0xffaa00][k%3]}));led.position.set(-0.3*s+(k%4)*0.15*s,-0.43*s,0.5*s+Math.floor(k/4)*0.8*s);g.add(led);}
+  return g;
+}
+
+function makePC(s){
+  s=s||1;var g=new THREE.Group();
+  /* Monitor */
+  var mon=new THREE.Mesh(new THREE.BoxGeometry(0.9*s,0.06*s,0.6*s),Mat(0x222222));mon.position.z=0.7*s;mon.castShadow=true;g.add(mon);
+  /* Screen glow */
+  var scr=new THREE.Mesh(new THREE.PlaneGeometry(0.75*s,0.48*s),new THREE.MeshBasicMaterial({color:0x1a5588,transparent:true,opacity:0.5,side:THREE.DoubleSide}));scr.position.set(0,-0.035*s,0.7*s);scr.rotation.x=Math.PI/2;g.add(scr);
+  /* Stand */
+  var stand=new THREE.Mesh(new THREE.BoxGeometry(0.15*s,0.06*s,0.25*s),Mat(0x333333));stand.position.z=0.35*s;g.add(stand);
+  /* Tower */
+  var tower=new THREE.Mesh(new THREE.BoxGeometry(0.25*s,0.45*s,0.55*s),Mat(0x2a2a30));tower.position.set(0.7*s,0,0.28*s);tower.castShadow=true;g.add(tower);
+  /* Tower LED */
+  var tled=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,4,4),new THREE.MeshBasicMaterial({color:0x00ff44}));tled.position.set(0.7*s,-0.24*s,0.45*s);g.add(tled);
+  return g;
+}
+
+function makeAP(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.35*s,0.4*s,0.08*s,16),Mat(0xeeeeee,0.3));body.rotation.x=Math.PI/2;body.castShadow=true;g.add(body);
+  var led=new THREE.Mesh(new THREE.RingGeometry(0.04*s,0.1*s,16),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));led.position.z=0.05*s;g.add(led);
+  for(var i=1;i<=3;i++){var ring=new THREE.Mesh(new THREE.RingGeometry(0.15*s*i,0.15*s*i+0.01*s,20),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:0.2/i,side:THREE.DoubleSide}));ring.position.z=0.06*s+0.06*s*i;g.add(ring);}
+  return g;
+}
+
+function makeCCTV(s){
+  s=s||1;var g=new THREE.Group();
+  var mount=new THREE.Mesh(new THREE.BoxGeometry(0.08*s,0.08*s,0.2*s),Mat(0x555555));g.add(mount);
+  var arm=new THREE.Mesh(new THREE.BoxGeometry(0.05*s,0.3*s,0.05*s),Mat(0x666666));arm.position.set(0,-0.15*s,-0.05*s);g.add(arm);
+  var cam=new THREE.Mesh(new THREE.CylinderGeometry(0.06*s,0.1*s,0.25*s,8),Mat(0xdddddd));cam.rotation.z=Math.PI/2;cam.position.set(0,-0.3*s,-0.05*s);g.add(cam);
+  var lens=new THREE.Mesh(new THREE.SphereGeometry(0.05*s,8,6),new THREE.MeshBasicMaterial({color:0x111122}));lens.position.set(0,-0.3*s,-0.18*s);g.add(lens);
+  var ir=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.045*s,8),new THREE.MeshBasicMaterial({color:0xff2200,side:THREE.DoubleSide}));ir.position.set(0,-0.44*s,-0.05*s);g.add(ir);
+  return g;
+}
+
+function makeUPS(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.4*s,0.8*s,2.8*s),Mat(0x1a3a4a,0.4));body.position.z=1.4*s;body.castShadow=true;g.add(body);
+  /* Display */
+  var disp=new THREE.Mesh(new THREE.BoxGeometry(0.4*s,0.02*s,0.2*s),new THREE.MeshBasicMaterial({color:0x22d3ee}));disp.position.set(0,-0.42*s,2.4*s);g.add(disp);
+  /* Battery indicators */
+  for(var i=0;i<5;i++){var bar=new THREE.Mesh(new THREE.BoxGeometry(0.06*s,0.02*s,0.15*s),new THREE.MeshBasicMaterial({color:i<4?0x00ff44:0xffaa00}));bar.position.set(-0.2*s+i*0.1*s,-0.42*s,2.1*s);g.add(bar);}
+  return g;
+}
+
+function makeGenerator(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(4*s,1.8*s,1.8*s),Mat(0x4a4a2a,0.6));body.position.z=0.9*s;body.castShadow=true;g.add(body);
+  /* Exhaust */
+  var exh=new THREE.Mesh(new THREE.CylinderGeometry(0.1*s,0.1*s,0.8*s,8),Mat(0x555555));exh.rotation.x=Math.PI/2;exh.position.set(1.2*s,0,2.2*s);g.add(exh);
+  /* Control panel */
+  var cp=new THREE.Mesh(new THREE.BoxGeometry(0.6*s,0.02*s,0.4*s),new THREE.MeshBasicMaterial({color:0x446644}));cp.position.set(-1.2*s,-0.92*s,1.5*s);g.add(cp);
+  return g;
+}
+
+function makeCRAC(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.2*s,0.8*s,2.8*s),Mat(0xddddee,0.4));body.position.z=1.4*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<4;i++){var vent=new THREE.Mesh(new THREE.BoxGeometry(0.9*s,0.02*s,0.15*s),Mat(0x888899));vent.position.set(0,-0.42*s,0.5*s+i*0.55*s);g.add(vent);}
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.35*s,0.02*s,0.2*s),new THREE.MeshBasicMaterial({color:0x38bdf8}));panel.position.set(0,-0.42*s,2.5*s);g.add(panel);
+  return g;
+}
+
+function makeChiller(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(4.5*s,2*s,1.6*s),Mat(0xcccccc,0.5));body.position.z=0.8*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.5*s,0.5*s,0.08*s,20),Mat(0x444444));fan.rotation.x=Math.PI/2;fan.position.set(-1*s+i*2*s,0,1.65*s);g.add(fan);}
+  /* Pipes */
+  for(var j=-1;j<=1;j+=2){var pipe=new THREE.Mesh(new THREE.CylinderGeometry(0.08*s,0.08*s,1.0*s,8),Mat(0x3388cc));pipe.rotation.x=Math.PI/2;pipe.position.set(j*1.8*s,0.4*s,0.4*s);g.add(pipe);}
+  return g;
+}
+
+/* Desk */
+function makeDesk(s){
+  s=s||1;var g=new THREE.Group();
+  var top=new THREE.Mesh(new THREE.BoxGeometry(2.0*s,1.0*s,0.06*s),Mat(0x8b6914,0.7,0.1));top.position.z=0.7*s;top.castShadow=true;g.add(top);
+  for(var i=-1;i<=1;i+=2)for(var j=-1;j<=1;j+=2){var leg=new THREE.Mesh(new THREE.BoxGeometry(0.06*s,0.06*s,0.7*s),Mat(0x666666));leg.position.set(i*0.85*s,j*0.4*s,0.35*s);g.add(leg);}
+  return g;
+}
+
+/* Office Chair */
+function makeChair(s){
+  s=s||1;var g=new THREE.Group();
+  var seat=new THREE.Mesh(new THREE.BoxGeometry(0.45*s,0.45*s,0.06*s),Mat(0x1a1a2e));seat.position.z=0.45*s;g.add(seat);
+  var back=new THREE.Mesh(new THREE.BoxGeometry(0.45*s,0.06*s,0.5*s),Mat(0x1a1a2e));back.position.set(0,0.2*s,0.7*s);g.add(back);
+  var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.03*s,0.03*s,0.4*s,6),Mat(0x666666));pole.rotation.x=Math.PI/2;pole.position.z=0.22*s;g.add(pole);
+  return g;
+}
+
+/* ============ CABLE FUNCTIONS ============ */
 function makeCable(p1,p2,color,thick){
-  thick=thick||0.03;color=color||0x00ffcc;
-  var a=p1 instanceof THREE.Vector3?p1:new THREE.Vector3(p1.x,p1.y,p1.z);
-  var b=p2 instanceof THREE.Vector3?p2:new THREE.Vector3(p2.x,p2.y,p2.z);
-  var mid=new THREE.Vector3((a.x+b.x)/2,(a.y+b.y)/2,Math.max(a.z,b.z)+1.2);
+  thick=thick||0.04;color=color||0x00ffcc;
+  var a=p1 instanceof THREE.Vector3?p1.clone():new THREE.Vector3(p1.x,p1.y,p1.z);
+  var b=p2 instanceof THREE.Vector3?p2.clone():new THREE.Vector3(p2.x,p2.y,p2.z);
+  var mid=new THREE.Vector3((a.x+b.x)/2,(a.y+b.y)/2,Math.max(a.z,b.z)+2);
   var curve=new THREE.CatmullRomCurve3([a,mid,b]);
-  var geo=new THREE.TubeGeometry(curve,20,thick,6,false);
-  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.4,transparent:true,opacity:0.8});
-  var mesh=new THREE.Mesh(geo,mat);connectionLines.push(mesh);scene.add(mesh);return mesh;
+  var mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,24,thick,6,false),new THREE.MeshStandardMaterial({color:color,roughness:0.4,transparent:true,opacity:0.85}));
+  connectionLines.push(mesh);scene.add(mesh);return mesh;
 }
+
 function makeUnderground(p1,p2,color,thick){
-  thick=thick||0.06;color=color||0xffaa00;
+  thick=thick||0.08;color=color||0x3b82f6;
   var a=new THREE.Vector3(p1.x,p1.y,p1.z),b=new THREE.Vector3(p2.x,p2.y,p2.z);
-  var d=-1.2;
-  var curve=new THREE.CatmullRomCurve3([a,new THREE.Vector3(a.x,a.y,d),new THREE.Vector3(b.x,b.y,d),b]);
-  var geo=new THREE.TubeGeometry(curve,28,thick,8,false);
-  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.5,transparent:true,opacity:0.65});
-  var mesh=new THREE.Mesh(geo,mat);connectionLines.push(mesh);scene.add(mesh);return mesh;
+  var curve=new THREE.CatmullRomCurve3([a,new THREE.Vector3(a.x,a.y,-2),new THREE.Vector3(b.x,b.y,-2),b]);
+  var mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,32,thick,8,false),new THREE.MeshStandardMaterial({color:color,roughness:0.5,transparent:true,opacity:0.6}));
+  connectionLines.push(mesh);scene.add(mesh);return mesh;
 }
-function makeLabel(txt,pos,color){
+
+function makeLabel(txt,pos,color,scale){
   var c=document.createElement("canvas");c.width=512;c.height=128;
-  var ctx=c.getContext("2d");ctx.fillStyle="rgba(0,0,0,0.65)";ctx.fillRect(0,0,512,128);
-  ctx.fillStyle=color||"#22d3ee";ctx.font="bold 34px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.fillText(txt,256,64);
+  var ctx=c.getContext("2d");ctx.fillStyle="rgba(0,0,0,0.6)";ctx.fillRect(0,0,512,128);
+  ctx.fillStyle=color||"#22d3ee";ctx.font="bold 34px monospace";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(txt,256,64);
   var tex=new THREE.CanvasTexture(c);
   var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
-  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(4,1,1);scene.add(sp);return sp;
+  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(scale||6,(scale||6)*0.25,1);scene.add(sp);return sp;
 }
+
 function sLabel(txt,pos,color,sc){
   var c=document.createElement("canvas");c.width=256;c.height=64;
   var ctx=c.getContext("2d");ctx.clearRect(0,0,256,64);
-  ctx.fillStyle=color||"#a5f3fc";ctx.font="bold 22px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.fillText(txt,128,32);
+  ctx.fillStyle=color||"#a5f3fc";ctx.font="bold 20px monospace";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(txt,128,32);
   var tex=new THREE.CanvasTexture(c);
   var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
-  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(sc||2,(sc||2)*0.25,1);scene.add(sp);return sp;
+  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(sc||3,(sc||3)*0.25,1);scene.add(sp);return sp;
 }
 
-// =====================================================================
-// BUILDING SHELL
-// =====================================================================
-var FH=8,ADMIN_X=0,ADMIN_Y=0,ADMIN_W=44,ADMIN_D=32;
-var W1_X=-80,W1_Y=0,W1_W=36,W1_D=28;
-var W2_X=80,W2_Y=0,W2_W=36,W2_D=28;
-var ADMIN_FLOORS=2,WORK_FLOORS=3;
+/* ============ BUILDING SHELL WITH INTERIORS ============ */
+var FH=8; /* floor height */
+var AX=0,AY=0,AW=40,AD=30; /* Admin building */
+var W1X=-70,W1Y=0,W1W=32,W1D=26; /* Work 1 */
+var W2X=70,W2Y=0,W2W=32,W2D=26; /* Work 2 */
+var AF=2,WF=3; /* admin floors, work floors */
 
 function makeBuilding(x,y,w,d,floors,wallColor,label){
   var g=new THREE.Group();g.position.set(x,y,0);
-  var floorM=new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:0.8});
-  var wallM=new THREE.MeshStandardMaterial({color:wallColor||0x334155,roughness:0.5,transparent:true,opacity:0.3,side:THREE.DoubleSide});
-  var glassM=new THREE.MeshStandardMaterial({color:0x38bdf8,roughness:0.1,transparent:true,opacity:0.12,side:THREE.DoubleSide});
+  var floorM=Mat(0x1e1e2e,0.8,0.1);
+  var wallM=new THREE.MeshStandardMaterial({color:wallColor||0x334155,roughness:0.5,transparent:true,opacity:0.25,side:THREE.DoubleSide});
+  var glassM=new THREE.MeshStandardMaterial({color:0x38bdf8,roughness:0.1,transparent:true,opacity:0.15,side:THREE.DoubleSide});
+  var frameM=Mat(0x4a5568,0.4,0.3);
+
   for(var f=0;f<floors;f++){
     var fz=f*FH;
-    var slab=new THREE.Mesh(new THREE.BoxGeometry(w,d,0.25),floorM);slab.position.z=fz+0.12;slab.receiveShadow=true;g.add(slab);
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.12,FH-0.3),wallM)).position.set(0,-d/2,fz+FH/2);
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.12,FH-0.3),wallM)).position.set(0,d/2,fz+FH/2);
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.12,d,FH-0.3),wallM)).position.set(-w/2,0,fz+FH/2);
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.12,d,FH-0.3),wallM)).position.set(w/2,0,fz+FH/2);
-    for(var wi=0;wi<Math.floor(w/3);wi++){
-      var win=new THREE.Mesh(new THREE.PlaneGeometry(1.6,2.2),glassM);
-      win.position.set(-w/2+2+wi*3,-(d/2+0.07),fz+FH/2);g.add(win);
-      var win2=win.clone();win2.position.set(-w/2+2+wi*3,d/2+0.07,fz+FH/2);g.add(win2);
+    /* Floor slab */
+    var slab=new THREE.Mesh(new THREE.BoxGeometry(w,d,0.3),floorM);slab.position.z=fz+0.15;slab.receiveShadow=true;g.add(slab);
+    /* Walls */
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.15,FH-0.3),wallM)).position.set(0,-d/2,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.15,FH-0.3),wallM)).position.set(0,d/2,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.15,d,FH-0.3),wallM)).position.set(-w/2,0,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.15,d,FH-0.3),wallM)).position.set(w/2,0,fz+FH/2);
+    /* Window frames & glass on front and back walls */
+    var nw=Math.floor(w/4);
+    for(var wi=0;wi<nw;wi++){
+      for(var side=-1;side<=1;side+=2){
+        var wf=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.05,3.2),frameM);
+        wf.position.set(-w/2+2.5+wi*4, side*(d/2+0.08), fz+FH/2);g.add(wf);
+        var wg=new THREE.Mesh(new THREE.PlaneGeometry(2.0,3.0),glassM);
+        wg.position.set(-w/2+2.5+wi*4, side*(d/2+0.1), fz+FH/2);g.add(wg);
+      }
     }
-    for(var li=0;li<2;li++){
-      var lt=new THREE.Mesh(new THREE.BoxGeometry(w*0.5,0.25,0.04),new THREE.MeshBasicMaterial({color:0xfff8e0,transparent:true,opacity:0.3}));
-      lt.position.set(0,-d/4+li*(d/2),fz+FH-0.15);g.add(lt);
+    /* Side windows */
+    var nws=Math.floor(d/4);
+    for(var si=0;si<nws;si++){
+      for(var sx=-1;sx<=1;sx+=2){
+        var swf=new THREE.Mesh(new THREE.BoxGeometry(0.05,2.2,3.2),frameM);
+        swf.position.set(sx*(w/2+0.08),-d/2+2.5+si*4,fz+FH/2);g.add(swf);
+        var swg=new THREE.Mesh(new THREE.PlaneGeometry(2.0,3.0),glassM);
+        swg.rotation.y=Math.PI/2;swg.position.set(sx*(w/2+0.1),-d/2+2.5+si*4,fz+FH/2);g.add(swg);
+      }
+    }
+    /* Ceiling lights */
+    var lightM=new THREE.MeshBasicMaterial({color:0xfff8e0,transparent:true,opacity:0.25});
+    for(var lx=-1;lx<=1;lx+=2)for(var ly=-1;ly<=1;ly+=2){
+      var lt=new THREE.Mesh(new THREE.BoxGeometry(w*0.3,0.3,0.05),lightM);lt.position.set(lx*w*0.2,ly*d*0.2,fz+FH-0.18);g.add(lt);
+    }
+    /* Interior partition walls (every other floor) */
+    if(f>0){
+      var pw=new THREE.Mesh(new THREE.BoxGeometry(0.1,d*0.5,FH*0.6),new THREE.MeshStandardMaterial({color:0x445566,transparent:true,opacity:0.15,side:THREE.DoubleSide}));
+      pw.position.set(w*0.15,0,fz+FH*0.4);g.add(pw);
     }
   }
-  var roof=new THREE.Mesh(new THREE.BoxGeometry(w+0.3,d+0.3,0.35),new THREE.MeshStandardMaterial({color:0x475569,roughness:0.7}));
-  roof.position.z=floors*FH+0.17;roof.receiveShadow=true;roof.castShadow=true;g.add(roof);
-  var door=new THREE.Mesh(new THREE.BoxGeometry(2.5,0.08,3),new THREE.MeshStandardMaterial({color:0x0ea5e9,transparent:true,opacity:0.45}));
-  door.position.set(0,-d/2-0.04,1.5);g.add(door);
+  /* Roof */
+  var roof=new THREE.Mesh(new THREE.BoxGeometry(w+0.5,d+0.5,0.4),Mat(0x475569,0.7));roof.position.z=floors*FH+0.2;roof.receiveShadow=true;roof.castShadow=true;g.add(roof);
+  /* Roof edge/parapet */
+  for(var ri=-1;ri<=1;ri+=2){
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(w+0.8,0.3,0.6),Mat(0x394960))).position.set(0,ri*(d/2+0.15),floors*FH+0.5);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.3,d+0.8,0.6),Mat(0x394960))).position.set(ri*(w/2+0.15),0,floors*FH+0.5);
+  }
+  /* Main entrance door */
+  var doorM=new THREE.MeshStandardMaterial({color:0x0ea5e9,transparent:true,opacity:0.45});
+  var door=new THREE.Mesh(new THREE.BoxGeometry(4,0.1,5),doorM);door.position.set(0,-d/2-0.05,2.5);g.add(door);
+  /* Entrance canopy */
+  var canopy=new THREE.Mesh(new THREE.BoxGeometry(6,3,0.15),Mat(0x555577));canopy.position.set(0,-d/2-1.5,5.5);g.add(canopy);
+  /* Steps */
+  for(var st=0;st<3;st++){var step=new THREE.Mesh(new THREE.BoxGeometry(5,0.6,0.2),Mat(0x888899));step.position.set(0,-d/2-0.3-st*0.6,0.1+st*0.2);g.add(step);}
+
   scene.add(g);
-  makeLabel(label,{x:x,y:y-d/2-3,z:floors*FH+2.5},wallColor===0x7c3aed?"#a78bfa":"#22d3ee");
+  makeLabel(label,{x:x,y:y-d/2-5,z:floors*FH+3},wallColor===0x7c3aed?"#a78bfa":"#22d3ee",8);
   return g;
 }
 
-// =====================================================================
-// BUILD ADMIN (MDF / DATA CENTER)
-// =====================================================================
+/* ============ BUILD ADMIN BUILDING ============ */
 function buildAdmin(){
-  makeBuilding(ADMIN_X,ADMIN_Y,ADMIN_W,ADMIN_D,ADMIN_FLOORS,0x0e7490,"TOA QUAN TRI (ADMIN / MDF)");
-  var ax=ADMIN_X,ay=ADMIN_Y,f1=0.4,f2=FH+0.4;
+  makeBuilding(AX,AY,AW,AD,AF,0x0e7490,"TOA QUAN TRI (ADMIN / MDF)");
+  var ax=AX,ay=AY,f1z=0.5,f2z=FH+0.5;
   var fg1=new THREE.Group();fg1.userData={building:"admin",floor:1};floorGroups.push(fg1);scene.add(fg1);
   var fg2=new THREE.Group();fg2.userData={building:"admin",floor:2};floorGroups.push(fg2);scene.add(fg2);
 
-  // Racks (server cabinets visual)
-  for(var ri=0;ri<6;ri++){var rk=makeRack();rk.position.set(ax-14+ri*5,ay-8,f1);fg1.add(rk);}
+  /* === FLOOR 1: Network Core + Power === */
 
-  // ISP Routers (right side)
-  var isp1=makeRouter(COL.isp,1.8);isp1.position.set(ax+16,ay+10,f1+1.5);addD(isp1,"ISP1",fg1);
-  var isp2=makeRouter(COL.isp,1.8);isp2.position.set(ax+16,ay+4,f1+1.5);addD(isp2,"ISP2",fg1);
-  var lte=makeRouter(0x9333ea,1.2);lte.position.set(ax+16,ay-2,f1+1.5);addD(lte,"LTE_Modem",fg1);
-  sLabel("ISP / WAN",{x:ax+16,y:ay+13,z:f1+4},"#fbbf24",2.5);
+  /* Server Racks (4 in a row) */
+  for(var ri=0;ri<4;ri++){var rk=makeRack(1.2);rk.position.set(ax-12+ri*5,ay-6,f1z);fg1.add(rk);}
+  sLabel("SERVER RACK ROW",{x:ax-5,y:ay-9,z:f1z+4},"#64748b",3);
 
-  // MikroTik VRRP (center-right)
-  var mk1=makeRouter(COL.router,2.0);mk1.position.set(ax+6,ay+10,f1+1.5);addD(mk1,"MikroTik1",fg1);
-  var mk2=makeRouter(COL.router,2.0);mk2.position.set(ax+6,ay+4,f1+1.5);addD(mk2,"MikroTik2",fg1);
-  makeCable(mk1.position,mk2.position,0xec4899,0.08);
-  sLabel("VRRP",{x:ax+6,y:ay+7,z:f1+4.5},"#ec4899",2.5);
+  /* Raised floor tiles visual */
+  var rfM=new THREE.MeshStandardMaterial({color:0x1a2040,roughness:0.9,transparent:true,opacity:0.5});
+  for(var rx=-3;rx<=3;rx++)for(var ry=-2;ry<=2;ry++){var tile=new THREE.Mesh(new THREE.BoxGeometry(4.5,4.5,0.1),rfM);tile.position.set(ax+rx*5,ay+ry*5,f1z-0.1);fg1.add(tile);}
 
-  // Console Server
-  var cs=makeServer(0x666666,1.0);cs.position.set(ax+6,ay-2,f1);addD(cs,"ConsoleServer",fg1);
+  /* ISP Routers - top right */
+  var isp1=makeRouter(C.isp,1.2);isp1.position.set(ax+14,ay+8,f1z+2);addD(isp1,"ISP1",fg1);
+  sLabel("ISP1",{x:ax+14,y:ay+8,z:f1z+4},"#fbbf24",2);
+  var isp2=makeRouter(C.isp,1.2);isp2.position.set(ax+14,ay+4,f1z+2);addD(isp2,"ISP2",fg1);
+  sLabel("ISP2",{x:ax+14,y:ay+4,z:f1z+4},"#fbbf24",2);
+  var lte=makeRouter(0x9333ea,0.8);lte.position.set(ax+14,ay+0,f1z+2);addD(lte,"LTE_Modem",fg1);
+  sLabel("LTE/4G",{x:ax+14,y:ay+0,z:f1z+4},"#9333ea",2);
 
-  // FortiGate HA (center)
-  var fw1=makeFirewall(2.0);fw1.position.set(ax-2,ay+10,f1+1.5);addD(fw1,"FortiGate1",fg1);
-  var fw2=makeFirewall(2.0);fw2.position.set(ax-2,ay+4,f1+1.5);addD(fw2,"FortiGate2",fg1);
-  makeCable(fw1.position,fw2.position,0xec4899,0.08);
-  sLabel("HA Active/Passive",{x:ax-2,y:ay+7,z:f1+4.5},"#eab308",2.5);
+  /* MikroTik pair - VRRP */
+  var mk1=makeRouter(C.router,1.3);mk1.position.set(ax+6,ay+8,f1z+2);addD(mk1,"MikroTik1",fg1);
+  var mk2=makeRouter(C.router,1.3);mk2.position.set(ax+6,ay+4,f1z+2);addD(mk2,"MikroTik2",fg1);
+  makeCable(mk1.position,mk2.position,0xec4899,0.06);
+  sLabel("VRRP",{x:ax+6,y:ay+6,z:f1z+4.5},"#ec4899",2.5);
 
-  // Core Switches StackWise (center-left)
-  var csw1=makeSwitch(COL.core,2.2);csw1.position.set(ax-12,ay+10,f1+1.5);addD(csw1,"CoreSW1",fg1);
-  var csw2=makeSwitch(COL.core,2.2);csw2.position.set(ax-12,ay+4,f1+1.5);addD(csw2,"CoreSW2",fg1);
-  makeCable(csw1.position,csw2.position,0xef4444,0.1);
-  sLabel("StackWise Virtual",{x:ax-12,y:ay+7,z:f1+4.5},"#ef4444",2.5);
+  /* Console Server */
+  var cs=makeServer(0x666666,0.7);cs.position.set(ax+6,ay+0,f1z);addD(cs,"ConsoleServer",fg1);
+  sLabel("Console OOB",{x:ax+6,y:ay+0,z:f1z+4},"#8b5cf6",2);
 
-  // Chain: ISP->MikroTik->FortiGate->CoreSW
-  makeCable(isp1.position,mk1.position,COL.isp,0.05);
-  makeCable(isp2.position,mk2.position,COL.isp,0.05);
-  makeCable(mk1.position,fw1.position,COL.router,0.05);
-  makeCable(mk2.position,fw2.position,COL.router,0.05);
-  makeCable(fw1.position,csw1.position,COL.fw,0.05);
-  makeCable(fw2.position,csw2.position,COL.fw,0.05);
-  // Cross links for redundancy
-  makeCable(mk1.position,fw2.position,0x555555,0.03);
-  makeCable(mk2.position,fw1.position,0x555555,0.03);
-  makeCable(lte.position,cs.position,0x8b5cf6,0.04);
+  /* FortiGate pair - HA */
+  var fw1=makeFirewall(1.2);fw1.position.set(ax-2,ay+8,f1z+2);addD(fw1,"FortiGate1",fg1);
+  var fw2=makeFirewall(1.2);fw2.position.set(ax-2,ay+4,f1z+2);addD(fw2,"FortiGate2",fg1);
+  makeCable(fw1.position,fw2.position,0xec4899,0.06);
+  sLabel("HA Sync",{x:ax-2,y:ay+6,z:f1z+4.5},"#eab308",2.5);
 
-  // UPS A/B (left-back)
-  var uA=makeUPS(1.8);uA.position.set(ax-16,ay-6,f1);addD(uA,"UPS_A",fg1);
-  var uB=makeUPS(1.8);uB.position.set(ax-16,ay-12,f1);addD(uB,"UPS_B",fg1);
-  sLabel("UPS Feed A",{x:ax-16,y:ay-6,z:f1+4},"#22d3ee",2);
-  sLabel("UPS Feed B",{x:ax-16,y:ay-12,z:f1+4},"#f59e0b",2);
-  makeCable({x:ax-16,y:ay-6,z:f1+2.5},{x:ax-12,y:ay+10,z:f1+1},0x22d3ee,0.04);
-  makeCable({x:ax-16,y:ay-12,z:f1+2.5},{x:ax-12,y:ay+4,z:f1+1},0xf59e0b,0.04);
+  /* Core Switches - StackWise */
+  var csw1=makeSwitch(C.core,1.4);csw1.position.set(ax-10,ay+8,f1z+2);addD(csw1,"CoreSW1",fg1);
+  var csw2=makeSwitch(C.core,1.4);csw2.position.set(ax-10,ay+4,f1z+2);addD(csw2,"CoreSW2",fg1);
+  makeCable(csw1.position,csw2.position,0xef4444,0.07);
+  sLabel("StackWise Virtual",{x:ax-10,y:ay+6,z:f1z+4.5},"#ef4444",2.5);
 
-  // Generator (right-back)
-  var gen=makeGenerator(1.8);gen.position.set(ax+16,ay-10,f1);addD(gen,"Generator",fg1);
-  sLabel("May Phat 150kVA",{x:ax+16,y:ay-10,z:f1+4},"#f59e0b",2);
-  makeCable({x:ax+16,y:ay-10,z:f1+2},{x:ax-16,y:ay-6,z:f1+2.5},0xef4444,0.05);
-  makeCable({x:ax+16,y:ay-10,z:f1+2},{x:ax-16,y:ay-12,z:f1+2.5},0xef4444,0.05);
+  /* Network chain cables */
+  makeCable(isp1.position,mk1.position,C.isp,0.04);
+  makeCable(isp2.position,mk2.position,C.isp,0.04);
+  makeCable(mk1.position,fw1.position,C.router,0.04);
+  makeCable(mk2.position,fw2.position,C.router,0.04);
+  makeCable(fw1.position,csw1.position,C.fw,0.04);
+  makeCable(fw2.position,csw2.position,C.fw,0.04);
+  /* Cross links for redundancy */
+  makeCable(mk1.position,fw2.position,0x555555,0.02);
+  makeCable(mk2.position,fw1.position,0x555555,0.02);
+  /* Console OOB cables */
+  makeCable(lte.position,cs.position,0x8b5cf6,0.03);
+  makeCable(cs.position,mk1.position,0x8b5cf6,0.02);
+  makeCable(cs.position,csw1.position,0x8b5cf6,0.02);
 
-  // CRAC (far left)
-  var cr1=makeCRAC(1.8);cr1.position.set(ax-18,ay+10,f1);addD(cr1,"CRAC1",fg1);
-  var cr2=makeCRAC(1.8);cr2.position.set(ax-18,ay+4,f1);addD(cr2,"CRAC2",fg1);
-  sLabel("CRAC N+1",{x:ax-18,y:ay+7,z:f1+4.5},"#38bdf8",2);
-  makeCable({x:ax-18,y:ay+10,z:f1+3},{x:ax-4,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.06);
-  makeCable({x:ax-18,y:ay+4,z:f1+3},{x:ax+4,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.06);
+  /* --- Power Systems (bottom-left area) --- */
+  var uA=makeUPS(1.1);uA.position.set(ax-14,ay-6,f1z);addD(uA,"UPS_A",fg1);
+  sLabel("UPS A",{x:ax-14,y:ay-6,z:f1z+4},"#22d3ee",2);
+  var uB=makeUPS(1.1);uB.position.set(ax-14,ay-10,f1z);addD(uB,"UPS_B",fg1);
+  sLabel("UPS B",{x:ax-14,y:ay-10,z:f1z+4},"#f59e0b",2);
+  /* Power feeds to core */
+  makeCable({x:ax-14,y:ay-6,z:f1z+2.8},{x:ax-10,y:ay+8,z:f1z+1},0x22d3ee,0.03);
+  makeCable({x:ax-14,y:ay-10,z:f1z+2.8},{x:ax-10,y:ay+4,z:f1z+1},0xf59e0b,0.03);
 
-  // Roof Chiller
-  var ch=makeChiller(1.4);ch.position.set(ax,ay,ADMIN_FLOORS*FH+0.5);addD(ch,"RoofChiller",fg1);
-  sLabel("Roof Chiller 120kW",{x:ax,y:ay-5,z:ADMIN_FLOORS*FH+3},"#38bdf8",2.5);
+  /* Generator - outside bottom */
+  var gen=makeGenerator(1.0);gen.position.set(ax+16,ay-10,f1z);addD(gen,"Generator",fg1);
+  sLabel("Generator 150kVA",{x:ax+16,y:ay-10,z:f1z+3.5},"#f59e0b",2.5);
+  makeCable({x:ax+16,y:ay-10,z:f1z+1.8},{x:ax-14,y:ay-6,z:f1z+2.8},0xef4444,0.035);
+  makeCable({x:ax+16,y:ay-10,z:f1z+1.8},{x:ax-14,y:ay-10,z:f1z+2.8},0xef4444,0.035);
 
-  // Floor 2: Server Farm
-  var sv1=makeServer(COL.server,1.6);sv1.position.set(ax-12,ay+8,f2);addD(sv1,"ROSEServer1",fg2);
-  var sv2=makeServer(COL.server,1.6);sv2.position.set(ax-6,ay+8,f2);addD(sv2,"ROSEServer2",fg2);
-  var ad=makeServer(0x7c3aed,1.4);ad.position.set(ax,ay+8,f2);addD(ad,"ADServer",fg2);
-  var nvr=makeServer(COL.cctv,1.6);nvr.position.set(ax+8,ay+8,f2);addD(nvr,"CentralNVR",fg2);
-  var nas=makeServer(0x666666,1.6);nas.position.set(ax+14,ay+8,f2);addD(nas,"StorageNAS",fg2);
-  makeCable({x:ax-12,y:ay+8,z:f2+2},csw1.position,COL.server,0.04);
-  makeCable({x:ax-6,y:ay+8,z:f2+2},csw2.position,COL.server,0.04);
-  makeCable({x:ax,y:ay+8,z:f2+2},csw1.position,0x7c3aed,0.04);
-  makeCable({x:ax+8,y:ay+8,z:f2+2},csw1.position,COL.cctv,0.04);
-  makeCable({x:ax+14,y:ay+8,z:f2+2},csw2.position,0x666666,0.04);
-  sLabel("SERVER FARM",{x:ax-6,y:ay+13,z:f2+4},"#a855f7",3);
-  sLabel("NVR / NAS",{x:ax+11,y:ay+13,z:f2+4},"#ef4444",2.5);
+  /* CRAC units */
+  var cr1=makeCRAC(1.0);cr1.position.set(ax-14,ay+8,f1z);addD(cr1,"CRAC1",fg1);
+  sLabel("CRAC #1",{x:ax-14,y:ay+8,z:f1z+4},"#38bdf8",2);
+  var cr2=makeCRAC(1.0);cr2.position.set(ax-14,ay+4,f1z);addD(cr2,"CRAC2",fg1);
+  sLabel("CRAC #2",{x:ax-14,y:ay+4,z:f1z+4},"#38bdf8",2);
+  /* Chiller pipes to roof */
+  makeCable({x:ax-14,y:ay+8,z:f1z+2.8},{x:ax-4,y:ay,z:AF*FH+2},0x38bdf8,0.05);
+  makeCable({x:ax-14,y:ay+4,z:f1z+2.8},{x:ax+4,y:ay,z:AF*FH+2},0x38bdf8,0.05);
+
+  /* Roof Chiller */
+  var ch=makeChiller(0.9);ch.position.set(ax,ay,AF*FH+0.5);addD(ch,"RoofChiller",fg1);
+  sLabel("Roof Chiller 120kW",{x:ax,y:ay,z:AF*FH+3.5},"#38bdf8",3);
+
+  /* === FLOOR 2: Server Farm + Camera Central === */
+  /* Servers */
+  var sv1=makeServer(C.server,1.0);sv1.position.set(ax-10,ay+6,f2z);addD(sv1,"ROSEServer1",fg2);
+  sLabel("ROSE #1",{x:ax-10,y:ay+6,z:f2z+4},"#a855f7",2);
+  var sv2=makeServer(C.server,1.0);sv2.position.set(ax-5,ay+6,f2z);addD(sv2,"ROSEServer2",fg2);
+  sLabel("ROSE #2",{x:ax-5,y:ay+6,z:f2z+4},"#a855f7",2);
+  var ad=makeServer(0x7c3aed,0.9);ad.position.set(ax,ay+6,f2z);addD(ad,"ADServer",fg2);
+  sLabel("AD/DHCP/DNS",{x:ax,y:ay+6,z:f2z+4},"#7c3aed",2);
+  var nvr=makeServer(C.cctv,1.0);nvr.position.set(ax+7,ay+6,f2z);addD(nvr,"CentralNVR",fg2);
+  sLabel("Central NVR",{x:ax+7,y:ay+6,z:f2z+4},"#ef4444",2);
+  var nas=makeServer(0x666680,1.0);nas.position.set(ax+13,ay+6,f2z);addD(nas,"StorageNAS",fg2);
+  sLabel("NAS 1.08PB",{x:ax+13,y:ay+6,z:f2z+4},"#64748b",2);
+
+  /* Server-to-core cables */
+  makeCable({x:ax-10,y:ay+6,z:f2z+1.5},csw1.position,C.server,0.03);
+  makeCable({x:ax-5,y:ay+6,z:f2z+1.5},csw2.position,C.server,0.03);
+  makeCable({x:ax,y:ay+6,z:f2z+1.5},csw1.position,0x7c3aed,0.03);
+  makeCable({x:ax+7,y:ay+6,z:f2z+1.5},csw1.position,C.cctv,0.03);
+  makeCable({x:ax+13,y:ay+6,z:f2z+1.5},csw2.position,0x666680,0.03);
+
+  /* Server room racks on floor 2 */
+  for(var sr=0;sr<3;sr++){var srk=makeRack(1.0);srk.position.set(ax-8+sr*6,ay-4,f2z);fg2.add(srk);}
+
+  sLabel("SERVER FARM",{x:ax-5,y:ay+11,z:f2z+4},"#a855f7",3);
+  sLabel("CAMERA CENTRAL",{x:ax+10,y:ay+11,z:f2z+4},"#ef4444",3);
 }
 
-// =====================================================================
-// BUILD WORK BUILDINGS
-// =====================================================================
-function buildWorkBuilding(bx,by,bw,bd,bldgKey,floors,distKeys,nvrKey){
-  makeBuilding(bx,by,bw,bd,WORK_FLOORS,0x7c3aed,"TOA LAM VIEC "+(bldgKey==="work1"?"1":"2"));
-  var fgIDF=new THREE.Group();fgIDF.userData={building:bldgKey,floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
+/* ============ BUILD WORK BUILDINGS ============ */
+function buildWorkBuilding(bx,by,bw,bd,bKey,distKeys,nvrKey){
+  makeBuilding(bx,by,bw,bd,WF,0x7c3aed,"TOA LAM VIEC "+(bKey==="work1"?"1":"2"));
+  var pre=bKey==="work1"?"W1":"W2";
+  var fgIDF=new THREE.Group();fgIDF.userData={building:bKey,floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
 
-  var ds1=makeSwitch(COL.dist,1.8);ds1.position.set(bx-8,by+8,0.4+1.5);addD(ds1,distKeys[0],fgIDF);
-  var ds2=makeSwitch(COL.dist,1.8);ds2.position.set(bx+8,by+8,0.4+1.5);addD(ds2,distKeys[1],fgIDF);
-  makeCable(ds1.position,ds2.position,COL.dist,0.06);
-  sLabel("StackWise-480",{x:bx,y:by+8,z:4},"#16a34a",2);
-  var nvrL=makeServer(COL.cctv,1.2);nvrL.position.set(bx,by+8,0.4);addD(nvrL,nvrKey,fgIDF);
-  makeCable(nvrL.position,ds1.position,COL.cctv,0.04);
-  sLabel("IDF ROOM",{x:bx,y:by+13,z:5},"#a78bfa",3);
+  /* IDF Room - Distribution switches */
+  var ds1=makeSwitch(C.dist,1.2);ds1.position.set(bx-6,by+6,0.5+1.5);addD(ds1,distKeys[0],fgIDF);
+  sLabel(distKeys[0],{x:bx-6,y:by+6,z:5},"#16a34a",2);
+  var ds2=makeSwitch(C.dist,1.2);ds2.position.set(bx+6,by+6,0.5+1.5);addD(ds2,distKeys[1],fgIDF);
+  sLabel(distKeys[1],{x:bx+6,y:by+6,z:5},"#16a34a",2);
+  makeCable(ds1.position,ds2.position,C.dist,0.05);
 
-  for(var fi=0;fi<floors.length;fi++){
-    var fl=floors[fi];
-    var fz=fl.key*FH+0.4;
-    var fg=new THREE.Group();fg.userData={building:bldgKey,floor:fl.key};floorGroups.push(fg);scene.add(fg);
+  /* NVR Local */
+  var nvrL=makeServer(C.cctv,0.8);nvrL.position.set(bx,by+6,0.5);addD(nvrL,nvrKey,fgIDF);
+  sLabel(nvrKey,{x:bx,y:by+6,z:4.5},"#ef4444",2);
+  makeCable(nvrL.position,ds1.position,C.cctv,0.03);
 
+  /* IDF Racks */
+  for(var idfr=0;idfr<2;idfr++){var irk=makeRack(0.9);irk.position.set(bx-4+idfr*8,by+9,0.5);fgIDF.add(irk);}
+  sLabel("IDF ROOM",{x:bx,y:by+12,z:5},"#a78bfa",3);
+
+  /* Each Floor */
+  FLOORS.forEach(function(fl){
+    var fz=fl.key*FH+0.5; /* floor 1 at FH, floor 2 at 2*FH, etc... but we start from 0 */
+    fz=(fl.key-1)*FH+0.5;
+    var fg=new THREE.Group();fg.userData={building:bKey,floor:fl.key};floorGroups.push(fg);scene.add(fg);
+
+    /* Access Switches */
     for(var si=0;si<fl.sw;si++){
-      var swK=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AccSW"+(si+1);
-      var sw=makeSwitch(COL.acc,1.4);sw.position.set(bx-8+si*8,by-5,fz+1.5);addD(sw,swK,fg);
-      makeCable(sw.position,ds1.position,COL.acc,0.03);
-      makeCable(sw.position,ds2.position,COL.acc,0.025);
+      var swK=pre+"_F"+fl.key+"_AccSW"+(si+1);
+      var sw=makeSwitch(C.acc,1.0);sw.position.set(bx-7+si*6,by-5,fz+1.5);addD(sw,swK,fg);
+      makeCable(sw.position,ds1.position,C.acc,0.025);
+      makeCable(sw.position,ds2.position,C.acc,0.02);
     }
-    var deskM=new THREE.MeshStandardMaterial({color:0x8b6914,roughness:0.7});
+
+    /* Desks + PCs */
     for(var pi=0;pi<fl.pcs;pi++){
-      var pc=makePC(0.7);pc.position.set(bx-12+pi*4.5,by-1,fz);
-      var pk=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_PC"+(pi+1);
-      addD(pc,pk,fg);
-      var desk=new THREE.Mesh(new THREE.BoxGeometry(3,1.5,0.08),deskM);desk.position.set(bx-12+pi*4.5,by-1,fz+0.5);fg.add(desk);
+      var dsk=makeDesk(0.7);dsk.position.set(bx-11+pi*3.8,by-1,fz);fg.add(dsk);
+      var pc=makePC(0.6);pc.position.set(bx-11+pi*3.8,by-1,fz+0.5);
+      addD(pc,pre+"_F"+fl.key+"_PC"+(pi+1),fg);
+      /* Chair */
+      var chr=makeChair(0.5);chr.position.set(bx-11+pi*3.8,by-2.2,fz);fg.add(chr);
     }
+
+    /* APs on ceiling */
     for(var ai=0;ai<fl.aps;ai++){
-      var ap=makeAP(1.0);ap.position.set(bx-6+ai*7,by+2,fz+FH-0.6);
-      addD(ap,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AP"+(ai+1),fg);
+      var ap=makeAP(0.7);ap.position.set(bx-5+ai*6,by+1,fz+FH-0.6);
+      addD(ap,pre+"_F"+fl.key+"_AP"+(ai+1),fg);
     }
+
+    /* CCTVs on walls */
     for(var ci=0;ci<fl.cctv;ci++){
-      var cam=makeCCTV(0.8);
+      var cam=makeCCTV(0.7);
       cam.position.set(bx-bw/2+3+ci*(bw-6)/(Math.max(fl.cctv-1,1)),by-bd/2+2,fz+FH-0.6);
-      addD(cam,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_CCTV"+(ci+1),fg);
+      addD(cam,pre+"_F"+fl.key+"_CCTV"+(ci+1),fg);
     }
-    sLabel("TANG "+fl.key,{x:bx,y:by-bd/2-3,z:fz+3},"#c4b5fd",2.5);
-  }
-  // Roof HVAC
-  var hvac=makeChiller(0.8);hvac.position.set(bx,by,WORK_FLOORS*FH+0.5);scene.add(hvac);
-}
 
-function buildWork1(){buildWorkBuilding(W1_X,W1_Y,W1_W,W1_D,"work1",FLOORS_B1,["DistSW1","DistSW2"],"NVRLocal1");}
-function buildWork2(){buildWorkBuilding(W2_X,W2_Y,W2_W,W2_D,"work2",FLOORS_B2,["DistSW3","DistSW4"],"NVRLocal2");}
-
-// =====================================================================
-// UNDERGROUND CABLING (40G Fiber Full-Mesh)
-// =====================================================================
-function buildUnderground(){
-  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+5,z:0.2},{x:W1_X-4,y:W1_Y+4,z:0.2},0x3b82f6,0.06);
-  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+2.5,z:0.2},{x:W1_X+4,y:W1_Y+4,z:0.2},0x1d4ed8,0.06);
-  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+5,z:0.2},{x:W2_X-4,y:W2_Y+4,z:0.2},0x3b82f6,0.06);
-  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+2.5,z:0.2},{x:W2_X+4,y:W2_Y+4,z:0.2},0x1d4ed8,0.06);
-  makeUnderground({x:W1_X+4,y:W1_Y+4,z:0.2},{x:W2_X-4,y:W2_Y+4,z:0.2},0x22d3ee,0.05);
-  makeUnderground({x:W1_X-4,y:W1_Y+4,z:0.2},{x:W2_X+4,y:W2_Y+4,z:0.2},0x22d3ee,0.05);
-
-  // Conduit
-  var cm=new THREE.MeshStandardMaterial({color:0x444444,roughness:0.8,transparent:true,opacity:0.2});
-  var c1=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W1_X-ADMIN_X)+10,2,0.4),cm);c1.position.set((W1_X+ADMIN_X)/2,3,-1);scene.add(c1);
-  var c2=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W2_X-ADMIN_X)+10,2,0.4),cm);c2.position.set((W2_X+ADMIN_X)/2,3,-1);scene.add(c2);
-
-  // Manholes
-  var mm=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.8});
-  [{x:-15,y:3},{x:15,y:3},{x:W1_X+5,y:3},{x:W2_X-5,y:3}].forEach(function(p){
-    var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.12,16),mm);mh.rotation.x=Math.PI/2;mh.position.set(p.x,p.y,0.06);scene.add(mh);
+    sLabel("TANG "+fl.key,{x:bx,y:by-bd/2-2.5,z:fz+3},"#c4b5fd",2.5);
   });
-  sLabel("40G FIBER UNDERGROUND",{x:0,y:3,z:-0.3},"#3b82f6",3);
+
+  /* Roof HVAC unit */
+  var hvac=makeChiller(0.5);hvac.position.set(bx,by,WF*FH+0.5);scene.add(hvac);
 }
 
-// =====================================================================
-// GROUND / LANDSCAPE
-// =====================================================================
+function buildWork1(){buildWorkBuilding(W1X,W1Y,W1W,W1D,"work1",["DistSW1","DistSW2"],"NVRLocal1");}
+function buildWork2(){buildWorkBuilding(W2X,W2Y,W2W,W2D,"work2",["DistSW3","DistSW4"],"NVRLocal2");}
+
+/* ============ UNDERGROUND 40G FIBER ============ */
+function buildUnderground(){
+  /* Admin <-> Work1 (dual cross uplinks) */
+  makeUnderground({x:AX-10,y:AY+8,z:0.3},{x:W1X-6,y:W1Y+6,z:0.3},0x3b82f6,0.08);
+  makeUnderground({x:AX-10,y:AY+4,z:0.3},{x:W1X+6,y:W1Y+6,z:0.3},0x1d4ed8,0.08);
+  /* Admin <-> Work2 */
+  makeUnderground({x:AX+10,y:AY+8,z:0.3},{x:W2X-6,y:W2Y+6,z:0.3},0x3b82f6,0.08);
+  makeUnderground({x:AX+10,y:AY+4,z:0.3},{x:W2X+6,y:W2Y+6,z:0.3},0x1d4ed8,0.08);
+  /* Work1 <-> Work2 cross */
+  makeUnderground({x:W1X+6,y:W1Y+6,z:0.3},{x:W2X-6,y:W2Y+6,z:0.3},0x22d3ee,0.07);
+  makeUnderground({x:W1X-6,y:W1Y+6,z:0.3},{x:W2X+6,y:W2Y+6,z:0.3},0x22d3ee,0.07);
+
+  /* Conduit visuals */
+  var cm=new THREE.MeshStandardMaterial({color:0x444444,roughness:0.8,transparent:true,opacity:0.15});
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(180,3,0.5),cm)).position.set(0,5,-1.5);
+  /* Manholes */
+  var mm=Mat(0x444444,0.8);
+  [{x:-25,y:5},{x:25,y:5},{x:W1X+10,y:5},{x:W2X-10,y:5}].forEach(function(p){
+    var mh=new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.0,0.15,16),mm);mh.rotation.x=Math.PI/2;mh.position.set(p.x,p.y,0.08);scene.add(mh);
+  });
+  sLabel("40G FIBER UNDERGROUND (Full-Mesh Cross Uplinks)",{x:0,y:5,z:-0.5},"#3b82f6",6);
+}
+
+/* ============ GROUND & LANDSCAPE ============ */
 function buildGround(){
-  var gnd=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x1a2a1a,roughness:0.9}));
+  /* Ground plane */
+  var gnd=new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshStandardMaterial({color:0x1a2a1a,roughness:0.9}));
   gnd.receiveShadow=true;scene.add(gnd);
 
-  var rm=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:0.8});
-  var rd1=new THREE.Mesh(new THREE.BoxGeometry(140,3.5,0.04),rm);rd1.position.set(0,-14,0.02);scene.add(rd1);
-  var rd2=new THREE.Mesh(new THREE.BoxGeometry(3.5,35,0.04),rm);rd2.position.set(0,0,0.02);scene.add(rd2);
-  for(var ri=-60;ri<60;ri+=5){var mk=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.12,0.01),new THREE.MeshBasicMaterial({color:0xffff00}));mk.position.set(ri,-14,0.05);scene.add(mk);}
+  /* Paved area around buildings */
+  var pave=new THREE.Mesh(new THREE.BoxGeometry(200,60,0.05),Mat(0x222230,0.9));pave.position.set(0,0,0.02);scene.add(pave);
 
-  var trM=new THREE.MeshStandardMaterial({color:0x5c3a1a,roughness:0.8});
-  var lfM=new THREE.MeshStandardMaterial({color:0x1a5a1a,roughness:0.7});
-  [{x:-28,y:14},{x:-18,y:17},{x:18,y:14},{x:28,y:17},{x:-38,y:-17},{x:38,y:-17},{x:-55,y:10},{x:55,y:10}].forEach(function(p){
-    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.25,1.8,6),trM);tr.rotation.x=Math.PI/2;tr.position.set(p.x,p.y,0.9);tr.castShadow=true;scene.add(tr);
-    var lf=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,6),lfM);lf.position.set(p.x,p.y,2.5);lf.castShadow=true;scene.add(lf);
+  /* Main road */
+  var rdM=Mat(0x2a2a2a,0.8);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(220,6,0.06),rdM)).position.set(0,-22,0.03);
+  /* Road markings */
+  for(var ri=-100;ri<=100;ri+=8){scene.add(new THREE.Mesh(new THREE.BoxGeometry(3,0.2,0.01),new THREE.MeshBasicMaterial({color:0xffff00}))).position.set(ri,-22,0.07);}
+  /* Cross road */
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(6,50,0.06),rdM)).position.set(0,0,0.03);
+
+  /* Sidewalks */
+  var swM=Mat(0x3a3a3a,0.8);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(220,2,0.15),swM)).position.set(0,-18.5,0.07);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(220,2,0.15),swM)).position.set(0,-25.5,0.07);
+
+  /* Trees */
+  var trM=Mat(0x5c3a1a,0.8),lfM=Mat(0x1a5a1a,0.7);
+  [{x:-40,y:20},{x:-25,y:22},{x:25,y:22},{x:40,y:20},{x:-55,y:-20},{x:-35,y:-26},{x:35,y:-26},{x:55,y:-20},{x:W1X-20,y:14},{x:W2X+20,y:14},{x:0,y:30}].forEach(function(p){
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.35,3,6),trM);tr.rotation.x=Math.PI/2;tr.position.set(p.x,p.y,1.5);tr.castShadow=true;scene.add(tr);
+    var lf=new THREE.Mesh(new THREE.SphereGeometry(2,8,6),lfM);lf.position.set(p.x,p.y,4);lf.castShadow=true;scene.add(lf);
   });
 
-  // Parking
-  var pk=new THREE.Mesh(new THREE.BoxGeometry(12,7,0.03),new THREE.MeshStandardMaterial({color:0x333333,roughness:0.9}));pk.position.set(0,-19,0.015);scene.add(pk);
-  for(var pi=0;pi<4;pi++){var pl=new THREE.Mesh(new THREE.BoxGeometry(0.08,4,0.01),new THREE.MeshBasicMaterial({color:0xffffff}));pl.position.set(-4.5+pi*3,-19,0.04);scene.add(pl);}
-
-  // Street lights
-  var pm=new THREE.MeshStandardMaterial({color:0x666666,metalness:0.5});
-  [{x:-22,y:-14},{x:0,y:-14},{x:22,y:-14}].forEach(function(p){
-    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,4.5,6),pm);pole.rotation.x=Math.PI/2;pole.position.set(p.x,p.y,2.25);scene.add(pole);
-    var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.25,8,6),new THREE.MeshBasicMaterial({color:0xffee88}));lamp.position.set(p.x,p.y,4.7);scene.add(lamp);
-    var lt=new THREE.PointLight(0xffee88,0.25,12);lt.position.set(p.x,p.y,4.5);scene.add(lt);
+  /* Grass patches */
+  var grassM=Mat(0x1a3a1a,0.9);
+  [{x:-50,y:16,w:15,d:12},{x:50,y:16,w:15,d:12},{x:0,y:26,w:20,d:8}].forEach(function(p){
+    scene.add(new THREE.Mesh(new THREE.BoxGeometry(p.w,p.d,0.05),grassM)).position.set(p.x,p.y,0.025);
   });
+
+  /* Parking lot */
+  var pkM=Mat(0x333333,0.9);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(20,12,0.04),pkM)).position.set(0,-30,0.02);
+  for(var pi=0;pi<6;pi++){scene.add(new THREE.Mesh(new THREE.BoxGeometry(0.1,6,0.01),new THREE.MeshBasicMaterial({color:0xffffff}))).position.set(-7.5+pi*3,-30,0.05);}
+  sLabel("BAI DO XE",{x:0,y:-30,z:1},"#64748b",3);
+
+  /* Street lights */
+  var plM=Mat(0x666666,0.5);
+  [{x:-35,y:-22},{x:-10,y:-22},{x:10,y:-22},{x:35,y:-22}].forEach(function(p){
+    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.12,7,6),plM);pole.rotation.x=Math.PI/2;pole.position.set(p.x,p.y,3.5);scene.add(pole);
+    var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.4,8,6),new THREE.MeshBasicMaterial({color:0xffee88}));lamp.position.set(p.x,p.y,7.2);scene.add(lamp);
+    var lt=new THREE.PointLight(0xffee88,0.3,15);lt.position.set(p.x,p.y,7);scene.add(lt);
+  });
+
+  /* Fence around campus */
+  var fenceM=new THREE.MeshStandardMaterial({color:0x444455,transparent:true,opacity:0.3});
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(220,0.1,2),fenceM)).position.set(0,35,1);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(220,0.1,2),fenceM)).position.set(0,-38,1);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(0.1,73,2),fenceM)).position.set(-110,0,1);
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(0.1,73,2),fenceM)).position.set(110,0,1);
+  /* Gate */
+  scene.add(new THREE.Mesh(new THREE.BoxGeometry(8,0.2,3),Mat(0x0ea5e9,0.3,0.5))).position.set(0,-38,1.5);
+  sLabel("CONG CHINH",{x:0,y:-40,z:3.5},"#0ea5e9",3);
 }
 
-// =====================================================================
-// BUILD SCENE
-// =====================================================================
+/* ============ BUILD EVERYTHING ============ */
 buildAdmin();
 buildWork1();
 buildWork2();
 buildUnderground();
 buildGround();
 
-// =====================================================================
-// SIDEBAR POPULATION
-// =====================================================================
+/* ============ SIDEBAR ============ */
 function populateSidebar(){
   var sec={admin:"",work1:"",work2:"",isp:"",power:""};
-  var keys=Object.keys(DEVICES);
-  for(var i=0;i<keys.length;i++){
-    var k=keys[i],d=DEVICES[k];
-    var cat="admin";
+  Object.keys(DEVICES).forEach(function(k){
+    var d=DEVICES[k],cat="admin";
     if(d.building==="work1")cat="work1";
     else if(d.building==="work2")cat="work2";
-    else if(d.type==="ISP Router"||k==="LTE_Modem")cat="isp";
-    else if(d.type==="UPS"||d.type==="Generator"||d.type==="CRAC"||d.type==="Chiller")cat="power";
+    else if(d.building==="isp")cat="isp";
+    else if(d.building==="power")cat="power";
     var icon="&#9632;",clr="#22d3ee";
     if(d.type==="Router"||d.type==="ISP Router"){icon="&#9650;";clr="#f97316";}
     else if(d.type==="Firewall"){icon="&#9670;";clr="#eab308";}
-    else if(d.type==="Core Switch"){icon="&#9632;";clr="#2563eb";}
-    else if(d.type==="Dist Switch"){icon="&#9632;";clr="#16a34a";}
-    else if(d.type==="Access Switch"){icon="&#9632;";clr="#0ea5e9";}
+    else if(d.type==="Core Switch"){clr="#2563eb";}
+    else if(d.type==="Dist Switch"){clr="#16a34a";}
+    else if(d.type==="Access Switch"){clr="#0ea5e9";}
     else if(d.type==="Server"){icon="&#9644;";clr="#a855f7";}
     else if(d.type==="UPS"){clr="#22d3ee";}
     else if(d.type==="Generator"){clr="#f59e0b";}
     else if(d.type==="CRAC"||d.type==="Chiller"){icon="&#10052;";clr="#38bdf8";}
+    else if(d.type==="PC"){clr="#94a3b8";}
+    else if(d.type==="AP"){icon="&#9678;";clr="#8b5cf6";}
+    else if(d.type==="CCTV"){icon="&#9673;";clr="#ef4444";}
     sec[cat]+='<div class="dev-item" onclick="selectDevice(\''+k+'\')" title="'+d.name+'"><span style="color:'+clr+'">'+icon+'</span> <span>'+k+'</span></div>';
-  }
-  document.getElementById("sb-admin").innerHTML=sec.admin||"<em style='color:#555'>None</em>";
-  document.getElementById("sb-work1").innerHTML=sec.work1||"<em style='color:#555'>None</em>";
-  document.getElementById("sb-work2").innerHTML=sec.work2||"<em style='color:#555'>None</em>";
-  document.getElementById("sb-isp").innerHTML=sec.isp||"<em style='color:#555'>None</em>";
-  document.getElementById("sb-power").innerHTML=sec.power||"<em style='color:#555'>None</em>";
+  });
+  document.getElementById("sb-admin").innerHTML=sec.admin||"<em style='color:#555'>-</em>";
+  document.getElementById("sb-work1").innerHTML=sec.work1||"<em style='color:#555'>-</em>";
+  document.getElementById("sb-work2").innerHTML=sec.work2||"<em style='color:#555'>-</em>";
+  document.getElementById("sb-isp").innerHTML=sec.isp||"<em style='color:#555'>-</em>";
+  document.getElementById("sb-power").innerHTML=sec.power||"<em style='color:#555'>-</em>";
   document.getElementById("bb-devices").textContent=Object.keys(deviceMeshMap).length;
   document.getElementById("bb-links").textContent=connectionLines.length;
 }
 populateSidebar();
 
-// =====================================================================
-// DEVICE SELECTION & DETAIL
-// =====================================================================
+/* ============ DEVICE SELECTION ============ */
 var selectedMesh=null;
 function selectDevice(key){
-  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});selectedMesh=null;}
+  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._origMat)c.material=c.userData._origMat;});selectedMesh=null;}
   var mesh=deviceMeshMap[key];if(!mesh)return;
   selectedMesh=mesh;
-  mesh.traverse(function(c){if(c.isMesh){c.userData._om=c.material;c.material=c.material.clone();c.material.emissive=new THREE.Color(0x22d3ee);c.material.emissiveIntensity=0.5;}});
-  camTarget.copy(mesh.position);camDist=20;updateCamera();
+  mesh.traverse(function(c){if(c.isMesh){c.userData._origMat=c.material;c.material=c.material.clone();c.material.emissive=new THREE.Color(0x22d3ee);c.material.emissiveIntensity=0.6;}});
+  camTarget.copy(mesh.position);camDist=30;updateCamera();
   showDetail(key);
   document.querySelectorAll(".dev-item").forEach(function(el){el.classList.remove("sel");});
   document.querySelectorAll(".dev-item").forEach(function(el){if(el.textContent.trim().indexOf(key)!==-1)el.classList.add("sel");});
@@ -631,53 +759,39 @@ function showDetail(key){
   var d=DEVICES[key];if(!d){document.getElementById("detail-panel").style.display="none";return;}
   var p=document.getElementById("detail-panel");p.style.display="block";
   var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="color:#22d3ee;margin:0">'+key+'</h3><button onclick="closeDetail()" style="background:#334155;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:14px">&times;</button></div>';
-  h+='<p><b>Name:</b> '+d.name+'</p>';
-  h+='<p><b>Type:</b> '+d.type+'</p>';
+  h+='<p><b>Name:</b> '+d.name+'</p><p><b>Type:</b> '+d.type+'</p>';
   var fields=["model","ip","role","ha","ports","features","throughput","capacity","redundancy","cooling","floor","building"];
-  for(var i=0;i<fields.length;i++){var f=fields[i];if(d[f])h+='<p><b>'+f.charAt(0).toUpperCase()+f.slice(1)+':</b> '+d[f]+'</p>';}
+  fields.forEach(function(f){if(d[f])h+='<p><b>'+f.charAt(0).toUpperCase()+f.slice(1)+':</b> '+d[f]+'</p>';});
   p.innerHTML=h;
 }
 function closeDetail(){
   document.getElementById("detail-panel").style.display="none";
-  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});selectedMesh=null;}
+  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._origMat)c.material=c.userData._origMat;});selectedMesh=null;}
   document.querySelectorAll(".dev-item").forEach(function(el){el.classList.remove("sel");});
 }
 
-// =====================================================================
-// SEARCH
-// =====================================================================
+/* ============ SEARCH ============ */
 document.getElementById("searchInput").addEventListener("input",function(){
   var q=this.value.toLowerCase().trim();
   var sr=document.getElementById("search-results");
   if(!q){sr.style.display="none";return;}
   var matches=[];
-  Object.keys(DEVICES).forEach(function(k){
-    var d=DEVICES[k];
-    if(k.toLowerCase().indexOf(q)!==-1||(d.model&&d.model.toLowerCase().indexOf(q)!==-1)||(d.type&&d.type.toLowerCase().indexOf(q)!==-1)||(d.ip&&d.ip.indexOf(q)!==-1)||(d.name&&d.name.toLowerCase().indexOf(q)!==-1)){matches.push(k);}
-  });
+  Object.keys(DEVICES).forEach(function(k){var d=DEVICES[k];if(k.toLowerCase().indexOf(q)!==-1||(d.model&&d.model.toLowerCase().indexOf(q)!==-1)||(d.type&&d.type.toLowerCase().indexOf(q)!==-1)||(d.ip&&d.ip.indexOf(q)!==-1)||(d.name&&d.name.toLowerCase().indexOf(q)!==-1))matches.push(k);});
   if(!matches.length){sr.innerHTML='<div style="padding:8px;color:#666">Khong tim thay</div>';sr.style.display="block";return;}
-  var h="";for(var i=0;i<Math.min(matches.length,12);i++){h+='<div class="dev-item" style="padding:8px 12px" onclick="selectDevice(\''+matches[i]+'\');document.getElementById(\'search-results\').style.display=\'none\'">'+matches[i]+" - "+(DEVICES[matches[i]].name||"")+'</div>';}
+  var h="";for(var i=0;i<Math.min(matches.length,15);i++)h+='<div class="dev-item" style="padding:8px 12px" onclick="selectDevice(\''+matches[i]+'\');document.getElementById(\'search-results\').style.display=\'none\'">'+matches[i]+" - "+(DEVICES[matches[i]].name||"")+'</div>';
   sr.innerHTML=h;sr.style.display="block";
 });
 
-// =====================================================================
-// FLOOR TOGGLE
-// =====================================================================
+/* ============ FLOOR TOGGLE ============ */
 function toggleFloor(building,floor){
-  for(var i=0;i<floorGroups.length;i++){
-    var fg=floorGroups[i];
-    if(fg.userData.building===building){
-      if(floor===undefined)fg.visible=!fg.visible;
-      else if(fg.userData.floor===floor)fg.visible=!fg.visible;
-    }
-  }
+  floorGroups.forEach(function(fg){
+    if(fg.userData.building===building){if(floor===undefined)fg.visible=!fg.visible;else if(fg.userData.floor===floor)fg.visible=!fg.visible;}
+  });
 }
 
-// =====================================================================
-// CAMERA CONTROLS
-// =====================================================================
-var camTheta=-Math.PI/6,camPhi=Math.PI/5,camDist=180;
-var camTarget=new THREE.Vector3(0,0,4);
+/* ============ CAMERA ============ */
+var camTheta=-Math.PI/5,camPhi=Math.PI/5,camDist=220;
+var camTarget=new THREE.Vector3(0,0,5);
 var isDrag=false,isRDrag=false,lmx=0,lmy=0;
 
 function updateCamera(){
@@ -694,28 +808,23 @@ var cvs=renderer.domElement;
 cvs.addEventListener("mousedown",function(e){if(e.button===0)isDrag=true;else if(e.button===2)isRDrag=true;lmx=e.clientX;lmy=e.clientY;});
 cvs.addEventListener("mousemove",function(e){
   var dx=e.clientX-lmx,dy=e.clientY-lmy;
-  if(isDrag){camTheta-=dx*0.005;camPhi-=dy*0.005;camPhi=Math.max(0.1,Math.min(Math.PI-0.1,camPhi));updateCamera();}
+  if(isDrag){camTheta-=dx*0.005;camPhi-=dy*0.005;camPhi=Math.max(0.1,Math.min(Math.PI*0.48,camPhi));updateCamera();}
   if(isRDrag){
-    var r=new THREE.Vector3();camera.getWorldDirection(r);var up=new THREE.Vector3(0,0,1);
-    r.cross(up).normalize();up.crossVectors(r,camera.getWorldDirection(new THREE.Vector3())).normalize();
-    camTarget.addScaledVector(r,-dx*0.12);camTarget.addScaledVector(up,-dy*0.12);updateCamera();
+    var fwd=new THREE.Vector3();camera.getWorldDirection(fwd);fwd.z=0;fwd.normalize();
+    var right=new THREE.Vector3();right.crossVectors(fwd,new THREE.Vector3(0,0,1)).normalize();
+    camTarget.addScaledVector(right,-dx*0.15);camTarget.addScaledVector(fwd,dy*0.15);updateCamera();
   }
   lmx=e.clientX;lmy=e.clientY;
-
-  // Tooltip
+  /* Tooltip */
   var rect=cvs.getBoundingClientRect();
   var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
   var ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);
   var hits=ray.intersectObjects(allMeshes,true);
   var tt=document.getElementById("tooltip");
-  if(hits.length>0){
-    var obj=hits[0].object;while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;
-    if(obj.userData.deviceKey){tt.textContent=obj.userData.deviceKey;tt.style.display="block";tt.style.left=(e.clientX+12)+"px";tt.style.top=(e.clientY+12)+"px";}
-    else tt.style.display="none";
-  }else tt.style.display="none";
+  if(hits.length>0){var obj=hits[0].object;while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;if(obj.userData.deviceKey){tt.textContent=obj.userData.deviceKey+" - "+(DEVICES[obj.userData.deviceKey]?DEVICES[obj.userData.deviceKey].name:"");tt.style.display="block";tt.style.left=(e.clientX+14)+"px";tt.style.top=(e.clientY+14)+"px";}else tt.style.display="none";}else tt.style.display="none";
 });
 window.addEventListener("mouseup",function(){isDrag=false;isRDrag=false;});
-cvs.addEventListener("wheel",function(e){camDist+=e.deltaY*0.05;camDist=Math.max(5,Math.min(400,camDist));updateCamera();e.preventDefault();},{passive:false});
+cvs.addEventListener("wheel",function(e){camDist+=e.deltaY*0.08;camDist=Math.max(8,Math.min(500,camDist));updateCamera();e.preventDefault();},{passive:false});
 cvs.addEventListener("contextmenu",function(e){e.preventDefault();});
 cvs.addEventListener("dblclick",function(e){
   var rect=cvs.getBoundingClientRect();
@@ -725,50 +834,38 @@ cvs.addEventListener("dblclick",function(e){
   if(hits.length>0){var obj=hits[0].object;while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;if(obj.userData.deviceKey)selectDevice(obj.userData.deviceKey);}
 });
 
-// Keyboard
+/* Keyboard */
 document.addEventListener("keydown",function(e){
   if(e.target.tagName==="INPUT")return;
-  var spd=2,dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.z=0;dir.normalize();
-  var rt=new THREE.Vector3();rt.crossVectors(dir,new THREE.Vector3(0,0,1)).normalize();
-  if(e.key==="w"||e.key==="W"){camTarget.addScaledVector(dir,spd);updateCamera();}
-  if(e.key==="s"||e.key==="S"){camTarget.addScaledVector(dir,-spd);updateCamera();}
-  if(e.key==="a"||e.key==="A"){camTarget.addScaledVector(rt,-spd);updateCamera();}
-  if(e.key==="d"||e.key==="D"){camTarget.addScaledVector(rt,spd);updateCamera();}
-  if(e.key==="r"||e.key==="R"){camTheta=-Math.PI/6;camPhi=Math.PI/5;camDist=180;camTarget.set(0,0,4);updateCamera();}
+  var spd=3,fwd=new THREE.Vector3();camera.getWorldDirection(fwd);fwd.z=0;fwd.normalize();
+  var right=new THREE.Vector3();right.crossVectors(fwd,new THREE.Vector3(0,0,1)).normalize();
+  if(e.key==="w"||e.key==="W"){camTarget.addScaledVector(fwd,spd);updateCamera();}
+  if(e.key==="s"||e.key==="S"){camTarget.addScaledVector(fwd,-spd);updateCamera();}
+  if(e.key==="a"||e.key==="A"){camTarget.addScaledVector(right,-spd);updateCamera();}
+  if(e.key==="d"||e.key==="D"){camTarget.addScaledVector(right,spd);updateCamera();}
+  if(e.key==="r"||e.key==="R"){camTheta=-Math.PI/5;camPhi=Math.PI/5;camDist=220;camTarget.set(0,0,5);updateCamera();}
   if(e.key==="Escape")closeDetail();
   if(e.key==="1")toggleFloor("admin");
   if(e.key==="2")toggleFloor("work1");
   if(e.key==="3")toggleFloor("work2");
 });
 
-// Resize
-window.addEventListener("resize",function(){
-  var w=container.clientWidth,h=container.clientHeight;
-  camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);
-});
+/* Resize */
+window.addEventListener("resize",function(){var w=container.clientWidth,h=container.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
 
-// =====================================================================
-// ANIMATION LOOP
-// =====================================================================
+/* ============ ANIMATION ============ */
 var clock=new THREE.Clock();
 (function animate(){
   requestAnimationFrame(animate);
   var t=clock.getElapsedTime();
-  for(var i=0;i<connectionLines.length;i++){
-    if(connectionLines[i].material)connectionLines[i].material.opacity=0.45+0.35*Math.sin(t*2+i*0.5);
-  }
+  for(var i=0;i<connectionLines.length;i++){if(connectionLines[i].material)connectionLines[i].material.opacity=0.5+0.3*Math.sin(t*1.5+i*0.4);}
   renderer.render(scene,camera);
 })();
 
-// Sidebar section toggle
-document.querySelectorAll(".sb-title").forEach(function(h){
-  h.addEventListener("click",function(){
-    var sib=this.nextElementSibling;
-    if(sib)sib.style.display=sib.style.display==="none"?"block":"none";
-  });
-});
+/* Sidebar collapse */
+document.querySelectorAll(".sb-title").forEach(function(h){h.addEventListener("click",function(){var s=this.nextElementSibling;if(s)s.style.display=s.style.display==="none"?"block":"none";});});
 
-console.log("Campus Network 3D loaded. Devices: "+Object.keys(deviceMeshMap).length+", Links: "+connectionLines.length);
+console.log("Campus Network 3D loaded. Devices:",Object.keys(deviceMeshMap).length,"Links:",connectionLines.length);
 </script>
 </body>
 </html>
