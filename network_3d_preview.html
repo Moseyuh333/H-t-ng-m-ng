@@ -158,17 +158,17 @@ renderer.setClearColor(0x060a14);
 container.appendChild(renderer.domElement);
 
 var scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x060a14,0.003);
-var camera=new THREE.PerspectiveCamera(45,W/H,0.1,800);
+scene.fog=new THREE.FogExp2(0x060a14,0.0008);
+var camera=new THREE.PerspectiveCamera(50,W/H,0.1,1200);
 camera.up.set(0,0,1);
 
 scene.add(new THREE.AmbientLight(0x2a3050,2.0));
 var dl=new THREE.DirectionalLight(0xfff8f0,1.0);
 dl.position.set(60,-40,80);dl.castShadow=true;
 dl.shadow.mapSize.set(2048,2048);
-dl.shadow.camera.left=-100;dl.shadow.camera.right=100;
-dl.shadow.camera.top=80;dl.shadow.camera.bottom=-60;
-dl.shadow.camera.far=250;
+dl.shadow.camera.left=-150;dl.shadow.camera.right=150;
+dl.shadow.camera.top=120;dl.shadow.camera.bottom=-120;
+dl.shadow.camera.far=400;
 scene.add(dl);
 scene.add(new THREE.DirectionalLight(0xddeeff,0.4)).position.set(-40,50,50);
 scene.add(new THREE.HemisphereLight(0x4466aa,0x111122,0.6));
@@ -335,9 +335,9 @@ function sLabel(txt,pos,color,sc){
 // =====================================================================
 // BUILDING SHELL
 // =====================================================================
-var FH=5,ADMIN_X=0,ADMIN_Y=0,ADMIN_W=24,ADMIN_D=18;
-var W1_X=-45,W1_Y=0,W1_W=20,W1_D=16;
-var W2_X=45,W2_Y=0,W2_W=20,W2_D=16;
+var FH=8,ADMIN_X=0,ADMIN_Y=0,ADMIN_W=44,ADMIN_D=32;
+var W1_X=-80,W1_Y=0,W1_W=36,W1_D=28;
+var W2_X=80,W2_Y=0,W2_W=36,W2_D=28;
 var ADMIN_FLOORS=2,WORK_FLOORS=3;
 
 function makeBuilding(x,y,w,d,floors,wallColor,label){
@@ -375,89 +375,91 @@ function makeBuilding(x,y,w,d,floors,wallColor,label){
 // BUILD ADMIN (MDF / DATA CENTER)
 // =====================================================================
 function buildAdmin(){
-  makeBuilding(ADMIN_X,ADMIN_Y,ADMIN_W,ADMIN_D,ADMIN_FLOORS,0x0e7490,"TOA QUAN TRI (ADMIN)");
+  makeBuilding(ADMIN_X,ADMIN_Y,ADMIN_W,ADMIN_D,ADMIN_FLOORS,0x0e7490,"TOA QUAN TRI (ADMIN / MDF)");
   var ax=ADMIN_X,ay=ADMIN_Y,f1=0.4,f2=FH+0.4;
   var fg1=new THREE.Group();fg1.userData={building:"admin",floor:1};floorGroups.push(fg1);scene.add(fg1);
   var fg2=new THREE.Group();fg2.userData={building:"admin",floor:2};floorGroups.push(fg2);scene.add(fg2);
 
-  // Racks
-  var r1=makeRack();r1.position.set(ax-8,ay-3,f1);fg1.add(r1);
-  var r2=makeRack();r2.position.set(ax-5,ay-3,f1);fg1.add(r2);
-  var r3=makeRack();r3.position.set(ax+5,ay-3,f1);fg1.add(r3);
-  var r4=makeRack();r4.position.set(ax+8,ay-3,f1);fg1.add(r4);
+  // Racks (server cabinets visual)
+  for(var ri=0;ri<6;ri++){var rk=makeRack();rk.position.set(ax-14+ri*5,ay-8,f1);fg1.add(rk);}
 
-  // ISP
-  var isp1=makeRouter(COL.isp,0.8);isp1.position.set(ax+9,ay+5,f1+1.2);addD(isp1,"ISP1",fg1);
-  var isp2=makeRouter(COL.isp,0.8);isp2.position.set(ax+9,ay+2.5,f1+1.2);addD(isp2,"ISP2",fg1);
-  var lte=makeRouter(0x9333ea,0.6);lte.position.set(ax+9,ay+0,f1+1.2);addD(lte,"LTE_Modem",fg1);
+  // ISP Routers (right side)
+  var isp1=makeRouter(COL.isp,1.8);isp1.position.set(ax+16,ay+10,f1+1.5);addD(isp1,"ISP1",fg1);
+  var isp2=makeRouter(COL.isp,1.8);isp2.position.set(ax+16,ay+4,f1+1.5);addD(isp2,"ISP2",fg1);
+  var lte=makeRouter(0x9333ea,1.2);lte.position.set(ax+16,ay-2,f1+1.5);addD(lte,"LTE_Modem",fg1);
+  sLabel("ISP / WAN",{x:ax+16,y:ay+13,z:f1+4},"#fbbf24",2.5);
 
-  // MikroTik VRRP
-  var mk1=makeRouter(COL.router,0.9);mk1.position.set(ax+4,ay+5,f1+1.2);addD(mk1,"MikroTik1",fg1);
-  var mk2=makeRouter(COL.router,0.9);mk2.position.set(ax+4,ay+2.5,f1+1.2);addD(mk2,"MikroTik2",fg1);
-  makeCable(mk1.position,mk2.position,0xec4899,0.04);
-  sLabel("VRRP",{x:ax+4,y:ay+3.75,z:f1+2.5},"#ec4899",1.5);
+  // MikroTik VRRP (center-right)
+  var mk1=makeRouter(COL.router,2.0);mk1.position.set(ax+6,ay+10,f1+1.5);addD(mk1,"MikroTik1",fg1);
+  var mk2=makeRouter(COL.router,2.0);mk2.position.set(ax+6,ay+4,f1+1.5);addD(mk2,"MikroTik2",fg1);
+  makeCable(mk1.position,mk2.position,0xec4899,0.08);
+  sLabel("VRRP",{x:ax+6,y:ay+7,z:f1+4.5},"#ec4899",2.5);
 
   // Console Server
-  var cs=makeServer(0x666666,0.5);cs.position.set(ax+4,ay+0,f1);addD(cs,"ConsoleServer",fg1);
+  var cs=makeServer(0x666666,1.0);cs.position.set(ax+6,ay-2,f1);addD(cs,"ConsoleServer",fg1);
 
-  // FortiGate HA
-  var fw1=makeFirewall(0.9);fw1.position.set(ax,ay+5,f1+1.2);addD(fw1,"FortiGate1",fg1);
-  var fw2=makeFirewall(0.9);fw2.position.set(ax,ay+2.5,f1+1.2);addD(fw2,"FortiGate2",fg1);
-  makeCable(fw1.position,fw2.position,0xec4899,0.04);
-  sLabel("HA Sync",{x:ax,y:ay+3.75,z:f1+2.5},"#eab308",1.5);
+  // FortiGate HA (center)
+  var fw1=makeFirewall(2.0);fw1.position.set(ax-2,ay+10,f1+1.5);addD(fw1,"FortiGate1",fg1);
+  var fw2=makeFirewall(2.0);fw2.position.set(ax-2,ay+4,f1+1.5);addD(fw2,"FortiGate2",fg1);
+  makeCable(fw1.position,fw2.position,0xec4899,0.08);
+  sLabel("HA Active/Passive",{x:ax-2,y:ay+7,z:f1+4.5},"#eab308",2.5);
 
-  // Core Switches StackWise
-  var csw1=makeSwitch(COL.core,1.1);csw1.position.set(ax-5,ay+5,f1+1.2);addD(csw1,"CoreSW1",fg1);
-  var csw2=makeSwitch(COL.core,1.1);csw2.position.set(ax-5,ay+2.5,f1+1.2);addD(csw2,"CoreSW2",fg1);
-  makeCable(csw1.position,csw2.position,0xef4444,0.05);
-  sLabel("StackWise",{x:ax-5,y:ay+3.75,z:f1+2.5},"#ef4444",1.5);
+  // Core Switches StackWise (center-left)
+  var csw1=makeSwitch(COL.core,2.2);csw1.position.set(ax-12,ay+10,f1+1.5);addD(csw1,"CoreSW1",fg1);
+  var csw2=makeSwitch(COL.core,2.2);csw2.position.set(ax-12,ay+4,f1+1.5);addD(csw2,"CoreSW2",fg1);
+  makeCable(csw1.position,csw2.position,0xef4444,0.1);
+  sLabel("StackWise Virtual",{x:ax-12,y:ay+7,z:f1+4.5},"#ef4444",2.5);
 
   // Chain: ISP->MikroTik->FortiGate->CoreSW
-  makeCable(isp1.position,mk1.position,COL.isp,0.025);
-  makeCable(isp2.position,mk2.position,COL.isp,0.025);
-  makeCable(mk1.position,fw1.position,COL.router,0.025);
-  makeCable(mk2.position,fw2.position,COL.router,0.025);
-  makeCable(fw1.position,csw1.position,COL.fw,0.025);
-  makeCable(fw2.position,csw2.position,COL.fw,0.025);
-  makeCable(mk1.position,fw2.position,0x555555,0.015);
-  makeCable(mk2.position,fw1.position,0x555555,0.015);
-  makeCable(lte.position,cs.position,0x8b5cf6,0.02);
+  makeCable(isp1.position,mk1.position,COL.isp,0.05);
+  makeCable(isp2.position,mk2.position,COL.isp,0.05);
+  makeCable(mk1.position,fw1.position,COL.router,0.05);
+  makeCable(mk2.position,fw2.position,COL.router,0.05);
+  makeCable(fw1.position,csw1.position,COL.fw,0.05);
+  makeCable(fw2.position,csw2.position,COL.fw,0.05);
+  // Cross links for redundancy
+  makeCable(mk1.position,fw2.position,0x555555,0.03);
+  makeCable(mk2.position,fw1.position,0x555555,0.03);
+  makeCable(lte.position,cs.position,0x8b5cf6,0.04);
 
-  // UPS A/B
-  var uA=makeUPS(0.9);uA.position.set(ax-9,ay-4,f1);addD(uA,"UPS_A",fg1);
-  var uB=makeUPS(0.9);uB.position.set(ax-9,ay-7,f1);addD(uB,"UPS_B",fg1);
-  sLabel("UPS A",{x:ax-9,y:ay-4,z:f1+2.2},"#22d3ee",1.2);
-  sLabel("UPS B",{x:ax-9,y:ay-7,z:f1+2.2},"#f59e0b",1.2);
-  makeCable({x:ax-9,y:ay-4,z:f1+1.5},{x:ax-5,y:ay+5,z:f1+0.5},0x22d3ee,0.02);
-  makeCable({x:ax-9,y:ay-7,z:f1+1.5},{x:ax-5,y:ay+2.5,z:f1+0.5},0xf59e0b,0.02);
+  // UPS A/B (left-back)
+  var uA=makeUPS(1.8);uA.position.set(ax-16,ay-6,f1);addD(uA,"UPS_A",fg1);
+  var uB=makeUPS(1.8);uB.position.set(ax-16,ay-12,f1);addD(uB,"UPS_B",fg1);
+  sLabel("UPS Feed A",{x:ax-16,y:ay-6,z:f1+4},"#22d3ee",2);
+  sLabel("UPS Feed B",{x:ax-16,y:ay-12,z:f1+4},"#f59e0b",2);
+  makeCable({x:ax-16,y:ay-6,z:f1+2.5},{x:ax-12,y:ay+10,z:f1+1},0x22d3ee,0.04);
+  makeCable({x:ax-16,y:ay-12,z:f1+2.5},{x:ax-12,y:ay+4,z:f1+1},0xf59e0b,0.04);
 
-  // Generator
-  var gen=makeGenerator(0.9);gen.position.set(ax+10,ay-7,f1);addD(gen,"Generator",fg1);
-  makeCable({x:ax+10,y:ay-7,z:f1+1.2},{x:ax-9,y:ay-4,z:f1+1.5},0xef4444,0.025);
-  makeCable({x:ax+10,y:ay-7,z:f1+1.2},{x:ax-9,y:ay-7,z:f1+1.5},0xef4444,0.025);
+  // Generator (right-back)
+  var gen=makeGenerator(1.8);gen.position.set(ax+16,ay-10,f1);addD(gen,"Generator",fg1);
+  sLabel("May Phat 150kVA",{x:ax+16,y:ay-10,z:f1+4},"#f59e0b",2);
+  makeCable({x:ax+16,y:ay-10,z:f1+2},{x:ax-16,y:ay-6,z:f1+2.5},0xef4444,0.05);
+  makeCable({x:ax+16,y:ay-10,z:f1+2},{x:ax-16,y:ay-12,z:f1+2.5},0xef4444,0.05);
 
-  // CRAC
-  var cr1=makeCRAC(0.9);cr1.position.set(ax-9,ay+5,f1);addD(cr1,"CRAC1",fg1);
-  var cr2=makeCRAC(0.9);cr2.position.set(ax-9,ay+2.5,f1);addD(cr2,"CRAC2",fg1);
-  makeCable({x:ax-9,y:ay+5,z:f1+1.7},{x:ax-2,y:ay,z:ADMIN_FLOORS*FH+1.5},0x38bdf8,0.035);
-  makeCable({x:ax-9,y:ay+2.5,z:f1+1.7},{x:ax+2,y:ay,z:ADMIN_FLOORS*FH+1.5},0x38bdf8,0.035);
+  // CRAC (far left)
+  var cr1=makeCRAC(1.8);cr1.position.set(ax-18,ay+10,f1);addD(cr1,"CRAC1",fg1);
+  var cr2=makeCRAC(1.8);cr2.position.set(ax-18,ay+4,f1);addD(cr2,"CRAC2",fg1);
+  sLabel("CRAC N+1",{x:ax-18,y:ay+7,z:f1+4.5},"#38bdf8",2);
+  makeCable({x:ax-18,y:ay+10,z:f1+3},{x:ax-4,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.06);
+  makeCable({x:ax-18,y:ay+4,z:f1+3},{x:ax+4,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.06);
 
   // Roof Chiller
-  var ch=makeChiller(0.7);ch.position.set(ax,ay,ADMIN_FLOORS*FH+0.4);addD(ch,"RoofChiller",fg1);
+  var ch=makeChiller(1.4);ch.position.set(ax,ay,ADMIN_FLOORS*FH+0.5);addD(ch,"RoofChiller",fg1);
+  sLabel("Roof Chiller 120kW",{x:ax,y:ay-5,z:ADMIN_FLOORS*FH+3},"#38bdf8",2.5);
 
-  // Floor 2: Servers
-  var sv1=makeServer(COL.server,0.8);sv1.position.set(ax-6,ay+4,f2);addD(sv1,"ROSEServer1",fg2);
-  var sv2=makeServer(COL.server,0.8);sv2.position.set(ax-3,ay+4,f2);addD(sv2,"ROSEServer2",fg2);
-  var ad=makeServer(0x7c3aed,0.7);ad.position.set(ax,ay+4,f2);addD(ad,"ADServer",fg2);
-  var nvr=makeServer(COL.cctv,0.8);nvr.position.set(ax+4,ay+4,f2);addD(nvr,"CentralNVR",fg2);
-  var nas=makeServer(0x666666,0.8);nas.position.set(ax+7,ay+4,f2);addD(nas,"StorageNAS",fg2);
-  makeCable({x:ax-6,y:ay+4,z:f2+1},csw1.position,COL.server,0.02);
-  makeCable({x:ax-3,y:ay+4,z:f2+1},csw2.position,COL.server,0.02);
-  makeCable({x:ax,y:ay+4,z:f2+1},csw1.position,0x7c3aed,0.02);
-  makeCable({x:ax+4,y:ay+4,z:f2+1},csw1.position,COL.cctv,0.02);
-  makeCable({x:ax+7,y:ay+4,z:f2+1},csw2.position,0x666666,0.02);
-  sLabel("SERVER FARM",{x:ax-3,y:ay+7,z:f2+2.5},"#a855f7",2);
-  sLabel("CAMERA CENTRAL",{x:ax+5.5,y:ay+7,z:f2+2.5},"#ef4444",2);
+  // Floor 2: Server Farm
+  var sv1=makeServer(COL.server,1.6);sv1.position.set(ax-12,ay+8,f2);addD(sv1,"ROSEServer1",fg2);
+  var sv2=makeServer(COL.server,1.6);sv2.position.set(ax-6,ay+8,f2);addD(sv2,"ROSEServer2",fg2);
+  var ad=makeServer(0x7c3aed,1.4);ad.position.set(ax,ay+8,f2);addD(ad,"ADServer",fg2);
+  var nvr=makeServer(COL.cctv,1.6);nvr.position.set(ax+8,ay+8,f2);addD(nvr,"CentralNVR",fg2);
+  var nas=makeServer(0x666666,1.6);nas.position.set(ax+14,ay+8,f2);addD(nas,"StorageNAS",fg2);
+  makeCable({x:ax-12,y:ay+8,z:f2+2},csw1.position,COL.server,0.04);
+  makeCable({x:ax-6,y:ay+8,z:f2+2},csw2.position,COL.server,0.04);
+  makeCable({x:ax,y:ay+8,z:f2+2},csw1.position,0x7c3aed,0.04);
+  makeCable({x:ax+8,y:ay+8,z:f2+2},csw1.position,COL.cctv,0.04);
+  makeCable({x:ax+14,y:ay+8,z:f2+2},csw2.position,0x666666,0.04);
+  sLabel("SERVER FARM",{x:ax-6,y:ay+13,z:f2+4},"#a855f7",3);
+  sLabel("NVR / NAS",{x:ax+11,y:ay+13,z:f2+4},"#ef4444",2.5);
 }
 
 // =====================================================================
@@ -467,44 +469,45 @@ function buildWorkBuilding(bx,by,bw,bd,bldgKey,floors,distKeys,nvrKey){
   makeBuilding(bx,by,bw,bd,WORK_FLOORS,0x7c3aed,"TOA LAM VIEC "+(bldgKey==="work1"?"1":"2"));
   var fgIDF=new THREE.Group();fgIDF.userData={building:bldgKey,floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
 
-  var ds1=makeSwitch(COL.dist,0.9);ds1.position.set(bx-4,by+4,0.4+1);addD(ds1,distKeys[0],fgIDF);
-  var ds2=makeSwitch(COL.dist,0.9);ds2.position.set(bx+4,by+4,0.4+1);addD(ds2,distKeys[1],fgIDF);
-  makeCable(ds1.position,ds2.position,COL.dist,0.03);
-  var nvrL=makeServer(COL.cctv,0.6);nvrL.position.set(bx,by+4,0.4);addD(nvrL,nvrKey,fgIDF);
-  makeCable(nvrL.position,ds1.position,COL.cctv,0.02);
-  sLabel("IDF ROOM",{x:bx,y:by+7,z:3.5},"#a78bfa",1.8);
+  var ds1=makeSwitch(COL.dist,1.8);ds1.position.set(bx-8,by+8,0.4+1.5);addD(ds1,distKeys[0],fgIDF);
+  var ds2=makeSwitch(COL.dist,1.8);ds2.position.set(bx+8,by+8,0.4+1.5);addD(ds2,distKeys[1],fgIDF);
+  makeCable(ds1.position,ds2.position,COL.dist,0.06);
+  sLabel("StackWise-480",{x:bx,y:by+8,z:4},"#16a34a",2);
+  var nvrL=makeServer(COL.cctv,1.2);nvrL.position.set(bx,by+8,0.4);addD(nvrL,nvrKey,fgIDF);
+  makeCable(nvrL.position,ds1.position,COL.cctv,0.04);
+  sLabel("IDF ROOM",{x:bx,y:by+13,z:5},"#a78bfa",3);
 
   for(var fi=0;fi<floors.length;fi++){
     var fl=floors[fi];
-    var fz=fl.z+0.4;
+    var fz=fl.key*FH+0.4;
     var fg=new THREE.Group();fg.userData={building:bldgKey,floor:fl.key};floorGroups.push(fg);scene.add(fg);
 
     for(var si=0;si<fl.sw;si++){
       var swK=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AccSW"+(si+1);
-      var sw=makeSwitch(COL.acc,0.7);sw.position.set(bx-5+si*4,by-3,fz+1);addD(sw,swK,fg);
-      makeCable(sw.position,ds1.position,COL.acc,0.015);
-      makeCable(sw.position,ds2.position,COL.acc,0.012);
+      var sw=makeSwitch(COL.acc,1.4);sw.position.set(bx-8+si*8,by-5,fz+1.5);addD(sw,swK,fg);
+      makeCable(sw.position,ds1.position,COL.acc,0.03);
+      makeCable(sw.position,ds2.position,COL.acc,0.025);
     }
     var deskM=new THREE.MeshStandardMaterial({color:0x8b6914,roughness:0.7});
     for(var pi=0;pi<fl.pcs;pi++){
-      var pc=makePC(0.35);pc.position.set(bx-7+pi*2.3,by-1,fz);
+      var pc=makePC(0.7);pc.position.set(bx-12+pi*4.5,by-1,fz);
       var pk=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_PC"+(pi+1);
       addD(pc,pk,fg);
-      var desk=new THREE.Mesh(new THREE.BoxGeometry(1.6,0.8,0.05),deskM);desk.position.set(bx-7+pi*2.3,by-1,fz+0.65);fg.add(desk);
+      var desk=new THREE.Mesh(new THREE.BoxGeometry(3,1.5,0.08),deskM);desk.position.set(bx-12+pi*4.5,by-1,fz+0.5);fg.add(desk);
     }
     for(var ai=0;ai<fl.aps;ai++){
-      var ap=makeAP(0.5);ap.position.set(bx-3+ai*3.5,by,fz+FH-0.4);
+      var ap=makeAP(1.0);ap.position.set(bx-6+ai*7,by+2,fz+FH-0.6);
       addD(ap,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AP"+(ai+1),fg);
     }
     for(var ci=0;ci<fl.cctv;ci++){
-      var cam=makeCCTV(0.4);
-      cam.position.set(bx-bw/2+2+ci*(bw-4)/(Math.max(fl.cctv-1,1)),by-bd/2+1,fz+FH-0.4);
+      var cam=makeCCTV(0.8);
+      cam.position.set(bx-bw/2+3+ci*(bw-6)/(Math.max(fl.cctv-1,1)),by-bd/2+2,fz+FH-0.6);
       addD(cam,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_CCTV"+(ci+1),fg);
     }
-    sLabel("TANG "+fl.key,{x:bx,y:by-bd/2-1.5,z:fz+2},"#c4b5fd",1.3);
+    sLabel("TANG "+fl.key,{x:bx,y:by-bd/2-3,z:fz+3},"#c4b5fd",2.5);
   }
   // Roof HVAC
-  var hvac=makeChiller(0.4);hvac.position.set(bx,by,WORK_FLOORS*FH+0.4);fg=new THREE.Group();scene.add(fg);fg.add(hvac);
+  var hvac=makeChiller(0.8);hvac.position.set(bx,by,WORK_FLOORS*FH+0.5);scene.add(hvac);
 }
 
 function buildWork1(){buildWorkBuilding(W1_X,W1_Y,W1_W,W1_D,"work1",FLOORS_B1,["DistSW1","DistSW2"],"NVRLocal1");}
@@ -673,8 +676,8 @@ function toggleFloor(building,floor){
 // =====================================================================
 // CAMERA CONTROLS
 // =====================================================================
-var camTheta=Math.PI/4,camPhi=Math.PI/4,camDist=120;
-var camTarget=new THREE.Vector3(0,0,5);
+var camTheta=-Math.PI/6,camPhi=Math.PI/5,camDist=180;
+var camTarget=new THREE.Vector3(0,0,4);
 var isDrag=false,isRDrag=false,lmx=0,lmy=0;
 
 function updateCamera(){
@@ -712,7 +715,7 @@ cvs.addEventListener("mousemove",function(e){
   }else tt.style.display="none";
 });
 window.addEventListener("mouseup",function(){isDrag=false;isRDrag=false;});
-cvs.addEventListener("wheel",function(e){camDist+=e.deltaY*0.05;camDist=Math.max(5,Math.min(200,camDist));updateCamera();e.preventDefault();},{passive:false});
+cvs.addEventListener("wheel",function(e){camDist+=e.deltaY*0.05;camDist=Math.max(5,Math.min(400,camDist));updateCamera();e.preventDefault();},{passive:false});
 cvs.addEventListener("contextmenu",function(e){e.preventDefault();});
 cvs.addEventListener("dblclick",function(e){
   var rect=cvs.getBoundingClientRect();
@@ -731,7 +734,7 @@ document.addEventListener("keydown",function(e){
   if(e.key==="s"||e.key==="S"){camTarget.addScaledVector(dir,-spd);updateCamera();}
   if(e.key==="a"||e.key==="A"){camTarget.addScaledVector(rt,-spd);updateCamera();}
   if(e.key==="d"||e.key==="D"){camTarget.addScaledVector(rt,spd);updateCamera();}
-  if(e.key==="r"||e.key==="R"){camTheta=Math.PI/4;camPhi=Math.PI/4;camDist=120;camTarget.set(0,0,5);updateCamera();}
+  if(e.key==="r"||e.key==="R"){camTheta=-Math.PI/6;camPhi=Math.PI/5;camDist=180;camTarget.set(0,0,4);updateCamera();}
   if(e.key==="Escape")closeDetail();
   if(e.key==="1")toggleFloor("admin");
   if(e.key==="2")toggleFloor("work1");
