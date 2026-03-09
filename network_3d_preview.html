@@ -1,859 +1,660 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Mo hinh Ha tang Mang 3D - Theo Design.txt</title>
+<title>Mo hinh Ha tang Mang 3D - Campus Network</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#060a14;--surface:rgba(12,18,35,0.92);--surface2:rgba(18,26,50,0.95);
-  --border:rgba(40,60,100,0.4);--accent:#00d4ff;--accent2:#ff6b35;--accent3:#7cfc00;
-  --text:#e2e8f0;--muted:#64748b;--dim:#334155;
-  --core:#2563eb;--dist:#16a34a;--acc:#0ea5e9;--router:#f97316;
-  --firewall:#eab308;--server:#a855f7;--pc:#94a3b8;
-  --trunk:#ef4444;--uplink:#3b82f6;--internet:#fbbf24;--dmzlink:#ec4899;
-  --glass:rgba(15,23,42,0.75);--glow:0 0 30px rgba(0,212,255,0.15);
-  --radius:10px;--ups:#22d3ee;--cooling:#38bdf8;--generator:#f59e0b;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#060a14;--surface:rgba(12,18,35,0.95);--border:rgba(40,60,100,0.4);--accent:#00d4ff;--text:#e2e8f0;--muted:#64748b;--dim:#334155;--glass:rgba(15,23,42,0.85)}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif}
-#header{position:fixed;top:0;left:0;right:0;z-index:200;height:48px;background:linear-gradient(180deg,rgba(6,10,20,0.98),rgba(6,10,20,0.85));border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:16px;backdrop-filter:blur(12px)}
-#header .logo{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--accent);text-transform:uppercase;white-space:nowrap}
-#header .sep{width:1px;height:24px;background:var(--border)}
-#header .subtitle{font-size:11px;color:var(--muted);white-space:nowrap}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.search-box{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px;transition:border .2s}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
+#header{position:fixed;top:0;left:0;right:0;z-index:200;height:44px;background:rgba(6,10,20,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:14px}
+#header .logo{font-size:11px;font-weight:700;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;font-family:monospace}
+#header .sub{font-size:11px;color:var(--muted)}
+.search-box{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px}
 .search-box:focus-within{border-color:var(--accent)}
-.search-box svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2}
-.search-box input{background:none;border:none;outline:none;color:var(--text);font-size:12px;font-family:inherit;width:180px}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-size:12px;width:180px}
 .search-box input::placeholder{color:var(--dim)}
-.stat-badge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
-#sidebar{position:fixed;left:0;top:48px;bottom:0;width:290px;z-index:150;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;backdrop-filter:blur(12px);scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
-#sidebar::-webkit-scrollbar{width:4px}
-#sidebar::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
-.sb-section{padding:12px 14px;border-bottom:1px solid var(--border)}
-.sb-title{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.sb-title .badge{font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,0.15);color:var(--accent);font-weight:400}
-.floor-toggle{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .2s;font-size:12px;color:var(--text);user-select:none}
-.floor-toggle:hover{background:rgba(255,255,255,0.06)}
-.floor-toggle.active{background:rgba(0,212,255,0.1)}
-.floor-toggle .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.floor-toggle .ft-name{flex:1;font-weight:500}
-.floor-toggle .ft-count{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace}
-.floor-toggle .ft-eye{font-size:12px;opacity:0.5;transition:opacity .2s}
-.floor-toggle:hover .ft-eye{opacity:1}
-.device-item{display:flex;align-items:center;gap:8px;padding:6px 10px;margin:2px 0;border-radius:6px;cursor:pointer;transition:all .2s;font-size:11px}
-.device-item:hover{background:rgba(255,255,255,0.06)}
-.device-item.selected{background:rgba(0,212,255,0.12);border-left:2px solid var(--accent)}
-.device-item .di-icon{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700;color:#fff}
-.device-item .di-info{flex:1;min-width:0}
-.device-item .di-name{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.device-item .di-sub{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:1px}
-#detail-panel{position:fixed;right:-400px;top:48px;bottom:0;width:390px;z-index:150;background:var(--surface2);border-left:1px solid var(--border);overflow-y:auto;backdrop-filter:blur(12px);transition:right .35s cubic-bezier(.4,0,.2,1);scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
-#detail-panel.open{right:0}
-.dp-header{padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface2);z-index:1}
-.dp-close{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.05);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:16px}
-.dp-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
-.dp-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;margin-bottom:10px}
-.dp-name{font-size:18px;font-weight:700;color:var(--text);margin-bottom:2px}
-.dp-type{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
-.dp-section{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.dp-section-title{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
-.dp-row{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;font-size:12px;gap:8px}
-.dp-row .label{color:var(--muted);min-width:90px;flex-shrink:0}
-.dp-row .value{color:var(--text);text-align:right;font-family:'Space Mono',monospace;font-size:11px;word-break:break-all}
-.dp-row .value.highlight{color:var(--accent)}
-.dp-row .value.price{color:var(--accent3)}
-#legend{position:fixed;right:16px;bottom:48px;z-index:100;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-width:190px;backdrop-filter:blur(12px);max-height:calc(100vh - 120px);overflow-y:auto;transition:right .3s}
-#legend.shifted{right:406px}
-#legend h3{font-family:'Space Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.leg-item{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--text);margin-bottom:4px}
+#sidebar{position:fixed;left:0;top:44px;bottom:0;width:270px;z-index:150;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+.sb-section{padding:10px 12px;border-bottom:1px solid var(--border)}
+.sb-title{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;font-family:monospace;cursor:pointer;user-select:none}
+.sb-title .badge{font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,0.15);color:var(--accent);font-weight:400;margin-left:4px}
+.dev-item{display:flex;align-items:center;gap:6px;padding:4px 8px;margin:1px 0;border-radius:4px;cursor:pointer;font-size:11px;transition:background .15s}
+.dev-item:hover{background:rgba(255,255,255,0.06)}
+.dev-item.sel{background:rgba(0,212,255,0.12)}
+#detail-panel{position:fixed;right:0;top:44px;bottom:0;width:340px;z-index:150;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:none;padding:16px}
+#detail-panel p{font-size:12px;margin:3px 0;line-height:1.5}
+#detail-panel p b{color:var(--muted);margin-right:4px}
+#legend{position:fixed;right:12px;bottom:40px;z-index:100;background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-width:180px;font-size:10px}
+#legend h3{font-size:9px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;font-family:monospace}
+.leg-item{display:flex;align-items:center;gap:6px;margin-bottom:3px}
 .leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.leg-line{width:18px;height:3px;flex-shrink:0;border-radius:2px}
-.leg-section{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:7px 0 3px}
-.tooltip{position:fixed;z-index:300;background:rgba(6,10,20,0.97);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--text);pointer-events:none;display:none;max-width:280px;box-shadow:var(--glow);backdrop-filter:blur(8px)}
-.tooltip .tt-title{color:var(--accent);font-weight:700;font-size:12px;margin-bottom:4px}
-.tooltip .tt-row{display:flex;gap:6px;margin-bottom:2px;font-size:10px;line-height:1.5}
-.tooltip .tt-label{color:var(--muted);min-width:65px;flex-shrink:0}
-.tooltip .tt-val{color:var(--text);font-family:'Space Mono',monospace}
-#bottom-bar{position:fixed;bottom:0;left:290px;right:0;height:32px;z-index:100;background:linear-gradient(0deg,rgba(6,10,20,0.95),rgba(6,10,20,0.7));border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:16px;backdrop-filter:blur(8px);font-size:10px;color:var(--muted);font-family:'Space Mono',monospace}
-.bb-item{display:flex;align-items:center;gap:4px}
-.bb-item .bb-val{color:var(--text)}
-#canvas-container{position:fixed;left:290px;top:48px;right:0;bottom:32px}
-#canvas-container.detail-open{right:390px}
+.leg-line{width:18px;height:3px;border-radius:2px;flex-shrink:0}
+.leg-cat{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:5px 0 2px;font-family:monospace}
+#tooltip{position:fixed;z-index:300;background:rgba(6,10,20,0.95);border:1px solid var(--accent);border-radius:6px;padding:6px 10px;font-size:11px;pointer-events:none;display:none;color:var(--accent);font-weight:600}
+#bottom-bar{position:fixed;bottom:0;left:270px;right:0;height:28px;z-index:100;background:rgba(6,10,20,0.95);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:14px;font-size:10px;color:var(--muted);font-family:monospace}
+#bottom-bar .v{color:var(--text)}
+#canvas-container{position:fixed;left:270px;top:44px;right:0;bottom:28px}
 canvas{display:block}
-#search-results{position:fixed;top:48px;right:100px;z-index:250;background:var(--surface2);border:1px solid var(--border);border-radius:8px;max-height:300px;overflow-y:auto;width:300px;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
-.sr-item{padding:8px 12px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:8px}
-.sr-item:hover{background:rgba(0,212,255,0.08)}
-.sr-item .sr-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-.sr-item .sr-name{font-size:12px;font-weight:500;flex:1}
-.sr-item .sr-sub{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+#search-results{position:fixed;top:44px;right:60px;z-index:250;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:260px;overflow-y:auto;width:280px;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 </style>
 </head>
 <body>
 <div id="header">
   <div class="logo">HA TANG MANG 3D</div>
-  <div class="sep"></div>
-  <div class="subtitle">Enterprise Campus Network · UPS Kep A/B · Cap Ngam · VRRP + HA</div>
-  <div class="header-right">
-    <div class="search-box">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchInput" placeholder="Tim thiet bi, IP, model..." oninput="handleSearch(this.value)">
-    </div>
-    <div class="stat-badge" id="totalDevBadge">--</div>
+  <div class="sub">Enterprise Campus Network &middot; UPS Kep A/B &middot; Cap Ngam &middot; VRRP + HA</div>
+  <div class="search-box">
+    <span style="color:var(--muted)">&#128269;</span>
+    <input type="text" id="searchInput" placeholder="Tim thiet bi, IP, model...">
   </div>
 </div>
 <div id="search-results"></div>
 <div id="sidebar">
-  <div class="sb-section">
-    <div class="sb-title"><span style="color:#f97316">&#9632;</span> Toa Quan Tri (Admin/MDF) <span class="badge">CORE</span></div>
-    <div id="sb-admin"></div>
-  </div>
-  <div class="sb-section">
-    <div class="sb-title"><span style="color:#3b82f6">&#9632;</span> Toa Lam Viec 1 (IDF 1) <span class="badge">WORK</span></div>
-    <div id="sb-work1"></div>
-  </div>
-  <div class="sb-section">
-    <div class="sb-title"><span style="color:#22c55e">&#9632;</span> Toa Lam Viec 2 (IDF 2) <span class="badge">WORK</span></div>
-    <div id="sb-work2"></div>
-  </div>
-  <div class="sb-section">
-    <div class="sb-title"><span style="color:#eab308">&#9632;</span> ISP / WAN <span class="badge">EXT</span></div>
-    <div id="sb-isp"></div>
-  </div>
-  <div class="sb-section">
-    <div class="sb-title"><span style="color:#22d3ee">&#9632;</span> He thong Dien &amp; Tan Nhiet <span class="badge">INFRA</span></div>
-    <div id="sb-power"></div>
-  </div>
+  <div class="sb-section"><div class="sb-title"><span style="color:#f97316">&#9632;</span> Toa Quan Tri (Admin/MDF) <span class="badge">CORE</span></div><div id="sb-admin"></div></div>
+  <div class="sb-section"><div class="sb-title"><span style="color:#3b82f6">&#9632;</span> Toa Lam Viec 1 (IDF 1) <span class="badge">WORK</span></div><div id="sb-work1"></div></div>
+  <div class="sb-section"><div class="sb-title"><span style="color:#22c55e">&#9632;</span> Toa Lam Viec 2 (IDF 2) <span class="badge">WORK</span></div><div id="sb-work2"></div></div>
+  <div class="sb-section"><div class="sb-title"><span style="color:#eab308">&#9632;</span> ISP / WAN <span class="badge">EXT</span></div><div id="sb-isp"></div></div>
+  <div class="sb-section"><div class="sb-title"><span style="color:#22d3ee">&#9632;</span> He Thong Dien &amp; Tan Nhiet <span class="badge">INFRA</span></div><div id="sb-power"></div></div>
 </div>
-<div id="detail-panel">
-  <div class="dp-header">
-    <button class="dp-close" onclick="closeDetail()">&times;</button>
-    <div class="dp-icon" id="dp-icon"></div>
-    <div class="dp-name" id="dp-name"></div>
-    <div class="dp-type" id="dp-type"></div>
-  </div>
-  <div id="dp-body"></div>
-</div>
+<div id="detail-panel"></div>
 <div id="legend">
-  <h3>Chu giai</h3>
-  <div class="leg-section">Thiet bi mang</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--router)"></div>MikroTik CCR2216 (VRRP)</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--firewall)"></div>FortiGate 600F (HA)</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--core)"></div>Cisco 9500 Core (StackWise)</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--dist)"></div>Cisco 9300 Distribution</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--acc)"></div>Cisco 9200L Access</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--server);border-radius:50%"></div>Server / NVR / NAS</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--pc)"></div>PC / AP / CCTV</div>
-  <div class="leg-section">Ket noi</div>
-  <div class="leg-item"><div class="leg-line" style="background:var(--trunk)"></div>Trunk / StackWise</div>
-  <div class="leg-item"><div class="leg-line" style="background:var(--uplink)"></div>40G Quang Ngam</div>
-  <div class="leg-item"><div class="leg-line" style="background:var(--internet)"></div>ISP WAN Link</div>
-  <div class="leg-item"><div class="leg-line" style="background:var(--dmzlink)"></div>HA Sync / VRRP</div>
+  <h3>Chu Giai</h3>
+  <div class="leg-cat">Thiet bi mang</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#f97316"></div>MikroTik CCR2216 (VRRP)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#eab308"></div>FortiGate 600F (HA)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#2563eb"></div>Cisco 9500 Core (StackWise)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#16a34a"></div>Cisco 9300 Distribution</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#0ea5e9"></div>Cisco 9200L Access</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#a855f7;border-radius:50%"></div>Server / NVR / NAS</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#94a3b8"></div>PC / AP / CCTV</div>
+  <div class="leg-cat">Ket noi</div>
+  <div class="leg-item"><div class="leg-line" style="background:#ef4444"></div>Trunk / StackWise</div>
+  <div class="leg-item"><div class="leg-line" style="background:#3b82f6"></div>40G Quang Ngam</div>
+  <div class="leg-item"><div class="leg-line" style="background:#fbbf24"></div>ISP WAN Link</div>
+  <div class="leg-item"><div class="leg-line" style="background:#ec4899"></div>HA Sync / VRRP</div>
   <div class="leg-item"><div class="leg-line" style="background:#8b5cf6"></div>Console (OOB)</div>
-  <div class="leg-section">Ha tang</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--ups)"></div>UPS Kep A/B</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--generator)"></div>May phat dien</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--cooling)"></div>He thong tan nhiet</div>
-  <div class="leg-section">Cap ngam</div>
-  <div class="leg-item"><div class="leg-line" style="background:rgba(59,130,246,0.5);border:1px dashed #3b82f6"></div>Ong luon cap ngam</div>
+  <div class="leg-cat">Ha tang</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#22d3ee"></div>UPS Kep A/B</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>May phat dien</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#38bdf8"></div>He thong tan nhiet</div>
+  <div class="leg-cat">Cap ngam</div>
+  <div class="leg-item"><div class="leg-line" style="background:#3b82f6;opacity:0.5;border:1px dashed #3b82f6"></div>Ong luon cap ngam</div>
 </div>
-<div class="tooltip" id="tooltip">
-  <div class="tt-title" id="tt-title"></div>
-  <div id="tt-body"></div>
-</div>
+<div id="tooltip"></div>
 <div id="bottom-bar">
-  <div class="bb-item">Thiet bi: <span class="bb-val" id="bb-devices">0</span></div>
-  <div class="bb-item">|</div>
-  <div class="bb-item">Ket noi: <span class="bb-val" id="bb-links">0</span></div>
-  <div class="bb-item">|</div>
-  <div class="bb-item">Toa nha: <span class="bb-val">3</span></div>
-  <div class="bb-item">|</div>
-  <div class="bb-item">UPS: <span class="bb-val">Kep A/B</span></div>
-  <div class="bb-item" style="margin-left:auto">Drag: Xoay | Scroll: Zoom | Right-drag: Pan | R: Reset | Click: Chi tiet</div>
+  <span>Thiet bi: <span class="v" id="bb-devices">0</span></span>
+  <span>|</span>
+  <span>Ket noi: <span class="v" id="bb-links">0</span></span>
+  <span>|</span>
+  <span>Toa nha: <span class="v">3</span></span>
+  <span>|</span>
+  <span>UPS: <span class="v">Kep A/B</span></span>
+  <span style="margin-left:auto">Drag:Xoay | Scroll:Zoom | Right-drag:Pan | R:Reset | DblClick:Chi tiet</span>
 </div>
 <div id="canvas-container"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+"use strict";
 // =====================================================================
-// DEVICE DATABASE - Matching Design.txt exactly
+// DEVICE DATABASE — Matching Design.txt
 // =====================================================================
-var DEVICES = {
-  "ISP1":{type:"router",name:"ISP 1 (Duong chinh)",model:"ISP Primary Link",desc:"Duong truyen chinh - Fiber",ip:"WAN IP (ISP1)",price:0},
-  "ISP2":{type:"router",name:"ISP 2 (Duong phu)",model:"ISP Secondary Link",desc:"Duong truyen du phong - Fiber",ip:"WAN IP (ISP2)",price:0},
-  "LTE_Modem":{type:"router",name:"LTE/4G Modem",model:"Industrial LTE Modem",desc:"Ket noi doc lap cho Console Server - Out-of-Band",ip:"DHCP (4G)",features:"OOB Management, Failover",price:500},
-  "MikroTik1":{type:"router",name:"MikroTik CCR2216 #1",model:"MikroTik CCR2216-1G-12XS-2XQ",cpu:"Marvell 88F8040 (4C/4T, 1.8GHz)",ram:"16GB DDR4 ECC",storage:"128MB NAND",ports:"1x GbE + 12x 25G SFP28 + 2x 100G QSFP28",features:"VRRP Master, BGP, OSPF, MPLS, NAT, Firewall",ip:"10.0.0.1",role:"VRRP Master - Primary Edge Router",price:3000},
-  "MikroTik2":{type:"router",name:"MikroTik CCR2216 #2",model:"MikroTik CCR2216-1G-12XS-2XQ",cpu:"Marvell 88F8040 (4C/4T, 1.8GHz)",ram:"16GB DDR4 ECC",storage:"128MB NAND",ports:"1x GbE + 12x 25G SFP28 + 2x 100G QSFP28",features:"VRRP Backup, BGP, OSPF, MPLS, NAT, Firewall",ip:"10.0.0.2",role:"VRRP Backup - Secondary Edge Router",price:3000},
-  "ConsoleServer":{type:"server",name:"Console Server (Opengear IM7200)",model:"Opengear IM7200",cpu:"ARM Cortex-A9",ram:"1GB DDR3",storage:"4GB eMMC",ports:"48x Serial RJ45 + 2x GbE + 4G Cellular",features:"Out-of-Band Mgmt, Serial Console, SSH, 4G Failover",ip:"192.168.250.1",role:"OOB Management - Ket noi qua LTE doc lap",price:5000},
-  "FortiGate1":{type:"firewall",name:"FortiGate 600F #1",model:"Fortinet FortiGate 600F",cpu:"NP7 + CP9 ASIC",ram:"16GB",storage:"480GB SSD",ports:"2x 25G SFP28 + 16x GbE + 8x GbE SFP",throughput:"36 Gbps FW / 6 Gbps IPS / 4 Gbps SSL",features:"HA Active/Passive, IPS, AV, Web Filter, SD-WAN, SSL VPN, FortiGuard",ip:"10.0.1.1",role:"HA Primary Firewall",price:18000},
-  "FortiGate2":{type:"firewall",name:"FortiGate 600F #2",model:"Fortinet FortiGate 600F",cpu:"NP7 + CP9 ASIC",ram:"16GB",storage:"480GB SSD",ports:"2x 25G SFP28 + 16x GbE + 8x GbE SFP",throughput:"36 Gbps FW / 6 Gbps IPS / 4 Gbps SSL",features:"HA Active/Passive, IPS, AV, Web Filter, SD-WAN, SSL VPN, FortiGuard",ip:"10.0.1.2",role:"HA Secondary Firewall",price:18000},
-  "CoreSW1":{type:"core",name:"Cisco 9500 Core SW #1",model:"Cisco Catalyst 9500-48Y4C",cpu:"x86 Quad-core 2.0GHz",ram:"16GB",flash:"16GB",ports:"48x 25G SFP28 + 4x 100G QSFP28",ios:"IOS-XE 17.9",features:"StackWise Virtual, L3 OSPF/BGP, HSRP, QoS, NetFlow, MACsec",ip:"10.10.10.1",role:"StackWise Virtual - Core L3 Routing #1",price:25000},
-  "CoreSW2":{type:"core",name:"Cisco 9500 Core SW #2",model:"Cisco Catalyst 9500-48Y4C",cpu:"x86 Quad-core 2.0GHz",ram:"16GB",flash:"16GB",ports:"48x 25G SFP28 + 4x 100G QSFP28",ios:"IOS-XE 17.9",features:"StackWise Virtual, L3 OSPF/BGP, HSRP, QoS, NetFlow, MACsec",ip:"10.10.10.2",role:"StackWise Virtual - Core L3 Routing #2",price:25000},
-  "ROSEServer1":{type:"server",name:"ROSE Server #1",model:"Dell PowerEdge R760",cpu:"2x Intel Xeon Gold 6430 (32C/64T)",ram:"512GB DDR5 ECC",storage:"8x 1.92TB NVMe SSD RAID 10",os:"VMware ESXi 8.0 / Windows Server 2022",nic:"2x 25GbE + 2x 10GbE",services:"AD Primary, DHCP, DNS Primary, File Server",ip:"10.50.50.10",power:"2x 1400W Redundant PSU (A/B Feed)",rack:"2U",price:35000},
-  "ROSEServer2":{type:"server",name:"ROSE Server #2",model:"Dell PowerEdge R760",cpu:"2x Intel Xeon Gold 6430 (32C/64T)",ram:"512GB DDR5 ECC",storage:"8x 1.92TB NVMe SSD RAID 10",os:"VMware ESXi 8.0 / Windows Server 2022",nic:"2x 25GbE + 2x 10GbE",services:"AD Secondary, DNS Secondary, Backup, Monitoring",ip:"10.50.50.11",power:"2x 1400W Redundant PSU (A/B Feed)",rack:"2U",price:35000},
-  "ADServer":{type:"server",name:"Active Directory / DHCP / DNS",model:"VM tren ROSE Server",services:"AD DS, DHCP Server, DNS Server",ip:"10.50.50.20 / .21 / .22",role:"Domain Services + DHCP Pool + DNS Resolution"},
-  "CentralNVR":{type:"server",name:"Central NVR/VMS",model:"Milestone XProtect Corporate VMS",cpu:"Intel Xeon E-2388G (8C/16T)",ram:"64GB DDR4 ECC",storage:"RAID6 Array (via NAS)",os:"Windows Server 2022",nic:"2x 10GbE",services:"Video Management System, Camera Recording, Analytics",ip:"10.60.60.10",price:12000},
-  "StorageNAS":{type:"server",name:"Storage NAS",model:"Synology HD6500 (60-bay)",cpu:"Intel Xeon D-1527 (4C/8T)",ram:"32GB DDR4 ECC",storage:"60x 18TB HDD = 1.08PB Raw / 720TB RAID6",os:"DSM 7.2",nic:"4x 10GbE LAG",services:"Camera Storage, Backup, File Share, iSCSI",ip:"10.60.60.11",price:50000},
-  "DistSW1":{type:"dist",name:"Cisco 9300 Dist #1",model:"Cisco Catalyst 9300-48UXM",cpu:"Quad-core 1.5GHz",ram:"8GB",flash:"16GB",ports:"48x mGig (2.5/5/10G) PoE+ (1440W) + 2x 40G QSFP+",ios:"IOS-XE 17.9",features:"L3 SVI, OSPF, StackWise-480, PoE++, MACsec",ip:"10.10.20.1",role:"IDF 1 Distribution #1 - Toa LV 1",price:12000},
-  "DistSW2":{type:"dist",name:"Cisco 9300 Dist #2",model:"Cisco Catalyst 9300-48UXM",cpu:"Quad-core 1.5GHz",ram:"8GB",flash:"16GB",ports:"48x mGig (2.5/5/10G) PoE+ (1440W) + 2x 40G QSFP+",ios:"IOS-XE 17.9",features:"L3 SVI, OSPF, StackWise-480, PoE++, MACsec",ip:"10.10.20.2",role:"IDF 1 Distribution #2 - Toa LV 1",price:12000},
-  "NVRLocal1":{type:"server",name:"NVR Camera Local (Toa 1)",model:"Dahua NVR608H-32-XI",storage:"8x 10TB HDD RAID5",ip:"10.60.61.10",services:"Local Camera Recording - Toa Lam Viec 1",price:3500},
-  "DistSW3":{type:"dist",name:"Cisco 9300 Dist #3",model:"Cisco Catalyst 9300-48UXM",cpu:"Quad-core 1.5GHz",ram:"8GB",flash:"16GB",ports:"48x mGig (2.5/5/10G) PoE+ (1440W) + 2x 40G QSFP+",ios:"IOS-XE 17.9",features:"L3 SVI, OSPF, StackWise-480, PoE++, MACsec",ip:"10.10.30.1",role:"IDF 2 Distribution #3 - Toa LV 2",price:12000},
-  "DistSW4":{type:"dist",name:"Cisco 9300 Dist #4",model:"Cisco Catalyst 9300-48UXM",cpu:"Quad-core 1.5GHz",ram:"8GB",flash:"16GB",ports:"48x mGig (2.5/5/10G) PoE+ (1440W) + 2x 40G QSFP+",ios:"IOS-XE 17.9",features:"L3 SVI, OSPF, StackWise-480, PoE++, MACsec",ip:"10.10.30.2",role:"IDF 2 Distribution #4 - Toa LV 2",price:12000},
-  "NVRLocal2":{type:"server",name:"NVR Camera Local (Toa 2)",model:"Dahua NVR608H-32-XI",storage:"8x 10TB HDD RAID5",ip:"10.60.62.10",services:"Local Camera Recording - Toa Lam Viec 2",price:3500},
-  "UPS_A":{type:"ups",name:"UPS Feed A",model:"APC Symmetra PX 40kW",features:"Online Double-Conversion, Hot-Swap Batteries, N+1 Redundant",ip:"10.99.1.10 (NMC)",price:25000},
-  "UPS_B":{type:"ups",name:"UPS Feed B",model:"APC Symmetra PX 40kW",features:"Online Double-Conversion, Hot-Swap Batteries, N+1 Redundant",ip:"10.99.1.11 (NMC)",price:25000},
-  "Generator":{type:"generator",name:"May Phat Dien Du Phong",model:"Cummins C150D5 (150kVA)",features:"Tu dong chuyen ATS, Diesel, Runtime 24h, Weekly Auto-test",price:35000},
-  "CRAC1":{type:"cooling",name:"CRAC Unit #1 (Admin)",model:"Schneider InRow RD 30kW",features:"In-Row Cooling, Chilled Water, Variable Speed EC Fans",role:"Lam mat Phong Server va Thiet bi mang",price:15000},
-  "CRAC2":{type:"cooling",name:"CRAC Unit #2 (Admin)",model:"Schneider InRow RD 30kW",features:"In-Row Cooling, N+1 Redundancy",role:"Du phong tan nhiet Phong Server",price:15000},
-  "RoofChiller":{type:"cooling",name:"Roof Chiller",model:"Daikin EWAD-C 120kW",features:"Water-Cooled Chiller, Variable Speed Compressor",role:"Cung cap nuoc lanh cho CRAC Units",price:40000}
+var DEVICES={
+ISP1:{type:"ISP Router",building:"admin",name:"ISP 1 (Duong chinh)",model:"ISP Primary Fiber",ip:"WAN (ISP1)"},
+ISP2:{type:"ISP Router",building:"admin",name:"ISP 2 (Duong phu)",model:"ISP Secondary Fiber",ip:"WAN (ISP2)"},
+LTE_Modem:{type:"Router",building:"admin",name:"LTE/4G Modem",model:"Industrial LTE Modem",ip:"DHCP(4G)",role:"OOB cho Console Server"},
+MikroTik1:{type:"Router",building:"admin",name:"MikroTik CCR2216 #1",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.1",role:"VRRP Master",ha:"VRRP",ports:"1xGbE+12x25G+2x100G",features:"BGP,OSPF,MPLS,NAT"},
+MikroTik2:{type:"Router",building:"admin",name:"MikroTik CCR2216 #2",model:"CCR2216-1G-12XS-2XQ",ip:"10.0.0.2",role:"VRRP Backup",ha:"VRRP",ports:"1xGbE+12x25G+2x100G",features:"BGP,OSPF,MPLS,NAT"},
+ConsoleServer:{type:"Server",building:"admin",name:"Console Server",model:"Opengear IM7200",ip:"192.168.250.1",role:"OOB Management",ports:"48xSerial+2xGbE+4G"},
+FortiGate1:{type:"Firewall",building:"admin",name:"FortiGate 600F #1",model:"FortiGate 600F",ip:"10.0.1.1",role:"HA Primary",ha:"Active/Passive",throughput:"36Gbps FW",features:"IPS,AV,WebFilter,SSL-VPN"},
+FortiGate2:{type:"Firewall",building:"admin",name:"FortiGate 600F #2",model:"FortiGate 600F",ip:"10.0.1.2",role:"HA Secondary",ha:"Active/Passive",throughput:"36Gbps FW",features:"IPS,AV,WebFilter,SSL-VPN"},
+CoreSW1:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #1",model:"Catalyst 9500-48Y4C",ip:"10.10.10.1",role:"StackWise Virtual #1",ha:"StackWise",ports:"48x25G+4x100G",features:"L3 OSPF/BGP,HSRP,QoS,MACsec"},
+CoreSW2:{type:"Core Switch",building:"admin",name:"Cisco 9500 Core #2",model:"Catalyst 9500-48Y4C",ip:"10.10.10.2",role:"StackWise Virtual #2",ha:"StackWise",ports:"48x25G+4x100G",features:"L3 OSPF/BGP,HSRP,QoS,MACsec"},
+ROSEServer1:{type:"Server",building:"admin",name:"ROSE Server #1",model:"Dell PowerEdge R760",ip:"10.50.50.10",role:"AD Primary,DHCP,DNS,File Server",capacity:"512GB DDR5,8x1.92TB NVMe"},
+ROSEServer2:{type:"Server",building:"admin",name:"ROSE Server #2",model:"Dell PowerEdge R760",ip:"10.50.50.11",role:"AD Secondary,DNS,Backup,Monitor",capacity:"512GB DDR5,8x1.92TB NVMe"},
+ADServer:{type:"Server",building:"admin",name:"AD/DHCP/DNS",model:"VM tren ROSE Server",ip:"10.50.50.20",role:"Domain Services"},
+CentralNVR:{type:"Server",building:"admin",name:"Central NVR/VMS",model:"Milestone XProtect Corporate",ip:"10.60.60.10",role:"Camera Recording,Analytics",capacity:"64GB DDR4"},
+StorageNAS:{type:"Server",building:"admin",name:"Storage NAS",model:"Synology HD6500 (60-bay)",ip:"10.60.60.11",role:"Camera Storage,Backup,iSCSI",capacity:"60x18TB=1.08PB Raw"},
+DistSW1:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #1",model:"Catalyst 9300-48UXM",ip:"10.10.20.1",role:"IDF1 Distribution #1",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
+DistSW2:{type:"Dist Switch",building:"work1",name:"Cisco 9300 Dist #2",model:"Catalyst 9300-48UXM",ip:"10.10.20.2",role:"IDF1 Distribution #2",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
+NVRLocal1:{type:"Server",building:"work1",name:"NVR Local (Toa 1)",model:"Dahua NVR608H-32-XI",ip:"10.60.61.10",role:"Local Camera Recording"},
+DistSW3:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #3",model:"Catalyst 9300-48UXM",ip:"10.10.30.1",role:"IDF2 Distribution #3",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
+DistSW4:{type:"Dist Switch",building:"work2",name:"Cisco 9300 Dist #4",model:"Catalyst 9300-48UXM",ip:"10.10.30.2",role:"IDF2 Distribution #4",ports:"48xmGig PoE+(1440W)+2x40G",features:"L3,OSPF,StackWise-480"},
+NVRLocal2:{type:"Server",building:"work2",name:"NVR Local (Toa 2)",model:"Dahua NVR608H-32-XI",ip:"10.60.62.10",role:"Local Camera Recording"},
+UPS_A:{type:"UPS",building:"admin",name:"UPS Feed A",model:"APC Symmetra PX 40kW",ip:"10.99.1.10",redundancy:"N+1",features:"Online Double-Conversion"},
+UPS_B:{type:"UPS",building:"admin",name:"UPS Feed B",model:"APC Symmetra PX 40kW",ip:"10.99.1.11",redundancy:"N+1",features:"Online Double-Conversion"},
+Generator:{type:"Generator",building:"admin",name:"May Phat Dien",model:"Cummins C150D5 (150kVA)",features:"ATS tu dong,Diesel,Runtime 24h"},
+CRAC1:{type:"CRAC",building:"admin",name:"CRAC Unit #1",model:"Schneider InRow RD 30kW",cooling:"In-Row,Chilled Water"},
+CRAC2:{type:"CRAC",building:"admin",name:"CRAC Unit #2",model:"Schneider InRow RD 30kW",cooling:"N+1 Redundancy"},
+RoofChiller:{type:"Chiller",building:"admin",name:"Roof Chiller",model:"Daikin EWAD-C 120kW",cooling:"Water-Cooled,Variable Speed"}
 };
-var FLOORS_B1 = [
-  {key:"W1_F1",label:"Tang 1",z:0,sw:"AccSW-W1F1",pcs:6,aps:2,cctv:3},
-  {key:"W1_F2",label:"Tang 2",z:5,sw:"AccSW-W1F2",pcs:6,aps:2,cctv:3},
-  {key:"W1_F3",label:"Tang 3",z:10,sw:"AccSW-W1F3",pcs:6,aps:2,cctv:3}
-];
-var FLOORS_B2 = [
-  {key:"W2_F1",label:"Tang 1",z:0,sw:"AccSW-W2F1",pcs:6,aps:2,cctv:3},
-  {key:"W2_F2",label:"Tang 2",z:5,sw:"AccSW-W2F2",pcs:6,aps:2,cctv:3},
-  {key:"W2_F3",label:"Tang 3",z:10,sw:"AccSW-W2F3",pcs:6,aps:2,cctv:3}
-];
-FLOORS_B1.concat(FLOORS_B2).forEach(function(f){
-  var bldg = f.key.startsWith('W1') ? '1' : '2';
-  DEVICES[f.sw] = {
-    type:"acc", name:"Cisco 9200L ("+f.label+" Toa "+bldg+")",
-    model:"Cisco Catalyst 9200L-48P-4X",
-    ports:"48x 1G PoE+ (740W) + 4x 10G SFP+",
-    ios:"IOS-XE 17.9",
-    features:"L2, PoE+ 802.3bt, Port-Security, 802.1X, STP RPVST+",
-    ip:"10."+bldg+"0."+f.label.replace('Tang ','')+"0.1",
-    role:"Access Layer - Toa LV "+bldg+" "+f.label,
-    price:4500
-  };
+
+// Generate access switches per floor (Design.txt: Cisco 9200L)
+var FLOORS_B1=[{key:1,label:"Tang 1",z:0,sw:2,pcs:6,aps:2,cctv:3},{key:2,label:"Tang 2",z:5,sw:2,pcs:6,aps:2,cctv:3},{key:3,label:"Tang 3",z:10,sw:2,pcs:6,aps:2,cctv:3}];
+var FLOORS_B2=[{key:1,label:"Tang 1",z:0,sw:2,pcs:6,aps:2,cctv:3},{key:2,label:"Tang 2",z:5,sw:2,pcs:6,aps:2,cctv:3},{key:3,label:"Tang 3",z:10,sw:2,pcs:6,aps:2,cctv:3}];
+FLOORS_B1.forEach(function(f){
+  for(var i=1;i<=f.sw;i++){var k="W1_F"+f.key+"_AccSW"+i;DEVICES[k]={type:"Access Switch",building:"work1",name:"Cisco 9200L (T"+f.key+" Toa1 #"+i+")",model:"Catalyst 9200L-48P-4X",ip:"10.10."+f.key+"0."+(i),ports:"48x1G PoE++4x10G",floor:f.key};}
+  for(var j=1;j<=f.pcs;j++){DEVICES["W1_F"+f.key+"_PC"+j]={type:"PC",building:"work1",name:"PC T"+f.key+" Toa1 #"+j,floor:f.key};}
+  for(var a=1;a<=f.aps;a++){DEVICES["W1_F"+f.key+"_AP"+a]={type:"AP",building:"work1",name:"Wi-Fi AP T"+f.key+" Toa1 #"+a,model:"Cisco Meraki MR46",floor:f.key};}
+  for(var c=1;c<=f.cctv;c++){DEVICES["W1_F"+f.key+"_CCTV"+c]={type:"CCTV",building:"work1",name:"CCTV T"+f.key+" Toa1 #"+c,model:"Dahua IPC-HFW5442H",floor:f.key};}
 });
+FLOORS_B2.forEach(function(f){
+  for(var i=1;i<=f.sw;i++){var k="W2_F"+f.key+"_AccSW"+i;DEVICES[k]={type:"Access Switch",building:"work2",name:"Cisco 9200L (T"+f.key+" Toa2 #"+i+")",model:"Catalyst 9200L-48P-4X",ip:"10.20."+f.key+"0."+(i),ports:"48x1G PoE++4x10G",floor:f.key};}
+  for(var j=1;j<=f.pcs;j++){DEVICES["W2_F"+f.key+"_PC"+j]={type:"PC",building:"work2",name:"PC T"+f.key+" Toa2 #"+j,floor:f.key};}
+  for(var a=1;a<=f.aps;a++){DEVICES["W2_F"+f.key+"_AP"+a]={type:"AP",building:"work2",name:"Wi-Fi AP T"+f.key+" Toa2 #"+a,model:"Cisco Meraki MR46",floor:f.key};}
+  for(var c=1;c<=f.cctv;c++){DEVICES["W2_F"+f.key+"_CCTV"+c]={type:"CCTV",building:"work2",name:"CCTV T"+f.key+" Toa2 #"+c,model:"Dahua IPC-HFW5442H",floor:f.key};}
+});
+
 // =====================================================================
 // THREE.JS INIT
 // =====================================================================
-var container = document.getElementById('canvas-container');
-var W = container.clientWidth || window.innerWidth - 290;
-var H = container.clientHeight || window.innerHeight - 80;
-var renderer = new THREE.WebGLRenderer({antialias:true,alpha:false});
+var container=document.getElementById("canvas-container");
+var W=container.clientWidth,H=container.clientHeight;
+var renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(W,H);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.setClearColor(0x060a14);
 container.appendChild(renderer.domElement);
-var scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x060a14,0.003);
-var camera = new THREE.PerspectiveCamera(45,W/H,0.1,800);
-scene.add(new THREE.AmbientLight(0x2a3050,2.2));
-var dLight = new THREE.DirectionalLight(0xfff8f0,1.0);
-dLight.position.set(60,-40,80);dLight.castShadow=true;
-dLight.shadow.mapSize.set(2048,2048);
-dLight.shadow.camera.left=-80;dLight.shadow.camera.right=80;
-dLight.shadow.camera.top=60;dLight.shadow.camera.bottom=-40;
-dLight.shadow.camera.far=200;
-scene.add(dLight);
-var dLight2 = new THREE.DirectionalLight(0xddeeff,0.4);
-dLight2.position.set(-40,50,50);scene.add(dLight2);
-scene.add(new THREE.HemisphereLight(0x4466aa,0x111122,0.8));
-var adminGlow = new THREE.PointLight(0xf97316,0.7,50);adminGlow.position.set(0,0,12);scene.add(adminGlow);
-var w1Glow = new THREE.PointLight(0x3b82f6,0.6,45);w1Glow.position.set(-40,0,10);scene.add(w1Glow);
-var w2Glow = new THREE.PointLight(0x22c55e,0.6,45);w2Glow.position.set(40,0,10);scene.add(w2Glow);
-var grid = new THREE.GridHelper(200,100,0x1a2540,0x0d1520);
-grid.rotation.x = Math.PI/2; grid.position.set(0,0,-0.1); scene.add(grid);
-var allMeshes = [], deviceMeshMap = {}, floorGroups = {};
-var connectionLines = [], linkCount = 0;
-var animatedParticles = [];
-var C = {core:0x2563eb,dist:0x16a34a,acc:0x0ea5e9,router:0xf97316,firewall:0xeab308,server:0xa855f7,pc:0x94a3b8,ups:0x22d3ee,cooling:0x38bdf8,generator:0xf59e0b,cctv:0xef4444,ap:0x8b5cf6,trunk:0xef4444,uplink:0x3b82f6,internet:0xfbbf24,dmzlink:0xec4899};
-function addR(mesh,meta){mesh.userData={meta:meta};allMeshes.push(mesh);return mesh;}
+
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x060a14,0.003);
+var camera=new THREE.PerspectiveCamera(45,W/H,0.1,800);
+
+scene.add(new THREE.AmbientLight(0x2a3050,2.0));
+var dl=new THREE.DirectionalLight(0xfff8f0,1.0);
+dl.position.set(60,-40,80);dl.castShadow=true;
+dl.shadow.mapSize.set(2048,2048);
+dl.shadow.camera.left=-100;dl.shadow.camera.right=100;
+dl.shadow.camera.top=80;dl.shadow.camera.bottom=-60;
+dl.shadow.camera.far=250;
+scene.add(dl);
+scene.add(new THREE.DirectionalLight(0xddeeff,0.4)).position.set(-40,50,50);
+scene.add(new THREE.HemisphereLight(0x4466aa,0x111122,0.6));
+
+var grid=new THREE.GridHelper(200,100,0x1a2540,0x0d1520);
+grid.rotation.x=Math.PI/2;grid.position.z=-0.1;scene.add(grid);
+
+// Global state
+var allMeshes=[],deviceMeshMap={},floorGroups=[],connectionLines=[];
+var COL={core:0x2563eb,dist:0x16a34a,acc:0x0ea5e9,router:0xf97316,fw:0xeab308,server:0xa855f7,pc:0x94a3b8,isp:0xfbbf24,ups:0x22d3ee,cool:0x38bdf8,gen:0xf59e0b,cctv:0xef4444,ap:0x8b5cf6};
+
+function addD(mesh,key,fg){
+  mesh.userData.deviceKey=key;
+  mesh.traverse(function(c){if(c.isMesh)c.userData.deviceKey=key;});
+  deviceMeshMap[key]=mesh;
+  allMeshes.push(mesh);
+  if(fg){fg.add(mesh);}else{scene.add(mesh);}
+  return mesh;
+}
+
 // =====================================================================
 // 3D MODEL FACTORIES
 // =====================================================================
 function makeSwitch(color,s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,1.3*s,0.4*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.6}));
+  var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,.4*s,.3*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.6}));
   body.castShadow=true;g.add(body);
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(2.0*s,0.05*s,0.32*s),new THREE.MeshStandardMaterial({color:0x111111,roughness:0.8}));
-  panel.position.set(0,-0.65*s,0);g.add(panel);
-  for(var i=0;i<8;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.035*s,6,4),new THREE.MeshBasicMaterial({color:i%3===2?0xffaa00:0x00ff00}));led.position.set(-0.8*s+i*0.23*s,-0.67*s,0.06*s);g.add(led);}
-  var glow=new THREE.Mesh(new THREE.PlaneGeometry(0.5*s,0.5*s),new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:0.4,side:THREE.DoubleSide}));
-  glow.position.set(0,0,0.21*s);g.add(glow);return g;
+  for(var i=0;i<8;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:i%3===2?0xffaa00:0x00ff00}));led.position.set(-0.8*s+i*0.22*s,-0.21*s,0.12*s);g.add(led);}
+  return g;
 }
 function makeRouter(color,s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(1.6*s,1.1*s,0.45*s),new THREE.MeshStandardMaterial({color:color,roughness:0.3,metalness:0.5}));
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.6*s,.35*s,.4*s),new THREE.MeshStandardMaterial({color:color,roughness:0.3,metalness:0.5}));
   body.castShadow=true;g.add(body);
-  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.025*s,0.025*s,0.7*s,6),new THREE.MeshStandardMaterial({color:0x444444}));ant.position.set(i*0.6*s,0,0.55*s);g.add(ant);}
-  for(var j=0;j<4;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:j<2?0x00ff00:0xffaa00}));led.position.set(-0.4*s+j*0.25*s,-0.57*s,0.08*s);g.add(led);}
+  for(var i=-1;i<=1;i+=2){var ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02*s,0.02*s,0.6*s,6),new THREE.MeshStandardMaterial({color:0x444444}));ant.position.set(i*0.6*s,0,0.5*s);g.add(ant);}
+  for(var j=0;j<3;j++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.025*s,6,4),new THREE.MeshBasicMaterial({color:j<2?0x00ff00:0xffaa00}));led.position.set(-0.3*s+j*0.2*s,-0.18*s,0.1*s);g.add(led);}
   return g;
 }
 function makeFirewall(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.0*s,1.3*s,0.55*s),new THREE.MeshStandardMaterial({color:0xeab308,roughness:0.3,metalness:0.5}));
+  var body=new THREE.Mesh(new THREE.BoxGeometry(2.0*s,.45*s,.45*s),new THREE.MeshStandardMaterial({color:0xeab308,roughness:0.3,metalness:0.5}));
   body.castShadow=true;g.add(body);
-  var shield=new THREE.Mesh(new THREE.CircleGeometry(0.28*s,6),new THREE.MeshBasicMaterial({color:0xff4444,side:THREE.DoubleSide}));
-  shield.position.set(0,0,0.28*s);g.add(shield);
-  for(var i=0;i<6;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:0x00ff00}));led.position.set(-0.6*s+i*0.24*s,-0.67*s,0.08*s);g.add(led);}
+  var shield=new THREE.Mesh(new THREE.CircleGeometry(0.15*s,6),new THREE.MeshBasicMaterial({color:0xff4444,side:THREE.DoubleSide}));
+  shield.position.set(0,-0.23*s,0.08*s);g.add(shield);
   return g;
 }
 function makeServer(color,s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.9*s,1.1*s,1.8*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.5}));
-  body.position.set(0,0,0.9*s);body.castShadow=true;g.add(body);
-  for(var i=0;i<5;i++){var bay=new THREE.Mesh(new THREE.BoxGeometry(0.7*s,0.05*s,0.22*s),new THREE.MeshStandardMaterial({color:0x222222,roughness:0.9}));bay.position.set(0,-0.57*s,0.25*s+i*0.32*s);g.add(bay);var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:i%2===0?0x00ff00:0x0088ff}));led.position.set(0.26*s,-0.58*s,0.25*s+i*0.32*s);g.add(led);}
+  var body=new THREE.Mesh(new THREE.BoxGeometry(0.6*s,0.9*s,1.6*s),new THREE.MeshStandardMaterial({color:color,roughness:0.35,metalness:0.5}));
+  body.position.z=0.8*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<4;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:i%2===0?0x00ff00:0x0088ff}));led.position.set(0.2*s,-0.46*s,0.3*s+i*0.3*s);g.add(led);}
   return g;
 }
-function makePC(color,s){
+function makePC(s){
   s=s||1;var g=new THREE.Group();
-  var tower=new THREE.Mesh(new THREE.BoxGeometry(0.25*s,0.5*s,0.45*s),new THREE.MeshStandardMaterial({color:0x2a2a30,roughness:0.5,metalness:0.3}));
-  tower.position.set(0.4*s,0,0.225*s);tower.castShadow=true;g.add(tower);
-  var led=new THREE.Mesh(new THREE.SphereGeometry(0.018*s,4,4),new THREE.MeshBasicMaterial({color:0x00ff00}));
-  led.position.set(0.4*s,-0.26*s,0.38*s);g.add(led);
-  var base=new THREE.Mesh(new THREE.CylinderGeometry(0.1*s,0.12*s,0.025*s,8),new THREE.MeshStandardMaterial({color:0x333333}));
-  base.position.set(-0.1*s,0,0.012*s);g.add(base);
-  var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.02*s,0.02*s,0.3*s,6),new THREE.MeshStandardMaterial({color:0x333333}));
-  pole.position.set(-0.1*s,0,0.175*s);g.add(pole);
-  var mon=new THREE.Mesh(new THREE.BoxGeometry(0.55*s,0.04*s,0.35*s),new THREE.MeshStandardMaterial({color:0x222222,roughness:0.8}));
-  mon.position.set(-0.1*s,-0.02*s,0.5*s);mon.castShadow=true;g.add(mon);
-  var scr=new THREE.Mesh(new THREE.PlaneGeometry(0.48*s,0.28*s),new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:0.65,side:THREE.DoubleSide}));
-  scr.position.set(-0.1*s,-0.042*s,0.5*s);scr.rotation.x=Math.PI/2;g.add(scr);return g;
+  var mon=new THREE.Mesh(new THREE.BoxGeometry(0.5*s,0.04*s,0.35*s),new THREE.MeshStandardMaterial({color:0x222222}));
+  mon.position.z=0.4*s;mon.castShadow=true;g.add(mon);
+  var scr=new THREE.Mesh(new THREE.PlaneGeometry(0.42*s,0.28*s),new THREE.MeshBasicMaterial({color:0x1a5588,transparent:true,opacity:0.6,side:THREE.DoubleSide}));
+  scr.position.set(0,-0.025*s,0.4*s);scr.rotation.x=Math.PI/2;g.add(scr);
+  var tower=new THREE.Mesh(new THREE.BoxGeometry(0.15*s,0.25*s,0.3*s),new THREE.MeshStandardMaterial({color:0x2a2a30}));
+  tower.position.set(0.35*s,0,0.15*s);g.add(tower);
+  return g;
 }
 function makeAP(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.2*s,0.22*s,0.06*s,12),new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.4,metalness:0.2}));
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.18*s,0.2*s,0.05*s,12),new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.4}));
   body.castShadow=true;g.add(body);
-  var led=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.06*s,12),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));
-  led.position.set(0,0,0.032*s);g.add(led);
-  for(var i=1;i<=3;i++){var ring=new THREE.Mesh(new THREE.RingGeometry(0.12*s*i,0.12*s*i+0.01*s,16),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:0.3/i,side:THREE.DoubleSide}));ring.position.set(0,0,0.06*s+0.05*s*i);g.add(ring);}
+  var led=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.05*s,12),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));
+  led.position.z=0.03*s;g.add(led);
+  for(var i=1;i<=2;i++){var ring=new THREE.Mesh(new THREE.RingGeometry(0.1*s*i,0.1*s*i+0.008*s,16),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:0.25/i,side:THREE.DoubleSide}));ring.position.z=0.04*s+0.04*s*i;g.add(ring);}
   return g;
 }
 function makeCCTV(s){
   s=s||1;var g=new THREE.Group();
-  var mount=new THREE.Mesh(new THREE.BoxGeometry(0.06*s,0.06*s,0.15*s),new THREE.MeshStandardMaterial({color:0x555555,metalness:0.5}));g.add(mount);
-  var cam=new THREE.Mesh(new THREE.CylinderGeometry(0.06*s,0.08*s,0.2*s,8),new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.4}));
-  cam.rotation.x=Math.PI/2;cam.position.set(0,-0.12*s,-0.03*s);g.add(cam);
-  var lens=new THREE.Mesh(new THREE.CylinderGeometry(0.04*s,0.04*s,0.03*s,8),new THREE.MeshStandardMaterial({color:0x111111}));
-  lens.rotation.x=Math.PI/2;lens.position.set(0,-0.24*s,-0.03*s);g.add(lens);
-  var ir=new THREE.Mesh(new THREE.RingGeometry(0.02*s,0.035*s,8),new THREE.MeshBasicMaterial({color:0xff2200,side:THREE.DoubleSide}));
-  ir.position.set(0,-0.25*s,-0.03*s);ir.rotation.x=Math.PI/2;g.add(ir);return g;
+  var mount=new THREE.Mesh(new THREE.BoxGeometry(0.05*s,0.05*s,0.12*s),new THREE.MeshStandardMaterial({color:0x555555}));g.add(mount);
+  var cam=new THREE.Mesh(new THREE.CylinderGeometry(0.04*s,0.06*s,0.15*s,8),new THREE.MeshStandardMaterial({color:0xdddddd}));
+  cam.rotation.x=Math.PI/2;cam.position.set(0,-0.1*s,-0.02*s);g.add(cam);
+  var ir=new THREE.Mesh(new THREE.RingGeometry(0.015*s,0.03*s,8),new THREE.MeshBasicMaterial({color:0xff2200,side:THREE.DoubleSide}));
+  ir.position.set(0,-0.18*s,-0.02*s);ir.rotation.x=Math.PI/2;g.add(ir);
+  return g;
 }
 function makeUPS(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(1.0*s,0.6*s,1.8*s),new THREE.MeshStandardMaterial({color:0x1a3a4a,roughness:0.4,metalness:0.3}));
-  body.position.set(0,0,0.9*s);body.castShadow=true;g.add(body);
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.88*s,0.02*s,0.5*s),new THREE.MeshStandardMaterial({color:0x0a1a25}));
-  panel.position.set(0,-0.31*s,1.5*s);g.add(panel);
-  var scr=new THREE.Mesh(new THREE.BoxGeometry(0.25*s,0.01*s,0.15*s),new THREE.MeshBasicMaterial({color:0x22d3ee}));
-  scr.position.set(0,-0.32*s,1.55*s);g.add(scr);
-  for(var i=0;i<4;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:i<3?0x00ff00:0xffaa00}));led.position.set(-0.2*s+i*0.14*s,-0.32*s,1.35*s);g.add(led);}
-  var batt=new THREE.Mesh(new THREE.BoxGeometry(0.6*s,0.02*s,0.08*s),new THREE.MeshBasicMaterial({color:0x00ff44,transparent:true,opacity:0.7}));
-  batt.position.set(0,-0.32*s,1.25*s);g.add(batt);return g;
+  var body=new THREE.Mesh(new THREE.BoxGeometry(0.8*s,0.5*s,1.6*s),new THREE.MeshStandardMaterial({color:0x1a3a4a,roughness:0.4}));
+  body.position.z=0.8*s;body.castShadow=true;g.add(body);
+  var scr=new THREE.Mesh(new THREE.BoxGeometry(0.2*s,0.01*s,0.12*s),new THREE.MeshBasicMaterial({color:0x22d3ee}));
+  scr.position.set(0,-0.26*s,1.4*s);g.add(scr);
+  for(var i=0;i<3;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.02*s,6,4),new THREE.MeshBasicMaterial({color:0x00ff00}));led.position.set(-0.15*s+i*0.12*s,-0.26*s,1.2*s);g.add(led);}
+  return g;
 }
 function makeGenerator(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(2.5*s,1.2*s,1.3*s),new THREE.MeshStandardMaterial({color:0x4a4a2a,roughness:0.6,metalness:0.2}));
-  body.position.set(0,0,0.65*s);body.castShadow=true;g.add(body);
-  var exhaust=new THREE.Mesh(new THREE.CylinderGeometry(0.08*s,0.08*s,0.5*s,8),new THREE.MeshStandardMaterial({color:0x555555,metalness:0.5}));
-  exhaust.position.set(0.8*s,0,1.55*s);g.add(exhaust);
-  var fuel=new THREE.Mesh(new THREE.CylinderGeometry(0.3*s,0.3*s,0.5*s,12),new THREE.MeshStandardMaterial({color:0x333333,roughness:0.6}));
-  fuel.position.set(-0.8*s,0,0.25*s);fuel.rotation.z=Math.PI/2;g.add(fuel);
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.4*s,0.02*s,0.4*s),new THREE.MeshStandardMaterial({color:0x222222}));
-  panel.position.set(0,-0.61*s,1.0*s);g.add(panel);
-  var led=new THREE.Mesh(new THREE.SphereGeometry(0.03*s,6,4),new THREE.MeshBasicMaterial({color:0x00ff00}));
-  led.position.set(0.1*s,-0.62*s,1.1*s);g.add(led);return g;
+  var body=new THREE.Mesh(new THREE.BoxGeometry(2.2*s,1.0*s,1.1*s),new THREE.MeshStandardMaterial({color:0x4a4a2a,roughness:0.6}));
+  body.position.z=0.55*s;body.castShadow=true;g.add(body);
+  var exhaust=new THREE.Mesh(new THREE.CylinderGeometry(0.06*s,0.06*s,0.4*s,8),new THREE.MeshStandardMaterial({color:0x555555}));
+  exhaust.position.set(0.7*s,0,1.3*s);g.add(exhaust);
+  return g;
 }
 function makeCRAC(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.8*s,0.6*s,2.0*s),new THREE.MeshStandardMaterial({color:0xddddee,roughness:0.4,metalness:0.15}));
-  body.position.set(0,0,1.0*s);body.castShadow=true;g.add(body);
-  for(var i=0;i<3;i++){var vent=new THREE.Mesh(new THREE.BoxGeometry(0.6*s,0.01*s,0.12*s),new THREE.MeshStandardMaterial({color:0x888899}));vent.position.set(0,-0.31*s,0.4*s+i*0.5*s);g.add(vent);}
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.3*s,0.02*s,0.2*s),new THREE.MeshBasicMaterial({color:0x38bdf8}));
-  panel.position.set(0,-0.32*s,1.8*s);g.add(panel);
-  for(var j=0;j<4;j++){var flow=new THREE.Mesh(new THREE.PlaneGeometry(0.04*s,0.3*s),new THREE.MeshBasicMaterial({color:0x88ccff,transparent:true,opacity:0.2,side:THREE.DoubleSide}));flow.position.set(-0.2*s+j*0.13*s,-0.35*s,0.5*s);flow.rotation.x=Math.PI/2;g.add(flow);}
+  var body=new THREE.Mesh(new THREE.BoxGeometry(0.7*s,0.5*s,1.7*s),new THREE.MeshStandardMaterial({color:0xddddee,roughness:0.4}));
+  body.position.z=0.85*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<3;i++){var vent=new THREE.Mesh(new THREE.BoxGeometry(0.5*s,0.01*s,0.1*s),new THREE.MeshStandardMaterial({color:0x888899}));vent.position.set(0,-0.26*s,0.3*s+i*0.4*s);g.add(vent);}
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.25*s,0.015*s,0.15*s),new THREE.MeshBasicMaterial({color:0x38bdf8}));
+  panel.position.set(0,-0.26*s,1.5*s);g.add(panel);
   return g;
 }
-function makeRoofChiller(s){
+function makeChiller(s){
   s=s||1;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(3.0*s,1.5*s,1.2*s),new THREE.MeshStandardMaterial({color:0xcccccc,roughness:0.5,metalness:0.2}));
-  body.position.set(0,0,0.6*s);body.castShadow=true;g.add(body);
-  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.35*s,0.35*s,0.06*s,16),new THREE.MeshStandardMaterial({color:0x444444}));fan.position.set(-0.6*s+i*1.2*s,0,1.23*s);g.add(fan);var grill=new THREE.Mesh(new THREE.RingGeometry(0.08*s,0.33*s,16),new THREE.MeshBasicMaterial({color:0x555555,side:THREE.DoubleSide}));grill.position.set(-0.6*s+i*1.2*s,0,1.27*s);g.add(grill);}
-  var pipes=new THREE.Mesh(new THREE.CylinderGeometry(0.04*s,0.04*s,1.8*s,6),new THREE.MeshStandardMaterial({color:0x3399cc,roughness:0.4}));
-  pipes.position.set(1.3*s,0,0.6*s);pipes.rotation.z=Math.PI/2;g.add(pipes);return g;
+  var body=new THREE.Mesh(new THREE.BoxGeometry(2.5*s,1.2*s,1.0*s),new THREE.MeshStandardMaterial({color:0xcccccc,roughness:0.5}));
+  body.position.z=0.5*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<2;i++){var fan=new THREE.Mesh(new THREE.CylinderGeometry(0.3*s,0.3*s,0.05*s,16),new THREE.MeshStandardMaterial({color:0x444444}));fan.position.set(-0.5*s+i*1.0*s,0,1.03*s);g.add(fan);}
+  return g;
 }
-function makeRack(color){
-  color=color||0x1a1a2a;var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.BoxGeometry(0.65,0.55,1.6),new THREE.MeshStandardMaterial({color:color,roughness:0.5,metalness:0.4}));
-  body.position.set(0,0,0.8);body.castShadow=true;g.add(body);
-  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.58,0.01,1.4),new THREE.MeshStandardMaterial({color:0x0a0a15,roughness:0.8}));
-  panel.position.set(0,-0.28,0.8);g.add(panel);
-  for(var i=0;i<10;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.012,4,4),new THREE.MeshBasicMaterial({color:[0x00ff00,0x00ff00,0x00aaff,0xffaa00][i%4]}));led.position.set(-0.18+(i%5)*0.09,-0.29,0.3+Math.floor(i/5)*0.25);g.add(led);}
+function makeRack(){
+  var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.5,1.5),new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:0.5,metalness:0.4}));
+  body.position.z=0.75;body.castShadow=true;g.add(body);
+  for(var i=0;i<6;i++){var led=new THREE.Mesh(new THREE.SphereGeometry(0.012,4,4),new THREE.MeshBasicMaterial({color:[0x00ff00,0x00aaff,0xffaa00][i%3]}));led.position.set(-0.15+(i%3)*0.1,-0.26,0.3+Math.floor(i/3)*0.3);g.add(led);}
   return g;
 }
 
 // =====================================================================
-// CABLE & LABEL UTILITIES
+// CABLE UTILITIES
 // =====================================================================
 function makeCable(p1,p2,color,thick){
   thick=thick||0.03;color=color||0x00ffcc;
-  var pts=[new THREE.Vector3(p1.x,p1.y,p1.z)];
-  var mid=new THREE.Vector3((p1.x+p2.x)/2,(p1.y+p2.y)/2,Math.max(p1.z,p2.z)+1.5);
-  pts.push(mid);pts.push(new THREE.Vector3(p2.x,p2.y,p2.z));
-  var curve=new THREE.CatmullRomCurve3(pts);
-  var geo=new THREE.TubeGeometry(curve,24,thick,6,false);
-  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.4,metalness:0.3,transparent:true,opacity:0.85});
-  var mesh=new THREE.Mesh(geo,mat);mesh.castShadow=true;
-  connectionLines.push(mesh);scene.add(mesh);return mesh;
+  var a=p1 instanceof THREE.Vector3?p1:new THREE.Vector3(p1.x,p1.y,p1.z);
+  var b=p2 instanceof THREE.Vector3?p2:new THREE.Vector3(p2.x,p2.y,p2.z);
+  var mid=new THREE.Vector3((a.x+b.x)/2,(a.y+b.y)/2,Math.max(a.z,b.z)+1.2);
+  var curve=new THREE.CatmullRomCurve3([a,mid,b]);
+  var geo=new THREE.TubeGeometry(curve,20,thick,6,false);
+  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.4,transparent:true,opacity:0.8});
+  var mesh=new THREE.Mesh(geo,mat);connectionLines.push(mesh);scene.add(mesh);return mesh;
 }
-function makeUndergroundCable(p1,p2,color,thick){
+function makeUnderground(p1,p2,color,thick){
   thick=thick||0.06;color=color||0xffaa00;
-  var depth=-1.2;
-  var pts=[new THREE.Vector3(p1.x,p1.y,p1.z),new THREE.Vector3(p1.x,p1.y,depth),new THREE.Vector3(p2.x,p2.y,depth),new THREE.Vector3(p2.x,p2.y,p2.z)];
-  var curve=new THREE.CatmullRomCurve3(pts);
-  var geo=new THREE.TubeGeometry(curve,32,thick,8,false);
-  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.5,metalness:0.2,transparent:true,opacity:0.7});
-  var mesh=new THREE.Mesh(geo,mat);mesh.castShadow=true;
-  connectionLines.push(mesh);scene.add(mesh);return mesh;
+  var a=new THREE.Vector3(p1.x,p1.y,p1.z),b=new THREE.Vector3(p2.x,p2.y,p2.z);
+  var d=-1.2;
+  var curve=new THREE.CatmullRomCurve3([a,new THREE.Vector3(a.x,a.y,d),new THREE.Vector3(b.x,b.y,d),b]);
+  var geo=new THREE.TubeGeometry(curve,28,thick,8,false);
+  var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.5,transparent:true,opacity:0.65});
+  var mesh=new THREE.Mesh(geo,mat);connectionLines.push(mesh);scene.add(mesh);return mesh;
 }
 function makeLabel(txt,pos,color){
-  var canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;
-  var ctx=canvas.getContext('2d');ctx.fillStyle='rgba(0,0,0,0.7)';
-  ctx.roundRect(0,0,512,128,16);ctx.fill();
-  ctx.fillStyle=color||'#22d3ee';ctx.font='bold 36px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  var c=document.createElement("canvas");c.width=512;c.height=128;
+  var ctx=c.getContext("2d");ctx.fillStyle="rgba(0,0,0,0.65)";ctx.fillRect(0,0,512,128);
+  ctx.fillStyle=color||"#22d3ee";ctx.font="bold 34px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
   ctx.fillText(txt,256,64);
-  var tex=new THREE.CanvasTexture(canvas);tex.needsUpdate=true;
+  var tex=new THREE.CanvasTexture(c);
   var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
   sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(4,1,1);scene.add(sp);return sp;
 }
-function sLabel(txt,pos,color,scale){
-  var canvas=document.createElement('canvas');canvas.width=256;canvas.height=64;
-  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,256,64);
-  ctx.fillStyle=color||'#a5f3fc';ctx.font='bold 24px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+function sLabel(txt,pos,color,sc){
+  var c=document.createElement("canvas");c.width=256;c.height=64;
+  var ctx=c.getContext("2d");ctx.clearRect(0,0,256,64);
+  ctx.fillStyle=color||"#a5f3fc";ctx.font="bold 22px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
   ctx.fillText(txt,128,32);
-  var tex=new THREE.CanvasTexture(canvas);tex.needsUpdate=true;
+  var tex=new THREE.CanvasTexture(c);
   var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
-  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(scale||2,scale*0.25||0.5,1);scene.add(sp);return sp;
+  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(sc||2,(sc||2)*0.25,1);scene.add(sp);return sp;
 }
 
 // =====================================================================
-// BUILDING SHELL FACTORY & LAYOUT CONSTANTS
+// BUILDING SHELL
 // =====================================================================
-var ADMIN_X=0,ADMIN_Y=0,ADMIN_W=24,ADMIN_D=18,W1_X=-50,W1_Y=0,W1_W=20,W1_D=16,W2_X=50,W2_Y=0,W2_W=20,W2_D=16;
-var FH=5,ADMIN_FLOORS=2,WORK_FLOORS=3;
+var FH=5,ADMIN_X=0,ADMIN_Y=0,ADMIN_W=24,ADMIN_D=18;
+var W1_X=-45,W1_Y=0,W1_W=20,W1_D=16;
+var W2_X=45,W2_Y=0,W2_W=20,W2_D=16;
+var ADMIN_FLOORS=2,WORK_FLOORS=3;
 
 function makeBuilding(x,y,w,d,floors,wallColor,label){
   var g=new THREE.Group();g.position.set(x,y,0);
-  var floorMat=new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:0.8,metalness:0.1});
-  var wallMat=new THREE.MeshStandardMaterial({color:wallColor||0x334155,roughness:0.5,metalness:0.2,transparent:true,opacity:0.35,side:THREE.DoubleSide});
-  var glassMat=new THREE.MeshStandardMaterial({color:0x38bdf8,roughness:0.1,metalness:0.5,transparent:true,opacity:0.15,side:THREE.DoubleSide});
+  var floorM=new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:0.8});
+  var wallM=new THREE.MeshStandardMaterial({color:wallColor||0x334155,roughness:0.5,transparent:true,opacity:0.3,side:THREE.DoubleSide});
+  var glassM=new THREE.MeshStandardMaterial({color:0x38bdf8,roughness:0.1,transparent:true,opacity:0.12,side:THREE.DoubleSide});
   for(var f=0;f<floors;f++){
     var fz=f*FH;
-    var slab=new THREE.Mesh(new THREE.BoxGeometry(w,d,0.3),floorMat);slab.position.set(0,0,fz+0.15);slab.receiveShadow=true;g.add(slab);
-    // Front wall with windows
-    var frontWall=new THREE.Mesh(new THREE.BoxGeometry(w,0.15,FH-0.3),wallMat);frontWall.position.set(0,-d/2,fz+FH/2);g.add(frontWall);
-    // Back wall
-    var backWall=new THREE.Mesh(new THREE.BoxGeometry(w,0.15,FH-0.3),wallMat);backWall.position.set(0,d/2,fz+FH/2);g.add(backWall);
-    // Left wall
-    var leftWall=new THREE.Mesh(new THREE.BoxGeometry(0.15,d,FH-0.3),wallMat);leftWall.position.set(-w/2,0,fz+FH/2);g.add(leftWall);
-    // Right wall
-    var rightWall=new THREE.Mesh(new THREE.BoxGeometry(0.15,d,FH-0.3),wallMat);rightWall.position.set(w/2,0,fz+FH/2);g.add(rightWall);
-    // Windows
+    var slab=new THREE.Mesh(new THREE.BoxGeometry(w,d,0.25),floorM);slab.position.z=fz+0.12;slab.receiveShadow=true;g.add(slab);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.12,FH-0.3),wallM)).position.set(0,-d/2,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(w,0.12,FH-0.3),wallM)).position.set(0,d/2,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.12,d,FH-0.3),wallM)).position.set(-w/2,0,fz+FH/2);
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.12,d,FH-0.3),wallM)).position.set(w/2,0,fz+FH/2);
     for(var wi=0;wi<Math.floor(w/3);wi++){
-      var win=new THREE.Mesh(new THREE.PlaneGeometry(1.8,2.5),glassMat);
-      win.position.set(-w/2+2+wi*3,-(d/2+0.08),fz+FH/2);g.add(win);
-      var win2=win.clone();win2.position.set(-w/2+2+wi*3,d/2+0.08,fz+FH/2);g.add(win2);
+      var win=new THREE.Mesh(new THREE.PlaneGeometry(1.6,2.2),glassM);
+      win.position.set(-w/2+2+wi*3,-(d/2+0.07),fz+FH/2);g.add(win);
+      var win2=win.clone();win2.position.set(-w/2+2+wi*3,d/2+0.07,fz+FH/2);g.add(win2);
     }
-    // Ceiling lights
-    for(var li=0;li<3;li++){
-      var light=new THREE.Mesh(new THREE.BoxGeometry(w*0.6,0.3,0.05),new THREE.MeshBasicMaterial({color:0xfff8e0,transparent:true,opacity:0.4}));
-      light.position.set(0,-d/3+li*(d/3),fz+FH-0.2);g.add(light);
+    for(var li=0;li<2;li++){
+      var lt=new THREE.Mesh(new THREE.BoxGeometry(w*0.5,0.25,0.04),new THREE.MeshBasicMaterial({color:0xfff8e0,transparent:true,opacity:0.3}));
+      lt.position.set(0,-d/4+li*(d/2),fz+FH-0.15);g.add(lt);
     }
   }
-  // Roof slab
-  var roofSlab=new THREE.Mesh(new THREE.BoxGeometry(w+0.4,d+0.4,0.4),new THREE.MeshStandardMaterial({color:0x475569,roughness:0.7}));
-  roofSlab.position.set(0,0,floors*FH+0.2);roofSlab.receiveShadow=true;roofSlab.castShadow=true;g.add(roofSlab);
-  // Roof edge rail
-  var railMat=new THREE.MeshStandardMaterial({color:0x64748b,metalness:0.4});
-  var railH=0.6;var rz=floors*FH+0.6;
-  g.add(new THREE.Mesh(new THREE.BoxGeometry(w+0.6,0.08,railH),railMat).translateX(0).translateY(-d/2-0.04).translateZ(rz));
-  g.add(new THREE.Mesh(new THREE.BoxGeometry(w+0.6,0.08,railH),railMat).translateX(0).translateY(d/2+0.04).translateZ(rz));
-  g.add(new THREE.Mesh(new THREE.BoxGeometry(0.08,d+0.6,railH),railMat).translateX(-w/2-0.04).translateZ(rz));
-  g.add(new THREE.Mesh(new THREE.BoxGeometry(0.08,d+0.6,railH),railMat).translateX(w/2+0.04).translateZ(rz));
-  // Entrance
-  var door=new THREE.Mesh(new THREE.BoxGeometry(3,0.1,3.5),new THREE.MeshStandardMaterial({color:0x0ea5e9,roughness:0.2,metalness:0.4,transparent:true,opacity:0.5}));
-  door.position.set(0,-d/2-0.05,1.75);g.add(door);
-  var canopy=new THREE.Mesh(new THREE.BoxGeometry(5,2,0.15),new THREE.MeshStandardMaterial({color:0x475569,roughness:0.6}));
-  canopy.position.set(0,-d/2-1,3.6);g.add(canopy);
+  var roof=new THREE.Mesh(new THREE.BoxGeometry(w+0.3,d+0.3,0.35),new THREE.MeshStandardMaterial({color:0x475569,roughness:0.7}));
+  roof.position.z=floors*FH+0.17;roof.receiveShadow=true;roof.castShadow=true;g.add(roof);
+  var door=new THREE.Mesh(new THREE.BoxGeometry(2.5,0.08,3),new THREE.MeshStandardMaterial({color:0x0ea5e9,transparent:true,opacity:0.45}));
+  door.position.set(0,-d/2-0.04,1.5);g.add(door);
   scene.add(g);
-  // Building label
-  makeLabel(label,{x:x,y:y-d/2-3,z:floors*FH+3},wallColor===0x7c3aed?'#a78bfa':'#22d3ee');
+  makeLabel(label,{x:x,y:y-d/2-3,z:floors*FH+2.5},wallColor===0x7c3aed?"#a78bfa":"#22d3ee");
   return g;
 }
 
 // =====================================================================
-// BUILD ADMIN BUILDING (MDF / DATA CENTER)
+// BUILD ADMIN (MDF / DATA CENTER)
 // =====================================================================
 function buildAdmin(){
-  var bldg=makeBuilding(ADMIN_X,ADMIN_Y,ADMIN_W,ADMIN_D,ADMIN_FLOORS,0x0e7490,'TOA QUAN TRI (ADMIN)');
-  var ax=ADMIN_X,ay=ADMIN_Y;
-  var f1z=0.5,f2z=FH+0.5;
-
-  // ---- FLOOR 1: Core Network Room ----
-  var fg1=new THREE.Group();fg1.userData={building:'admin',floor:1};floorGroups.push(fg1);scene.add(fg1);
+  makeBuilding(ADMIN_X,ADMIN_Y,ADMIN_W,ADMIN_D,ADMIN_FLOORS,0x0e7490,"TOA QUAN TRI (ADMIN)");
+  var ax=ADMIN_X,ay=ADMIN_Y,f1=0.4,f2=FH+0.4;
+  var fg1=new THREE.Group();fg1.userData={building:"admin",floor:1};floorGroups.push(fg1);scene.add(fg1);
+  var fg2=new THREE.Group();fg2.userData={building:"admin",floor:2};floorGroups.push(fg2);scene.add(fg2);
 
   // Racks
-  var rack1=makeRack(0x1a1a2e);rack1.position.set(ax-8,ay-2,f1z);addR(rack1,'Rack-Core-1','admin',fg1);
-  var rack2=makeRack(0x1a1a2e);rack2.position.set(ax-5,ay-2,f1z);addR(rack2,'Rack-Core-2','admin',fg1);
-  var rack3=makeRack(0x1a1a2e);rack3.position.set(ax+5,ay-2,f1z);addR(rack3,'Rack-FW','admin',fg1);
-  var rack4=makeRack(0x1a1a2e);rack4.position.set(ax+8,ay-2,f1z);addR(rack4,'Rack-ISP','admin',fg1);
+  var r1=makeRack();r1.position.set(ax-8,ay-3,f1);fg1.add(r1);
+  var r2=makeRack();r2.position.set(ax-5,ay-3,f1);fg1.add(r2);
+  var r3=makeRack();r3.position.set(ax+5,ay-3,f1);fg1.add(r3);
+  var r4=makeRack();r4.position.set(ax+8,ay-3,f1);fg1.add(r4);
 
-  // ISP Routers
-  var isp1=makeRouter(C.isp,0.9);isp1.position.set(ax+9,ay+5,f1z+1.4);addR(isp1,'ISP1','admin',fg1);
-  var isp2=makeRouter(C.isp,0.9);isp2.position.set(ax+9,ay+2,f1z+1.4);addR(isp2,'ISP2','admin',fg1);
+  // ISP
+  var isp1=makeRouter(COL.isp,0.8);isp1.position.set(ax+9,ay+5,f1+1.2);addD(isp1,"ISP1",fg1);
+  var isp2=makeRouter(COL.isp,0.8);isp2.position.set(ax+9,ay+2.5,f1+1.2);addD(isp2,"ISP2",fg1);
+  var lte=makeRouter(0x9333ea,0.6);lte.position.set(ax+9,ay+0,f1+1.2);addD(lte,"LTE_Modem",fg1);
 
-  // LTE Modem
-  var lte=makeRouter(0x9333ea,0.7);lte.position.set(ax+9,ay-1,f1z+1.4);addR(lte,'LTE_Modem','admin',fg1);
-
-  // MikroTik routers (VRRP pair)
-  var mk1=makeRouter(C.router,1);mk1.position.set(ax+4,ay+5,f1z+1.4);addR(mk1,'MikroTik1','admin',fg1);
-  var mk2=makeRouter(C.router,1);mk2.position.set(ax+4,ay+2,f1z+1.4);addR(mk2,'MikroTik2','admin',fg1);
-  makeCable(mk1.position,mk2.position,0xff6600,0.04); // VRRP link
-  sLabel('VRRP',{x:ax+4,y:ay+3.5,z:f1z+2.5},'#ff6600',1.5);
+  // MikroTik VRRP
+  var mk1=makeRouter(COL.router,0.9);mk1.position.set(ax+4,ay+5,f1+1.2);addD(mk1,"MikroTik1",fg1);
+  var mk2=makeRouter(COL.router,0.9);mk2.position.set(ax+4,ay+2.5,f1+1.2);addD(mk2,"MikroTik2",fg1);
+  makeCable(mk1.position,mk2.position,0xec4899,0.04);
+  sLabel("VRRP",{x:ax+4,y:ay+3.75,z:f1+2.5},"#ec4899",1.5);
 
   // Console Server
-  var cs=makeServer(0x666666,0.6);cs.position.set(ax+4,ay-1,f1z);addR(cs,'ConsoleServer','admin',fg1);
+  var cs=makeServer(0x666666,0.5);cs.position.set(ax+4,ay+0,f1);addD(cs,"ConsoleServer",fg1);
 
-  // FortiGate firewalls (HA pair)
-  var fw1=makeFirewall(1);fw1.position.set(ax,ay+5,f1z+1.4);addR(fw1,'FortiGate1','admin',fg1);
-  var fw2=makeFirewall(1);fw2.position.set(ax,ay+2,f1z+1.4);addR(fw2,'FortiGate2','admin',fg1);
-  makeCable(fw1.position,fw2.position,0xeab308,0.04); // HA Sync
-  sLabel('HA Sync',{x:ax,y:ay+3.5,z:f1z+2.5},'#eab308',1.5);
+  // FortiGate HA
+  var fw1=makeFirewall(0.9);fw1.position.set(ax,ay+5,f1+1.2);addD(fw1,"FortiGate1",fg1);
+  var fw2=makeFirewall(0.9);fw2.position.set(ax,ay+2.5,f1+1.2);addD(fw2,"FortiGate2",fg1);
+  makeCable(fw1.position,fw2.position,0xec4899,0.04);
+  sLabel("HA Sync",{x:ax,y:ay+3.75,z:f1+2.5},"#eab308",1.5);
 
-  // Core switches (StackWise)
-  var csw1=makeSwitch(C.core,1.2);csw1.position.set(ax-4,ay+5,f1z+1.4);addR(csw1,'CoreSW1','admin',fg1);
-  var csw2=makeSwitch(C.core,1.2);csw2.position.set(ax-4,ay+2,f1z+1.4);addR(csw2,'CoreSW2','admin',fg1);
-  makeCable(csw1.position,csw2.position,0x22d3ee,0.05); // StackWise
-  sLabel('StackWise',{x:ax-4,y:ay+3.5,z:f1z+2.5},'#22d3ee',1.5);
+  // Core Switches StackWise
+  var csw1=makeSwitch(COL.core,1.1);csw1.position.set(ax-5,ay+5,f1+1.2);addD(csw1,"CoreSW1",fg1);
+  var csw2=makeSwitch(COL.core,1.1);csw2.position.set(ax-5,ay+2.5,f1+1.2);addD(csw2,"CoreSW2",fg1);
+  makeCable(csw1.position,csw2.position,0xef4444,0.05);
+  sLabel("StackWise",{x:ax-5,y:ay+3.75,z:f1+2.5},"#ef4444",1.5);
 
-  // Core cabling: ISP->MikroTik->FortiGate->CoreSW
-  makeCable(isp1.position,mk1.position,C.isp,0.03);
-  makeCable(isp2.position,mk2.position,C.isp,0.03);
-  makeCable(mk1.position,fw1.position,C.router,0.03);
-  makeCable(mk2.position,fw2.position,C.router,0.03);
-  makeCable(fw1.position,csw1.position,C.fw,0.03);
-  makeCable(fw2.position,csw2.position,C.fw,0.03);
-  // Cross links
-  makeCable(mk1.position,fw2.position,0x666666,0.02);
-  makeCable(mk2.position,fw1.position,0x666666,0.02);
+  // Chain: ISP->MikroTik->FortiGate->CoreSW
+  makeCable(isp1.position,mk1.position,COL.isp,0.025);
+  makeCable(isp2.position,mk2.position,COL.isp,0.025);
+  makeCable(mk1.position,fw1.position,COL.router,0.025);
+  makeCable(mk2.position,fw2.position,COL.router,0.025);
+  makeCable(fw1.position,csw1.position,COL.fw,0.025);
+  makeCable(fw2.position,csw2.position,COL.fw,0.025);
+  makeCable(mk1.position,fw2.position,0x555555,0.015);
+  makeCable(mk2.position,fw1.position,0x555555,0.015);
+  makeCable(lte.position,cs.position,0x8b5cf6,0.02);
 
-  // UPS A & B
-  var upsA=makeUPS(1);upsA.position.set(ax-9,ay-4,f1z);addR(upsA,'UPS_A','admin',fg1);
-  var upsB=makeUPS(1);upsB.position.set(ax-9,ay-7,f1z);addR(upsB,'UPS_B','admin',fg1);
-  sLabel('UPS A',{x:ax-9,y:ay-4,z:f1z+2.5},'#00ff44',1.2);
-  sLabel('UPS B',{x:ax-9,y:ay-7,z:f1z+2.5},'#ffaa00',1.2);
-  // Power distribution lines
-  makeCable(upsA.position,{x:ax-4,y:ay+5,z:f1z+0.5},0x00ff44,0.02);
-  makeCable(upsB.position,{x:ax-4,y:ay+2,z:f1z+0.5},0xffaa00,0.02);
+  // UPS A/B
+  var uA=makeUPS(0.9);uA.position.set(ax-9,ay-4,f1);addD(uA,"UPS_A",fg1);
+  var uB=makeUPS(0.9);uB.position.set(ax-9,ay-7,f1);addD(uB,"UPS_B",fg1);
+  sLabel("UPS A",{x:ax-9,y:ay-4,z:f1+2.2},"#22d3ee",1.2);
+  sLabel("UPS B",{x:ax-9,y:ay-7,z:f1+2.2},"#f59e0b",1.2);
+  makeCable({x:ax-9,y:ay-4,z:f1+1.5},{x:ax-5,y:ay+5,z:f1+0.5},0x22d3ee,0.02);
+  makeCable({x:ax-9,y:ay-7,z:f1+1.5},{x:ax-5,y:ay+2.5,z:f1+0.5},0xf59e0b,0.02);
 
   // Generator
-  var gen=makeGenerator(1);gen.position.set(ax+10,ay-7,f1z);addR(gen,'Generator','admin',fg1);
-  makeCable({x:ax+10,y:ay-7,z:f1z+1.5},upsA.position,0xff4444,0.03);
-  makeCable({x:ax+10,y:ay-7,z:f1z+1.5},upsB.position,0xff4444,0.03);
+  var gen=makeGenerator(0.9);gen.position.set(ax+10,ay-7,f1);addD(gen,"Generator",fg1);
+  makeCable({x:ax+10,y:ay-7,z:f1+1.2},{x:ax-9,y:ay-4,z:f1+1.5},0xef4444,0.025);
+  makeCable({x:ax+10,y:ay-7,z:f1+1.2},{x:ax-9,y:ay-7,z:f1+1.5},0xef4444,0.025);
 
-  // CRAC units
-  var crac1=makeCRAC(1);crac1.position.set(ax-9,ay+5,f1z);addR(crac1,'CRAC1','admin',fg1);
-  var crac2=makeCRAC(1);crac2.position.set(ax-9,ay+2,f1z);addR(crac2,'CRAC2','admin',fg1);
-  // Cooling pipes to roof
-  makeCable({x:ax-9,y:ay+5,z:f1z+2},{x:ax-3,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.04);
-  makeCable({x:ax-9,y:ay+2,z:f1z+2},{x:ax+3,y:ay,z:ADMIN_FLOORS*FH+2},0x38bdf8,0.04);
+  // CRAC
+  var cr1=makeCRAC(0.9);cr1.position.set(ax-9,ay+5,f1);addD(cr1,"CRAC1",fg1);
+  var cr2=makeCRAC(0.9);cr2.position.set(ax-9,ay+2.5,f1);addD(cr2,"CRAC2",fg1);
+  makeCable({x:ax-9,y:ay+5,z:f1+1.7},{x:ax-2,y:ay,z:ADMIN_FLOORS*FH+1.5},0x38bdf8,0.035);
+  makeCable({x:ax-9,y:ay+2.5,z:f1+1.7},{x:ax+2,y:ay,z:ADMIN_FLOORS*FH+1.5},0x38bdf8,0.035);
 
-  // Roof chiller
-  var chiller=makeRoofChiller(0.8);chiller.position.set(ax,ay,ADMIN_FLOORS*FH+0.5);addR(chiller,'RoofChiller','admin',fg1);
+  // Roof Chiller
+  var ch=makeChiller(0.7);ch.position.set(ax,ay,ADMIN_FLOORS*FH+0.4);addD(ch,"RoofChiller",fg1);
 
-  // Cable tray visualization
-  var trayMat=new THREE.MeshStandardMaterial({color:0x555555,roughness:0.7,metalness:0.3,transparent:true,opacity:0.3});
-  var tray=new THREE.Mesh(new THREE.BoxGeometry(ADMIN_W-4,1,0.1),trayMat);
-  tray.position.set(ax,ay,f1z+FH-0.8);fg1.add(tray);
-
-  // ---- FLOOR 2: Server Farm & Camera Central ----
-  var fg2=new THREE.Group();fg2.userData={building:'admin',floor:2};floorGroups.push(fg2);scene.add(fg2);
-
-  // Servers
-  var srv1=makeServer(C.server,0.9);srv1.position.set(ax-6,ay+4,f2z);addR(srv1,'ROSEServer1','admin',fg2);
-  var srv2=makeServer(C.server,0.9);srv2.position.set(ax-3,ay+4,f2z);addR(srv2,'ROSEServer2','admin',fg2);
-  var adSrv=makeServer(0x7c3aed,0.9);adSrv.position.set(ax,ay+4,f2z);addR(adSrv,'ADServer','admin',fg2);
-
-  // Camera central
-  var nvr=makeServer(0xef4444,0.9);nvr.position.set(ax+5,ay+4,f2z);addR(nvr,'CentralNVR','admin',fg2);
-  var nas=makeServer(0x666666,0.9);nas.position.set(ax+8,ay+4,f2z);addR(nas,'StorageNAS','admin',fg2);
-
-  // Connect servers to core switches
-  makeCable({x:ax-6,y:ay+4,z:f2z+1},csw1.position,C.server,0.025);
-  makeCable({x:ax-3,y:ay+4,z:f2z+1},csw2.position,C.server,0.025);
-  makeCable({x:ax,y:ay+4,z:f2z+1},csw1.position,0x7c3aed,0.025);
-  makeCable({x:ax+5,y:ay+4,z:f2z+1},csw1.position,0xef4444,0.025);
-  makeCable({x:ax+8,y:ay+4,z:f2z+1},csw2.position,0x666666,0.025);
-
-  // Server room labels
-  sLabel('SERVER FARM',{x:ax-3,y:ay+7,z:f2z+3},'#10b981',2);
-  sLabel('CAMERA CENTRAL',{x:ax+6,y:ay+7,z:f2z+3},'#ef4444',2);
+  // Floor 2: Servers
+  var sv1=makeServer(COL.server,0.8);sv1.position.set(ax-6,ay+4,f2);addD(sv1,"ROSEServer1",fg2);
+  var sv2=makeServer(COL.server,0.8);sv2.position.set(ax-3,ay+4,f2);addD(sv2,"ROSEServer2",fg2);
+  var ad=makeServer(0x7c3aed,0.7);ad.position.set(ax,ay+4,f2);addD(ad,"ADServer",fg2);
+  var nvr=makeServer(COL.cctv,0.8);nvr.position.set(ax+4,ay+4,f2);addD(nvr,"CentralNVR",fg2);
+  var nas=makeServer(0x666666,0.8);nas.position.set(ax+7,ay+4,f2);addD(nas,"StorageNAS",fg2);
+  makeCable({x:ax-6,y:ay+4,z:f2+1},csw1.position,COL.server,0.02);
+  makeCable({x:ax-3,y:ay+4,z:f2+1},csw2.position,COL.server,0.02);
+  makeCable({x:ax,y:ay+4,z:f2+1},csw1.position,0x7c3aed,0.02);
+  makeCable({x:ax+4,y:ay+4,z:f2+1},csw1.position,COL.cctv,0.02);
+  makeCable({x:ax+7,y:ay+4,z:f2+1},csw2.position,0x666666,0.02);
+  sLabel("SERVER FARM",{x:ax-3,y:ay+7,z:f2+2.5},"#a855f7",2);
+  sLabel("CAMERA CENTRAL",{x:ax+5.5,y:ay+7,z:f2+2.5},"#ef4444",2);
 }
 
 // =====================================================================
-// BUILD WORK BUILDING 1
+// BUILD WORK BUILDINGS
 // =====================================================================
-function buildWork1(){
-  var bldg=makeBuilding(W1_X,W1_Y,W1_W,W1_D,WORK_FLOORS,0x7c3aed,'TOA LAM VIEC 1 (WORK 1)');
-  var bx=W1_X,by=W1_Y;
+function buildWorkBuilding(bx,by,bw,bd,bldgKey,floors,distKeys,nvrKey){
+  makeBuilding(bx,by,bw,bd,WORK_FLOORS,0x7c3aed,"TOA LAM VIEC "+(bldgKey==="work1"?"1":"2"));
+  var fgIDF=new THREE.Group();fgIDF.userData={building:bldgKey,floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
 
-  // IDF Room (ground level)
-  var fgIDF=new THREE.Group();fgIDF.userData={building:'work1',floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
-  var dsw1=makeSwitch(C.dist,1);dsw1.position.set(bx-4,by+4,0.5+1.2);addR(dsw1,'DistSW1','work1',fgIDF);
-  var dsw2=makeSwitch(C.dist,1);dsw2.position.set(bx+4,by+4,0.5+1.2);addR(dsw2,'DistSW2','work1',fgIDF);
-  makeCable(dsw1.position,dsw2.position,C.dist,0.035);
-  var nvrL1=makeServer(0xef4444,0.7);nvrL1.position.set(bx,by+4,0.5);addR(nvrL1,'NVRLocal1','work1',fgIDF);
-  makeCable(nvrL1.position,dsw1.position,0xef4444,0.02);
-  sLabel('IDF ROOM 1',{x:bx,y:by+7,z:4},'#a78bfa',2);
+  var ds1=makeSwitch(COL.dist,0.9);ds1.position.set(bx-4,by+4,0.4+1);addD(ds1,distKeys[0],fgIDF);
+  var ds2=makeSwitch(COL.dist,0.9);ds2.position.set(bx+4,by+4,0.4+1);addD(ds2,distKeys[1],fgIDF);
+  makeCable(ds1.position,ds2.position,COL.dist,0.03);
+  var nvrL=makeServer(COL.cctv,0.6);nvrL.position.set(bx,by+4,0.4);addD(nvrL,nvrKey,fgIDF);
+  makeCable(nvrL.position,ds1.position,COL.cctv,0.02);
+  sLabel("IDF ROOM",{x:bx,y:by+7,z:3.5},"#a78bfa",1.8);
 
-  // Floors 1-3
-  for(var fi=0;fi<FLOORS_B1.length;fi++){
-    var fl=FLOORS_B1[fi];
-    var fz=fl.z+0.5;
-    var fg=new THREE.Group();fg.userData={building:'work1',floor:fl.key};floorGroups.push(fg);scene.add(fg);
+  for(var fi=0;fi<floors.length;fi++){
+    var fl=floors[fi];
+    var fz=fl.z+0.4;
+    var fg=new THREE.Group();fg.userData={building:bldgKey,floor:fl.key};floorGroups.push(fg);scene.add(fg);
 
-    // Access switches on this floor
     for(var si=0;si<fl.sw;si++){
-      var swKey='W1_F'+fl.key+'_AccSW'+(si+1);
-      var swMesh=makeSwitch(C.access,0.8);
-      swMesh.position.set(bx-6+si*4,by-3,fz+1.2);
-      addR(swMesh,swKey,'work1',fg);
-      // Uplink to distribution
-      makeCable(swMesh.position,dsw1.position,C.access,0.02);
-      makeCable(swMesh.position,dsw2.position,C.access,0.015);
+      var swK=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AccSW"+(si+1);
+      var sw=makeSwitch(COL.acc,0.7);sw.position.set(bx-5+si*4,by-3,fz+1);addD(sw,swK,fg);
+      makeCable(sw.position,ds1.position,COL.acc,0.015);
+      makeCable(sw.position,ds2.position,COL.acc,0.012);
     }
-    // PCs
+    var deskM=new THREE.MeshStandardMaterial({color:0x8b6914,roughness:0.7});
     for(var pi=0;pi<fl.pcs;pi++){
-      var pc=makePC(C.pc,0.4);
-      pc.position.set(bx-7+pi*2.5,by-1,fz);
-      addR(pc,'W1_F'+fl.key+'_PC'+(pi+1),'work1',fg);
+      var pc=makePC(0.35);pc.position.set(bx-7+pi*2.3,by-1,fz);
+      var pk=(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_PC"+(pi+1);
+      addD(pc,pk,fg);
+      var desk=new THREE.Mesh(new THREE.BoxGeometry(1.6,0.8,0.05),deskM);desk.position.set(bx-7+pi*2.3,by-1,fz+0.65);fg.add(desk);
     }
-    // APs (ceiling mounted)
     for(var ai=0;ai<fl.aps;ai++){
-      var ap=makeAP(0.6);
-      ap.position.set(bx-4+ai*4,by,fz+FH-0.5);
-      addR(ap,'W1_F'+fl.key+'_AP'+(ai+1),'work1',fg);
+      var ap=makeAP(0.5);ap.position.set(bx-3+ai*3.5,by,fz+FH-0.4);
+      addD(ap,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_AP"+(ai+1),fg);
     }
-    // CCTVs
     for(var ci=0;ci<fl.cctv;ci++){
-      var cam=makeCCTV(0.5);
-      cam.position.set(bx-W1_W/2+2+ci*(W1_W-4)/(Math.max(fl.cctv-1,1)),by-W1_D/2+1,fz+FH-0.5);
-      addR(cam,'W1_F'+fl.key+'_CCTV'+(ci+1),'work1',fg);
+      var cam=makeCCTV(0.4);
+      cam.position.set(bx-bw/2+2+ci*(bw-4)/(Math.max(fl.cctv-1,1)),by-bd/2+1,fz+FH-0.4);
+      addD(cam,(bldgKey==="work1"?"W1":"W2")+"_F"+fl.key+"_CCTV"+(ci+1),fg);
     }
-    // Desks
-    var deskMat=new THREE.MeshStandardMaterial({color:0x8b6914,roughness:0.7});
-    for(var di=0;di<fl.pcs;di++){
-      var desk=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.0,0.06),deskMat);
-      desk.position.set(bx-7+di*2.5,by-1,fz+0.75);desk.castShadow=true;fg.add(desk);
-    }
-    sLabel('TANG '+fl.key,{x:bx,y:by-W1_D/2-2,z:fz+2.5},'#c4b5fd',1.5);
+    sLabel("TANG "+fl.key,{x:bx,y:by-bd/2-1.5,z:fz+2},"#c4b5fd",1.3);
   }
-
   // Roof HVAC
-  var hvac1=makeRoofChiller(0.5);hvac1.position.set(bx,by,WORK_FLOORS*FH+0.5);
-  addR(hvac1,'W1_RoofHVAC','work1',fgIDF);
+  var hvac=makeChiller(0.4);hvac.position.set(bx,by,WORK_FLOORS*FH+0.4);fg=new THREE.Group();scene.add(fg);fg.add(hvac);
 }
 
-// =====================================================================
-// BUILD WORK BUILDING 2
-// =====================================================================
-function buildWork2(){
-  var bldg=makeBuilding(W2_X,W2_Y,W2_W,W2_D,WORK_FLOORS,0x7c3aed,'TOA LAM VIEC 2 (WORK 2)');
-  var bx=W2_X,by=W2_Y;
-
-  // IDF Room
-  var fgIDF=new THREE.Group();fgIDF.userData={building:'work2',floor:0};floorGroups.push(fgIDF);scene.add(fgIDF);
-  var dsw3=makeSwitch(C.dist,1);dsw3.position.set(bx-4,by+4,0.5+1.2);addR(dsw3,'DistSW3','work2',fgIDF);
-  var dsw4=makeSwitch(C.dist,1);dsw4.position.set(bx+4,by+4,0.5+1.2);addR(dsw4,'DistSW4','work2',fgIDF);
-  makeCable(dsw3.position,dsw4.position,C.dist,0.035);
-  var nvrL2=makeServer(0xef4444,0.7);nvrL2.position.set(bx,by+4,0.5);addR(nvrL2,'NVRLocal2','work2',fgIDF);
-  makeCable(nvrL2.position,dsw3.position,0xef4444,0.02);
-  sLabel('IDF ROOM 2',{x:bx,y:by+7,z:4},'#a78bfa',2);
-
-  // Floors 1-3
-  for(var fi=0;fi<FLOORS_B2.length;fi++){
-    var fl=FLOORS_B2[fi];
-    var fz=fl.z+0.5;
-    var fg=new THREE.Group();fg.userData={building:'work2',floor:fl.key};floorGroups.push(fg);scene.add(fg);
-
-    for(var si=0;si<fl.sw;si++){
-      var swKey='W2_F'+fl.key+'_AccSW'+(si+1);
-      var swMesh=makeSwitch(C.access,0.8);
-      swMesh.position.set(bx-6+si*4,by-3,fz+1.2);
-      addR(swMesh,swKey,'work2',fg);
-      makeCable(swMesh.position,dsw3.position,C.access,0.02);
-      makeCable(swMesh.position,dsw4.position,C.access,0.015);
-    }
-    for(var pi=0;pi<fl.pcs;pi++){
-      var pc=makePC(C.pc,0.4);
-      pc.position.set(bx-7+pi*2.5,by-1,fz);
-      addR(pc,'W2_F'+fl.key+'_PC'+(pi+1),'work2',fg);
-    }
-    for(var ai=0;ai<fl.aps;ai++){
-      var ap=makeAP(0.6);
-      ap.position.set(bx-4+ai*4,by,fz+FH-0.5);
-      addR(ap,'W2_F'+fl.key+'_AP'+(ai+1),'work2',fg);
-    }
-    for(var ci=0;ci<fl.cctv;ci++){
-      var cam=makeCCTV(0.5);
-      cam.position.set(bx-W2_W/2+2+ci*(W2_W-4)/(Math.max(fl.cctv-1,1)),by-W2_D/2+1,fz+FH-0.5);
-      addR(cam,'W2_F'+fl.key+'_CCTV'+(ci+1),'work2',fg);
-    }
-    var deskMat2=new THREE.MeshStandardMaterial({color:0x8b6914,roughness:0.7});
-    for(var di=0;di<fl.pcs;di++){
-      var desk=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.0,0.06),deskMat2);
-      desk.position.set(bx-7+di*2.5,by-1,fz+0.75);desk.castShadow=true;fg.add(desk);
-    }
-    sLabel('TANG '+fl.key,{x:bx,y:by-W2_D/2-2,z:fz+2.5},'#c4b5fd',1.5);
-  }
-
-  var hvac2=makeRoofChiller(0.5);hvac2.position.set(bx,by,WORK_FLOORS*FH+0.5);
-  addR(hvac2,'W2_RoofHVAC','work2',fgIDF);
-}
+function buildWork1(){buildWorkBuilding(W1_X,W1_Y,W1_W,W1_D,"work1",FLOORS_B1,["DistSW1","DistSW2"],"NVRLocal1");}
+function buildWork2(){buildWorkBuilding(W2_X,W2_Y,W2_W,W2_D,"work2",FLOORS_B2,["DistSW3","DistSW4"],"NVRLocal2");}
 
 // =====================================================================
-// UNDERGROUND CABLING (Full-Mesh Cross Uplinks)
+// UNDERGROUND CABLING (40G Fiber Full-Mesh)
 // =====================================================================
-function buildUndergroundCabling(){
-  // Admin CoreSW -> Work1 DistSW (40G fiber)
-  makeUndergroundCable({x:ADMIN_X-4,y:ADMIN_Y+5,z:0.3},{x:W1_X-4,y:W1_Y+4,z:0.3},0xffaa00,0.07);
-  makeUndergroundCable({x:ADMIN_X-4,y:ADMIN_Y+2,z:0.3},{x:W1_X+4,y:W1_Y+4,z:0.3},0xff6600,0.07);
-  // Admin CoreSW -> Work2 DistSW (40G fiber)
-  makeUndergroundCable({x:ADMIN_X-4,y:ADMIN_Y+5,z:0.3},{x:W2_X-4,y:W2_Y+4,z:0.3},0xffaa00,0.07);
-  makeUndergroundCable({x:ADMIN_X-4,y:ADMIN_Y+2,z:0.3},{x:W2_X+4,y:W2_Y+4,z:0.3},0xff6600,0.07);
-  // Cross uplinks Work1<->Work2
-  makeUndergroundCable({x:W1_X+4,y:W1_Y+4,z:0.3},{x:W2_X-4,y:W2_Y+4,z:0.3},0x22d3ee,0.05);
-  makeUndergroundCable({x:W1_X-4,y:W1_Y+4,z:0.3},{x:W2_X+4,y:W2_Y+4,z:0.3},0x22d3ee,0.05);
+function buildUnderground(){
+  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+5,z:0.2},{x:W1_X-4,y:W1_Y+4,z:0.2},0x3b82f6,0.06);
+  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+2.5,z:0.2},{x:W1_X+4,y:W1_Y+4,z:0.2},0x1d4ed8,0.06);
+  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+5,z:0.2},{x:W2_X-4,y:W2_Y+4,z:0.2},0x3b82f6,0.06);
+  makeUnderground({x:ADMIN_X-5,y:ADMIN_Y+2.5,z:0.2},{x:W2_X+4,y:W2_Y+4,z:0.2},0x1d4ed8,0.06);
+  makeUnderground({x:W1_X+4,y:W1_Y+4,z:0.2},{x:W2_X-4,y:W2_Y+4,z:0.2},0x22d3ee,0.05);
+  makeUnderground({x:W1_X-4,y:W1_Y+4,z:0.2},{x:W2_X+4,y:W2_Y+4,z:0.2},0x22d3ee,0.05);
 
-  // Underground conduit visualization
-  var conduitMat=new THREE.MeshStandardMaterial({color:0x555555,roughness:0.8,transparent:true,opacity:0.25});
-  var conduit1=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W1_X-ADMIN_X)+10,2,0.5),conduitMat);
-  conduit1.position.set((W1_X+ADMIN_X)/2,ADMIN_Y+2,-1.0);scene.add(conduit1);
-  var conduit2=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W2_X-ADMIN_X)+10,2,0.5),conduitMat);
-  conduit2.position.set((W2_X+ADMIN_X)/2,ADMIN_Y+2,-1.0);scene.add(conduit2);
+  // Conduit
+  var cm=new THREE.MeshStandardMaterial({color:0x444444,roughness:0.8,transparent:true,opacity:0.2});
+  var c1=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W1_X-ADMIN_X)+10,2,0.4),cm);c1.position.set((W1_X+ADMIN_X)/2,3,-1);scene.add(c1);
+  var c2=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(W2_X-ADMIN_X)+10,2,0.4),cm);c2.position.set((W2_X+ADMIN_X)/2,3,-1);scene.add(c2);
 
   // Manholes
-  var manholeMat=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.8,metalness:0.2});
-  var mhPositions=[{x:ADMIN_X-15,y:ADMIN_Y+2},{x:ADMIN_X+15,y:ADMIN_Y+2},{x:W1_X+5,y:W1_Y+2},{x:W2_X-5,y:W2_Y+2}];
-  for(var mi=0;mi<mhPositions.length;mi++){
-    var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.8,0.8,0.15,16),manholeMat);
-    mh.position.set(mhPositions[mi].x,mhPositions[mi].y,0.08);scene.add(mh);
-    var cover=new THREE.Mesh(new THREE.RingGeometry(0.2,0.7,12),new THREE.MeshStandardMaterial({color:0x444444,side:THREE.DoubleSide}));
-    cover.position.set(mhPositions[mi].x,mhPositions[mi].y,0.16);scene.add(cover);
-  }
-  sLabel('40G FIBER UNDERGROUND',{x:0,y:ADMIN_Y+2,z:-0.5},'#ffaa00',3);
+  var mm=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.8});
+  [{x:-15,y:3},{x:15,y:3},{x:W1_X+5,y:3},{x:W2_X-5,y:3}].forEach(function(p){
+    var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.12,16),mm);mh.position.set(p.x,p.y,0.06);scene.add(mh);
+  });
+  sLabel("40G FIBER UNDERGROUND",{x:0,y:3,z:-0.3},"#3b82f6",3);
 }
 
 // =====================================================================
 // GROUND / LANDSCAPE
 // =====================================================================
 function buildGround(){
-  // Ground plane
-  var groundGeo=new THREE.PlaneGeometry(200,200);
-  var groundMat=new THREE.MeshStandardMaterial({color:0x1a2a1a,roughness:0.9});
-  var ground=new THREE.Mesh(groundGeo,groundMat);ground.receiveShadow=true;scene.add(ground);
+  var gnd=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x1a2a1a,roughness:0.9}));
+  gnd.receiveShadow=true;scene.add(gnd);
 
-  // Roads
-  var roadMat=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:0.8});
-  var road1=new THREE.Mesh(new THREE.BoxGeometry(140,4,0.05),roadMat);road1.position.set(0,-14,0.03);scene.add(road1);
-  var road2=new THREE.Mesh(new THREE.BoxGeometry(4,40,0.05),roadMat);road2.position.set(ADMIN_X,0,0.03);scene.add(road2);
-  // Road markings
-  var markMat=new THREE.MeshBasicMaterial({color:0xffff00});
-  for(var ri=-60;ri<60;ri+=6){
-    var mark=new THREE.Mesh(new THREE.BoxGeometry(2,0.15,0.01),markMat);mark.position.set(ri,-14,0.06);scene.add(mark);
-  }
+  var rm=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:0.8});
+  var rd1=new THREE.Mesh(new THREE.BoxGeometry(140,3.5,0.04),rm);rd1.position.set(0,-14,0.02);scene.add(rd1);
+  var rd2=new THREE.Mesh(new THREE.BoxGeometry(3.5,35,0.04),rm);rd2.position.set(0,0,0.02);scene.add(rd2);
+  for(var ri=-60;ri<60;ri+=5){var mk=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.12,0.01),new THREE.MeshBasicMaterial({color:0xffff00}));mk.position.set(ri,-14,0.05);scene.add(mk);}
 
-  // Trees
-  var treeTrunkMat=new THREE.MeshStandardMaterial({color:0x5c3a1a,roughness:0.8});
-  var treeLeafMat=new THREE.MeshStandardMaterial({color:0x1a5a1a,roughness:0.7});
-  var treePositions=[{x:-30,y:15},{x:-20,y:18},{x:20,y:15},{x:30,y:18},{x:-40,y:-18},{x:40,y:-18},{x:-60,y:12},{x:60,y:12},{x:-60,y:-12},{x:60,y:-12}];
-  for(var ti=0;ti<treePositions.length;ti++){
-    var trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.3,2,6),treeTrunkMat);
-    trunk.position.set(treePositions[ti].x,treePositions[ti].y,1);trunk.castShadow=true;scene.add(trunk);
-    var leaves=new THREE.Mesh(new THREE.SphereGeometry(1.5,8,6),treeLeafMat);
-    leaves.position.set(treePositions[ti].x,treePositions[ti].y,3);leaves.castShadow=true;scene.add(leaves);
-  }
+  var trM=new THREE.MeshStandardMaterial({color:0x5c3a1a,roughness:0.8});
+  var lfM=new THREE.MeshStandardMaterial({color:0x1a5a1a,roughness:0.7});
+  [{x:-28,y:14},{x:-18,y:17},{x:18,y:14},{x:28,y:17},{x:-38,y:-17},{x:38,y:-17},{x:-55,y:10},{x:55,y:10}].forEach(function(p){
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.25,1.8,6),trM);tr.position.set(p.x,p.y,0.9);tr.castShadow=true;scene.add(tr);
+    var lf=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,6),lfM);lf.position.set(p.x,p.y,2.5);lf.castShadow=true;scene.add(lf);
+  });
 
-  // Parking area
-  var parkMat=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.9});
-  var park=new THREE.Mesh(new THREE.BoxGeometry(15,8,0.04),parkMat);park.position.set(ADMIN_X,-20,0.02);scene.add(park);
-  var linesMat=new THREE.MeshBasicMaterial({color:0xffffff});
-  for(var pi=0;pi<5;pi++){
-    var pline=new THREE.Mesh(new THREE.BoxGeometry(0.1,5,0.01),linesMat);
-    pline.position.set(ADMIN_X-6+pi*3,-20,0.05);scene.add(pline);
-  }
-  sLabel('PARKING',{x:ADMIN_X,y:-23,z:1},'#94a3b8',1.5);
+  // Parking
+  var pk=new THREE.Mesh(new THREE.BoxGeometry(12,7,0.03),new THREE.MeshStandardMaterial({color:0x333333,roughness:0.9}));pk.position.set(0,-19,0.015);scene.add(pk);
+  for(var pi=0;pi<4;pi++){var pl=new THREE.Mesh(new THREE.BoxGeometry(0.08,4,0.01),new THREE.MeshBasicMaterial({color:0xffffff}));pl.position.set(-4.5+pi*3,-19,0.04);scene.add(pl);}
 
   // Street lights
-  var poleMat=new THREE.MeshStandardMaterial({color:0x666666,metalness:0.5});
-  var lampPositions=[{x:-25,y:-14},{x:0,y:-14},{x:25,y:-14},{x:ADMIN_X,y:-8},{x:ADMIN_X,y:8}];
-  for(var li=0;li<lampPositions.length;li++){
-    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,5,6),poleMat);
-    pole.position.set(lampPositions[li].x,lampPositions[li].y,2.5);scene.add(pole);
-    var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.3,8,6),new THREE.MeshBasicMaterial({color:0xffee88}));
-    lamp.position.set(lampPositions[li].x,lampPositions[li].y,5.2);scene.add(lamp);
-    var pl=new THREE.PointLight(0xffee88,0.3,15);pl.position.set(lampPositions[li].x,lampPositions[li].y,5);scene.add(pl);
-  }
+  var pm=new THREE.MeshStandardMaterial({color:0x666666,metalness:0.5});
+  [{x:-22,y:-14},{x:0,y:-14},{x:22,y:-14}].forEach(function(p){
+    var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,4.5,6),pm);pole.position.set(p.x,p.y,2.25);scene.add(pole);
+    var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.25,8,6),new THREE.MeshBasicMaterial({color:0xffee88}));lamp.position.set(p.x,p.y,4.7);scene.add(lamp);
+    var lt=new THREE.PointLight(0xffee88,0.25,12);lt.position.set(p.x,p.y,4.5);scene.add(lt);
+  });
 }
 
 // =====================================================================
-// CONSTRUCT SCENE
+// BUILD SCENE
 // =====================================================================
 buildAdmin();
 buildWork1();
 buildWork2();
-buildUndergroundCabling();
+buildUnderground();
 buildGround();
 
 // =====================================================================
 // SIDEBAR POPULATION
 // =====================================================================
-function devItemHTML(key,d){
-  var icon='&#9632;';
-  if(d.type==='Router'||d.type==='ISP Router')icon='&#9650;';
-  else if(d.type==='Firewall')icon='&#9670;';
-  else if(d.type==='Server'||d.type==='NVR'||d.type==='NAS')icon='&#9644;';
-  else if(d.type==='Access Point')icon='&#9678;';
-  else if(d.type==='CCTV')icon='&#9673;';
-  else if(d.type==='PC')icon='&#9633;';
-  else if(d.type==='UPS'||d.type==='Generator')icon='&#9889;';
-  else if(d.type==='CRAC'||d.type==='Chiller')icon='&#10052;';
-  return '<div class="dev-item" onclick="selectDevice(\''+key+'\')" title="'+d.type+': '+(d.model||'')+'">' +
-    '<span style="color:'+(d.color||'#22d3ee')+'">'+icon+'</span> <span>'+key+'</span></div>';
-}
 function populateSidebar(){
-  var sections={admin:'sb-admin',work1:'sb-work1',work2:'sb-work2',isp:'sb-isp',power:'sb-power'};
-  var html={admin:'',work1:'',work2:'',isp:'',power:''};
+  var sec={admin:"",work1:"",work2:"",isp:"",power:""};
   var keys=Object.keys(DEVICES);
   for(var i=0;i<keys.length;i++){
     var k=keys[i],d=DEVICES[k];
-    if(d.building==='admin'){
-      if(d.type==='ISP Router'||k.indexOf('LTE')===0)html.isp+=devItemHTML(k,d);
-      else if(d.type==='UPS'||d.type==='Generator'||d.type==='CRAC'||d.type==='Chiller')html.power+=devItemHTML(k,d);
-      else html.admin+=devItemHTML(k,d);
-    }else if(d.building==='work1') html.work1+=devItemHTML(k,d);
-    else if(d.building==='work2') html.work2+=devItemHTML(k,d);
-    else html.admin+=devItemHTML(k,d);
+    var cat="admin";
+    if(d.building==="work1")cat="work1";
+    else if(d.building==="work2")cat="work2";
+    else if(d.type==="ISP Router"||k==="LTE_Modem")cat="isp";
+    else if(d.type==="UPS"||d.type==="Generator"||d.type==="CRAC"||d.type==="Chiller")cat="power";
+    var icon="&#9632;",clr="#22d3ee";
+    if(d.type==="Router"||d.type==="ISP Router"){icon="&#9650;";clr="#f97316";}
+    else if(d.type==="Firewall"){icon="&#9670;";clr="#eab308";}
+    else if(d.type==="Core Switch"){icon="&#9632;";clr="#2563eb";}
+    else if(d.type==="Dist Switch"){icon="&#9632;";clr="#16a34a";}
+    else if(d.type==="Access Switch"){icon="&#9632;";clr="#0ea5e9";}
+    else if(d.type==="Server"){icon="&#9644;";clr="#a855f7";}
+    else if(d.type==="UPS"){clr="#22d3ee";}
+    else if(d.type==="Generator"){clr="#f59e0b";}
+    else if(d.type==="CRAC"||d.type==="Chiller"){icon="&#10052;";clr="#38bdf8";}
+    sec[cat]+='<div class="dev-item" onclick="selectDevice(\''+k+'\')" title="'+d.name+'"><span style="color:'+clr+'">'+icon+'</span> <span>'+k+'</span></div>';
   }
-  Object.keys(sections).forEach(function(s){document.getElementById(sections[s]).innerHTML=html[s]||'<div style="color:#555;padding:4px">None</div>';});
-  // Update link count
-  document.getElementById('link-count').textContent=connectionLines.length;
-  document.getElementById('device-count').textContent=Object.keys(deviceMeshMap).length;
+  document.getElementById("sb-admin").innerHTML=sec.admin||"<em style='color:#555'>None</em>";
+  document.getElementById("sb-work1").innerHTML=sec.work1||"<em style='color:#555'>None</em>";
+  document.getElementById("sb-work2").innerHTML=sec.work2||"<em style='color:#555'>None</em>";
+  document.getElementById("sb-isp").innerHTML=sec.isp||"<em style='color:#555'>None</em>";
+  document.getElementById("sb-power").innerHTML=sec.power||"<em style='color:#555'>None</em>";
+  document.getElementById("bb-devices").textContent=Object.keys(deviceMeshMap).length;
+  document.getElementById("bb-links").textContent=connectionLines.length;
 }
 populateSidebar();
+
+// =====================================================================
+// DEVICE SELECTION & DETAIL
+// =====================================================================
+var selectedMesh=null;
+function selectDevice(key){
+  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});selectedMesh=null;}
+  var mesh=deviceMeshMap[key];if(!mesh)return;
+  selectedMesh=mesh;
+  mesh.traverse(function(c){if(c.isMesh){c.userData._om=c.material;c.material=c.material.clone();c.material.emissive=new THREE.Color(0x22d3ee);c.material.emissiveIntensity=0.5;}});
+  camTarget.copy(mesh.position);camDist=20;updateCamera();
+  showDetail(key);
+  document.querySelectorAll(".dev-item").forEach(function(el){el.classList.remove("sel");});
+  document.querySelectorAll(".dev-item").forEach(function(el){if(el.textContent.trim().indexOf(key)!==-1)el.classList.add("sel");});
+}
+function showDetail(key){
+  var d=DEVICES[key];if(!d){document.getElementById("detail-panel").style.display="none";return;}
+  var p=document.getElementById("detail-panel");p.style.display="block";
+  var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="color:#22d3ee;margin:0">'+key+'</h3><button onclick="closeDetail()" style="background:#334155;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:14px">&times;</button></div>';
+  h+='<p><b>Name:</b> '+d.name+'</p>';
+  h+='<p><b>Type:</b> '+d.type+'</p>';
+  var fields=["model","ip","role","ha","ports","features","throughput","capacity","redundancy","cooling","floor","building"];
+  for(var i=0;i<fields.length;i++){var f=fields[i];if(d[f])h+='<p><b>'+f.charAt(0).toUpperCase()+f.slice(1)+':</b> '+d[f]+'</p>';}
+  p.innerHTML=h;
+}
+function closeDetail(){
+  document.getElementById("detail-panel").style.display="none";
+  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});selectedMesh=null;}
+  document.querySelectorAll(".dev-item").forEach(function(el){el.classList.remove("sel");});
+}
+
+// =====================================================================
+// SEARCH
+// =====================================================================
+document.getElementById("searchInput").addEventListener("input",function(){
+  var q=this.value.toLowerCase().trim();
+  var sr=document.getElementById("search-results");
+  if(!q){sr.style.display="none";return;}
+  var matches=[];
+  Object.keys(DEVICES).forEach(function(k){
+    var d=DEVICES[k];
+    if(k.toLowerCase().indexOf(q)!==-1||(d.model&&d.model.toLowerCase().indexOf(q)!==-1)||(d.type&&d.type.toLowerCase().indexOf(q)!==-1)||(d.ip&&d.ip.indexOf(q)!==-1)||(d.name&&d.name.toLowerCase().indexOf(q)!==-1)){matches.push(k);}
+  });
+  if(!matches.length){sr.innerHTML='<div style="padding:8px;color:#666">Khong tim thay</div>';sr.style.display="block";return;}
+  var h="";for(var i=0;i<Math.min(matches.length,12);i++){h+='<div class="dev-item" style="padding:8px 12px" onclick="selectDevice(\''+matches[i]+'\');document.getElementById(\'search-results\').style.display=\'none\'">'+matches[i]+" - "+(DEVICES[matches[i]].name||"")+'</div>';}
+  sr.innerHTML=h;sr.style.display="block";
+});
 
 // =====================================================================
 // FLOOR TOGGLE
@@ -862,230 +663,108 @@ function toggleFloor(building,floor){
   for(var i=0;i<floorGroups.length;i++){
     var fg=floorGroups[i];
     if(fg.userData.building===building){
-      if(floor===undefined){fg.visible=!fg.visible;}
-      else if(fg.userData.floor===floor){fg.visible=!fg.visible;}
+      if(floor===undefined)fg.visible=!fg.visible;
+      else if(fg.userData.floor===floor)fg.visible=!fg.visible;
     }
   }
 }
 
 // =====================================================================
-// DEVICE SELECTION & DETAIL PANEL
-// =====================================================================
-var selectedMesh=null,origMaterials=[];
-function findDeviceMeta(key){return DEVICES[key]||null;}
-function selectDevice(key){
-  // Reset previous
-  if(selectedMesh){
-    selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._origMat)c.material=c.userData._origMat;});
-  }
-  var mesh=deviceMeshMap[key];
-  if(!mesh){return;}
-  selectedMesh=mesh;
-  // Highlight
-  mesh.traverse(function(c){
-    if(c.isMesh){
-      c.userData._origMat=c.material;
-      c.material=c.material.clone();
-      c.material.emissive=new THREE.Color(0x22d3ee);c.material.emissiveIntensity=0.5;
-    }
-  });
-  // Move camera to device
-  var pos=mesh.position;
-  camTarget.set(pos.x,pos.y,pos.z);camDist=25;
-  showDetailPanel(key);
-}
-function showDetailPanel(key){
-  var panel=document.getElementById('detail-panel');
-  var d=findDeviceMeta(key);
-  if(!d){panel.style.display='none';return;}
-  panel.style.display='block';
-  var h='<h3 style="color:#22d3ee;margin:0 0 8px">'+key+'</h3>';
-  h+='<p><b>Type:</b> '+d.type+'</p>';
-  if(d.model)h+='<p><b>Model:</b> '+d.model+'</p>';
-  if(d.ip)h+='<p><b>IP:</b> '+d.ip+'</p>';
-  if(d.role)h+='<p><b>Role:</b> '+d.role+'</p>';
-  if(d.ha)h+='<p><b>HA:</b> '+d.ha+'</p>';
-  if(d.uplink)h+='<p><b>Uplink:</b> '+d.uplink+'</p>';
-  if(d.capacity)h+='<p><b>Capacity:</b> '+d.capacity+'</p>';
-  if(d.ports)h+='<p><b>Ports:</b> '+d.ports+'</p>';
-  if(d.redundancy)h+='<p><b>Redundancy:</b> '+d.redundancy+'</p>';
-  if(d.runtime)h+='<p><b>Runtime:</b> '+d.runtime+'</p>';
-  if(d.cooling)h+='<p><b>Cooling:</b> '+d.cooling+'</p>';
-  h+='<p><b>Building:</b> '+d.building+'</p>';
-  if(d.floor)h+='<p><b>Floor:</b> '+d.floor+'</p>';
-  panel.innerHTML=h+'<div style="text-align:right;margin-top:8px"><button onclick="closeDetail()" style="background:#334155;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer">Close</button></div>';
-}
-function closeDetail(){
-  document.getElementById('detail-panel').style.display='none';
-  if(selectedMesh){selectedMesh.traverse(function(c){if(c.isMesh&&c.userData._origMat)c.material=c.userData._origMat;});selectedMesh=null;}
-}
-
-// =====================================================================
-// SEARCH
-// =====================================================================
-function handleSearch(){
-  var q=document.getElementById('search-input').value.toLowerCase().trim();
-  var sr=document.getElementById('search-results');
-  if(!q){sr.style.display='none';return;}
-  var matches=[];
-  var keys=Object.keys(DEVICES);
-  for(var i=0;i<keys.length;i++){
-    var k=keys[i],d=DEVICES[k];
-    if(k.toLowerCase().indexOf(q)!==-1||(d.model&&d.model.toLowerCase().indexOf(q)!==-1)||(d.type&&d.type.toLowerCase().indexOf(q)!==-1)||(d.ip&&d.ip.indexOf(q)!==-1)){
-      matches.push(k);
-    }
-  }
-  if(matches.length===0){sr.innerHTML='<div style="padding:8px;color:#666">No results</div>';sr.style.display='block';return;}
-  var h='';
-  for(var j=0;j<Math.min(matches.length,15);j++){
-    h+='<div class="dev-item" onclick="selectDevice(\''+matches[j]+'\');document.getElementById(\'search-results\').style.display=\'none\'">'+matches[j]+'</div>';
-  }
-  sr.innerHTML=h;sr.style.display='block';
-}
-document.getElementById('search-input').addEventListener('input',handleSearch);
-document.getElementById('search-input').addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('search-results').style.display='none';});
-
-// =====================================================================
-// CAMERA CONTROLS (Spherical Orbit)
+// CAMERA CONTROLS
 // =====================================================================
 var camTheta=Math.PI/4,camPhi=Math.PI/3,camDist=80;
 var camTarget=new THREE.Vector3(0,0,5);
-var isDragging=false,isRightDrag=false,lastMX=0,lastMY=0;
+var isDrag=false,isRDrag=false,lmx=0,lmy=0;
 
 function updateCamera(){
-  var x=camTarget.x+camDist*Math.sin(camPhi)*Math.cos(camTheta);
-  var y=camTarget.y+camDist*Math.sin(camPhi)*Math.sin(camTheta);
-  var z=camTarget.z+camDist*Math.cos(camPhi);
-  camera.position.set(x,y,z);
+  camera.position.set(
+    camTarget.x+camDist*Math.sin(camPhi)*Math.cos(camTheta),
+    camTarget.y+camDist*Math.sin(camPhi)*Math.sin(camTheta),
+    camTarget.z+camDist*Math.cos(camPhi)
+  );
   camera.lookAt(camTarget);
 }
 updateCamera();
 
-var canvas=renderer.domElement;
-canvas.addEventListener('mousedown',function(e){
-  if(e.button===0){isDragging=true;}
-  else if(e.button===2){isRightDrag=true;}
-  lastMX=e.clientX;lastMY=e.clientY;
-});
-canvas.addEventListener('mousemove',function(e){
-  var dx=e.clientX-lastMX,dy=e.clientY-lastMY;
-  if(isDragging){
-    camTheta-=dx*0.005;
-    camPhi-=dy*0.005;
-    camPhi=Math.max(0.1,Math.min(Math.PI-0.1,camPhi));
-    updateCamera();
+var cvs=renderer.domElement;
+cvs.addEventListener("mousedown",function(e){if(e.button===0)isDrag=true;else if(e.button===2)isRDrag=true;lmx=e.clientX;lmy=e.clientY;});
+cvs.addEventListener("mousemove",function(e){
+  var dx=e.clientX-lmx,dy=e.clientY-lmy;
+  if(isDrag){camTheta-=dx*0.005;camPhi-=dy*0.005;camPhi=Math.max(0.1,Math.min(Math.PI-0.1,camPhi));updateCamera();}
+  if(isRDrag){
+    var r=new THREE.Vector3();camera.getWorldDirection(r);var up=new THREE.Vector3(0,0,1);
+    r.cross(up).normalize();up.crossVectors(r,camera.getWorldDirection(new THREE.Vector3())).normalize();
+    camTarget.addScaledVector(r,-dx*0.12);camTarget.addScaledVector(up,-dy*0.12);updateCamera();
   }
-  if(isRightDrag){
-    var right=new THREE.Vector3();camera.getWorldDirection(right);
-    var up=new THREE.Vector3(0,0,1);
-    right.cross(up).normalize();
-    up.crossVectors(right,camera.getWorldDirection(new THREE.Vector3())).normalize();
-    camTarget.addScaledVector(right,-dx*0.15);
-    camTarget.addScaledVector(up,-dy*0.15);
-    updateCamera();
-  }
-  lastMX=e.clientX;lastMY=e.clientY;
+  lmx=e.clientX;lmy=e.clientY;
 
-  // Tooltip on hover
-  var rect=canvas.getBoundingClientRect();
+  // Tooltip
+  var rect=cvs.getBoundingClientRect();
   var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
-  var raycaster=new THREE.Raycaster();raycaster.setFromCamera(mouse,camera);
-  var hits=raycaster.intersectObjects(allMeshes,true);
-  var tooltip=document.getElementById('tooltip');
-  if(hits.length>0){
-    var obj=hits[0].object;
-    while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;
-    if(obj.userData.deviceKey){
-      tooltip.textContent=obj.userData.deviceKey;tooltip.style.display='block';
-      tooltip.style.left=(e.clientX+12)+'px';tooltip.style.top=(e.clientY+12)+'px';
-    }else{tooltip.style.display='none';}
-  }else{tooltip.style.display='none';}
-});
-window.addEventListener('mouseup',function(){isDragging=false;isRightDrag=false;});
-canvas.addEventListener('wheel',function(e){
-  camDist+=e.deltaY*0.05;camDist=Math.max(5,Math.min(200,camDist));updateCamera();e.preventDefault();
-},{passive:false});
-canvas.addEventListener('contextmenu',function(e){e.preventDefault();});
-canvas.addEventListener('dblclick',function(e){
-  var rect=canvas.getBoundingClientRect();
-  var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
-  var raycaster=new THREE.Raycaster();raycaster.setFromCamera(mouse,camera);
-  var hits=raycaster.intersectObjects(allMeshes,true);
+  var ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);
+  var hits=ray.intersectObjects(allMeshes,true);
+  var tt=document.getElementById("tooltip");
   if(hits.length>0){
     var obj=hits[0].object;while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;
-    if(obj.userData.deviceKey)selectDevice(obj.userData.deviceKey);
-  }
+    if(obj.userData.deviceKey){tt.textContent=obj.userData.deviceKey;tt.style.display="block";tt.style.left=(e.clientX+12)+"px";tt.style.top=(e.clientY+12)+"px";}
+    else tt.style.display="none";
+  }else tt.style.display="none";
+});
+window.addEventListener("mouseup",function(){isDrag=false;isRDrag=false;});
+cvs.addEventListener("wheel",function(e){camDist+=e.deltaY*0.05;camDist=Math.max(5,Math.min(200,camDist));updateCamera();e.preventDefault();},{passive:false});
+cvs.addEventListener("contextmenu",function(e){e.preventDefault();});
+cvs.addEventListener("dblclick",function(e){
+  var rect=cvs.getBoundingClientRect();
+  var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+  var ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);
+  var hits=ray.intersectObjects(allMeshes,true);
+  if(hits.length>0){var obj=hits[0].object;while(obj.parent&&!obj.userData.deviceKey)obj=obj.parent;if(obj.userData.deviceKey)selectDevice(obj.userData.deviceKey);}
 });
 
-// Keyboard controls
-document.addEventListener('keydown',function(e){
-  var speed=2;
-  var dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.z=0;dir.normalize();
-  var right=new THREE.Vector3();right.crossVectors(dir,new THREE.Vector3(0,0,1)).normalize();
-  if(e.key==='w'||e.key==='W'){camTarget.addScaledVector(dir,speed);updateCamera();}
-  if(e.key==='s'||e.key==='S'){camTarget.addScaledVector(dir,-speed);updateCamera();}
-  if(e.key==='a'||e.key==='A'){camTarget.addScaledVector(right,-speed);updateCamera();}
-  if(e.key==='d'||e.key==='D'){camTarget.addScaledVector(right,speed);updateCamera();}
-  if(e.key==='r'||e.key==='R'){camTheta=Math.PI/4;camPhi=Math.PI/3;camDist=80;camTarget.set(0,0,5);updateCamera();}
-  if(e.key==='Escape'){closeDetail();}
-  if(e.key==='1'){toggleFloor('admin');}
-  if(e.key==='2'){toggleFloor('work1');}
-  if(e.key==='3'){toggleFloor('work2');}
+// Keyboard
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="INPUT")return;
+  var spd=2,dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.z=0;dir.normalize();
+  var rt=new THREE.Vector3();rt.crossVectors(dir,new THREE.Vector3(0,0,1)).normalize();
+  if(e.key==="w"||e.key==="W"){camTarget.addScaledVector(dir,spd);updateCamera();}
+  if(e.key==="s"||e.key==="S"){camTarget.addScaledVector(dir,-spd);updateCamera();}
+  if(e.key==="a"||e.key==="A"){camTarget.addScaledVector(rt,-spd);updateCamera();}
+  if(e.key==="d"||e.key==="D"){camTarget.addScaledVector(rt,spd);updateCamera();}
+  if(e.key==="r"||e.key==="R"){camTheta=Math.PI/4;camPhi=Math.PI/3;camDist=80;camTarget.set(0,0,5);updateCamera();}
+  if(e.key==="Escape")closeDetail();
+  if(e.key==="1")toggleFloor("admin");
+  if(e.key==="2")toggleFloor("work1");
+  if(e.key==="3")toggleFloor("work2");
 });
 
 // Resize
-window.addEventListener('resize',function(){
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+window.addEventListener("resize",function(){
+  var w=container.clientWidth,h=container.clientHeight;
+  camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);
 });
 
 // =====================================================================
 // ANIMATION LOOP
 // =====================================================================
 var clock=new THREE.Clock();
-function animate(){
+(function animate(){
   requestAnimationFrame(animate);
   var t=clock.getElapsedTime();
-
-  // Glow pulse on connection lines
   for(var i=0;i<connectionLines.length;i++){
-    if(connectionLines[i].material){
-      connectionLines[i].material.opacity=0.5+0.35*Math.sin(t*2+i*0.5);
-    }
+    if(connectionLines[i].material)connectionLines[i].material.opacity=0.45+0.35*Math.sin(t*2+i*0.5);
   }
-
-  // Subtle device float animation
-  var keys=Object.keys(deviceMeshMap);
-  for(var j=0;j<keys.length;j++){
-    var mesh=deviceMeshMap[keys[j]];
-    if(mesh&&mesh.userData.baseZ!==undefined){
-      mesh.position.z=mesh.userData.baseZ+Math.sin(t*1.5+j*0.3)*0.05;
-    }
-  }
-
   renderer.render(scene,camera);
-}
+})();
 
-// Store base Z for animation
-var dkeys=Object.keys(deviceMeshMap);
-for(var di=0;di<dkeys.length;di++){
-  deviceMeshMap[dkeys[di]].userData.baseZ=deviceMeshMap[dkeys[di]].position.z;
-}
-
-animate();
-
-// =====================================================================
-// SIDEBAR TOGGLE
-// =====================================================================
-document.querySelectorAll('.sb-section h4').forEach(function(h){
-  h.addEventListener('click',function(){
-    var content=this.nextElementSibling;
-    if(content){content.style.display=content.style.display==='none'?'block':'none';}
+// Sidebar section toggle
+document.querySelectorAll(".sb-title").forEach(function(h){
+  h.addEventListener("click",function(){
+    var sib=this.nextElementSibling;
+    if(sib)sib.style.display=sib.style.display==="none"?"block":"none";
   });
 });
 
-console.log('Campus Network 3D Visualization loaded. Devices: '+Object.keys(deviceMeshMap).length+', Links: '+connectionLines.length);
+console.log("Campus Network 3D loaded. Devices: "+Object.keys(deviceMeshMap).length+", Links: "+connectionLines.length);
 </script>
 </body>
 </html>
