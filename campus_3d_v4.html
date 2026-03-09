@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Campus Network 3D v4.0 — Ha Tang Mang Chinh Xac</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Exo+2:wght@300;400;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#01030c;--surface:rgba(3,6,18,0.95);--border:rgba(0,200,255,0.15);
+  --accent:#00c8ff;--accent2:#7c3aed;--accent3:#00ff88;
+  --warn:#ffb300;--danger:#ff4444;
+  --text:#dde8f0;--muted:#4a6280;--dim:#141e30;
+  --glass:rgba(3,6,18,0.88);
+}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{color:var(--text);font-family:'Exo 2','Segoe UI',sans-serif;font-size:13px}
+
+/* HEADER */
+#hdr{position:fixed;top:0;left:0;right:0;height:46px;z-index:300;
+  background:linear-gradient(90deg,rgba(1,3,12,.99),rgba(3,6,20,.97),rgba(1,3,12,.99));
+  border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:12px;
+}
+#hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.logo{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:.25em;
+  background:linear-gradient(90deg,#00c8ff,#7c3aed);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.logo-ic{width:24px;height:24px;background:linear-gradient(135deg,#00c8ff,#7c3aed);
+  border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.hbadge{font-size:8px;padding:2px 7px;border-radius:12px;border:1px solid rgba(0,200,255,.3);
+  color:var(--accent);font-family:monospace;letter-spacing:.1em;background:rgba(0,200,255,.08)}
+.hbadge.live{border-color:rgba(0,255,136,.4);color:#00ff88;background:rgba(0,255,136,.07)}
+.hsub{font-size:9.5px;color:var(--muted);font-family:monospace}
+.search-w{margin-left:auto;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;padding:5px 11px;
+  transition:border-color .2s,box-shadow .2s}
+.search-w:focus-within{border-color:var(--accent);box-shadow:0 0 12px rgba(0,200,255,.18)}
+.search-w input{background:none;border:none;outline:none;color:var(--text);font-size:11.5px;
+  width:210px;font-family:monospace}
+.search-w input::placeholder{color:var(--muted)}
+
+/* SIDEBAR */
+#sb{position:fixed;left:0;top:46px;bottom:30px;width:276px;z-index:200;
+  background:linear-gradient(180deg,rgba(2,5,16,.98),rgba(1,3,10,.99));
+  border-right:1px solid var(--border);overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(0,200,255,.15) transparent}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:rgba(0,200,255,.15);border-radius:2px}
+.sb-sec{padding:8px 10px;border-bottom:1px solid rgba(0,200,255,.05)}
+.sb-hd{font-size:8.5px;font-weight:700;color:var(--accent);letter-spacing:.15em;
+  text-transform:uppercase;margin-bottom:6px;font-family:monospace;
+  cursor:pointer;user-select:none;display:flex;align-items:center;gap:5px}
+.sb-hd .cnt{font-size:7.5px;padding:1px 5px;border-radius:3px;
+  background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.18);
+  color:var(--accent);margin-left:auto;font-weight:400}
+.di{display:flex;align-items:center;gap:6px;padding:3px 7px;margin:1px 0;
+  border-radius:4px;cursor:pointer;font-size:10.5px;
+  transition:background .12s;border:1px solid transparent}
+.di:hover{background:rgba(0,200,255,.05);border-color:rgba(0,200,255,.1)}
+.di.sel{background:rgba(0,200,255,.1);border-color:rgba(0,200,255,.28)}
+.di-ic{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.di-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.di-pwr{font-size:9px;color:#ffb300;font-family:monospace;white-space:nowrap}
+
+/* DETAIL PANEL */
+#dp{position:fixed;right:0;top:46px;bottom:30px;width:350px;z-index:200;
+  background:linear-gradient(180deg,rgba(2,5,16,.98),rgba(1,3,10,.99));
+  border-left:1px solid var(--border);overflow-y:auto;display:none;padding:16px;
+  box-shadow:-6px 0 40px rgba(0,0,0,.6)}
+#dp h3{font-family:'Orbitron',monospace;font-size:13px;
+  background:linear-gradient(90deg,#00c8ff,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:2px}
+.dp-badge{display:inline-block;font-size:8.5px;padding:2px 8px;border-radius:4px;
+  background:rgba(0,200,255,.12);border:1px solid rgba(0,200,255,.25);
+  color:var(--accent);font-family:monospace;letter-spacing:.08em;margin-bottom:12px}
+.dp-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:10.5px;line-height:1.6}
+.dp-k{color:var(--muted);min-width:90px;font-family:monospace;font-size:9.5px;flex-shrink:0}
+.dp-v{color:var(--text);flex:1}
+.dp-pwr-block{margin-top:10px;padding:10px;border-radius:6px;
+  background:rgba(255,179,0,.06);border:1px solid rgba(255,179,0,.18)}
+.dp-pwr-title{font-size:9px;font-weight:700;color:#ffb300;letter-spacing:.12em;
+  text-transform:uppercase;font-family:monospace;margin-bottom:6px}
+.dp-meter{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.dp-meter-lbl{font-size:9.5px;color:var(--muted);min-width:80px;font-family:monospace}
+.dp-meter-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.dp-meter-fill{height:100%;border-radius:3px;transition:width .3s}
+.dp-meter-val{font-size:9.5px;font-family:monospace;min-width:52px;text-align:right}
+.dp-vlan-block{margin-top:10px;padding:10px;border-radius:6px;
+  background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15)}
+.dp-vlan-title{font-size:9px;font-weight:700;color:var(--accent);letter-spacing:.12em;
+  text-transform:uppercase;font-family:monospace;margin-bottom:6px}
+.vlan-tag{display:inline-block;font-size:8.5px;padding:2px 7px;border-radius:3px;
+  margin:2px;font-family:monospace;font-weight:700}
+
+/* LEGEND */
+#leg{position:fixed;right:10px;bottom:38px;z-index:150;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;min-width:180px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 4px 28px rgba(0,0,0,.5)}
+#leg h4{font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:7px;
+  font-family:monospace;
+  background:linear-gradient(90deg,#00c8ff,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.li{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:9.5px}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.ll{width:18px;height:3px;border-radius:2px;flex-shrink:0}
+.lcat{font-size:7px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;
+  margin:5px 0 2px;font-family:monospace;padding-top:5px;border-top:1px solid rgba(255,255,255,.05)}
+
+/* TOOLTIP */
+#tt{position:fixed;z-index:400;background:rgba(1,3,12,.97);
+  border:1px solid var(--accent);border-radius:7px;padding:6px 11px;font-size:10.5px;
+  pointer-events:none;display:none;color:var(--accent);font-weight:600;font-family:monospace;
+  box-shadow:0 0 16px rgba(0,200,255,.3),0 4px 14px rgba(0,0,0,.5);letter-spacing:.04em}
+#tt .ts{color:var(--muted);font-size:9px;font-weight:400;margin-top:1px}
+#tt .tp{color:#ffb300;font-size:9px;font-weight:400}
+
+/* BOTTOM BAR */
+#bbar{position:fixed;bottom:0;left:276px;right:0;height:30px;z-index:200;
+  background:linear-gradient(90deg,rgba(1,3,12,.99),rgba(2,5,16,.99));
+  border-top:1px solid var(--border);display:flex;align-items:center;
+  padding:0 14px;gap:14px;font-size:9.5px;color:var(--muted);font-family:monospace}
+#bbar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,200,255,.25),transparent)}
+#bbar .bv{color:var(--accent)}
+.bstat{display:flex;align-items:center;gap:4px}
+.bstatdot{width:6px;height:6px;border-radius:50%;background:#00ff88;
+  box-shadow:0 0 6px #00ff88;animation:blink 2.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.sep{color:rgba(255,255,255,.08)}
+.key-hints{margin-left:auto;display:flex;gap:7px;align-items:center;font-size:9px}
+.kk{display:inline-flex;align-items:center;justify-content:center;
+  min-width:17px;height:14px;padding:0 3px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+  border-radius:2px;font-size:7.5px;font-family:monospace}
+
+/* CANVAS */
+#cv{position:fixed;left:276px;top:46px;right:0;bottom:30px}
+
+/* SEARCH RESULTS */
+#sr{position:fixed;top:58px;right:56px;z-index:350;
+  background:rgba(2,5,16,.98);border:1px solid var(--border);
+  border-radius:7px;max-height:260px;overflow-y:auto;width:290px;display:none;
+  box-shadow:0 12px 40px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
+.sr-item{padding:7px 11px;cursor:pointer;font-size:10.5px;
+  border-bottom:1px solid rgba(255,255,255,.04)}
+.sr-item:hover{background:rgba(0,200,255,.07)}
+
+/* LOADING */
+#load{position:fixed;inset:0;z-index:999;background:#01030c;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  transition:opacity .8s}
+.ltitle{font-size:20px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  font-family:'Orbitron',monospace;
+  background:linear-gradient(90deg,#00c8ff,#7c3aed,#00c8ff);background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shimmer 2.2s linear infinite}
+@keyframes shimmer{to{background-position:200%}}
+.lbar-w{width:280px;height:3px;background:rgba(255,255,255,.08);border-radius:2px}
+.lbar{height:100%;width:0;background:linear-gradient(90deg,#00c8ff,#7c3aed);
+  border-radius:2px;transition:width .35s}
+.lsub{font-size:10px;color:var(--muted);font-family:monospace;letter-spacing:.1em}
+
+/* PANEL TABS */
+.tab-row{display:flex;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:10px}
+.tab{padding:5px 11px;font-size:9.5px;cursor:pointer;font-family:monospace;
+  color:var(--muted);border-bottom:2px solid transparent;transition:all .15s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* POWER HEATMAP toggle */
+.view-btn{font-size:9px;padding:3px 8px;border-radius:4px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  color:var(--muted);cursor:pointer;transition:all .15s;margin-left:4px}
+.view-btn.on{background:rgba(255,179,0,.12);border-color:rgba(255,179,0,.3);color:#ffb300}
+
+@media(max-width:1200px){#leg{display:none}.hsub{display:none}}
+@media(max-width:900px){#sb{width:230px}#bbar{left:230px}#cv{left:230px}}
+</style>
+</head>
+<body>
+
+<div id="load">
+  <div class="ltitle">Campus Network 3D</div>
+  <div class="lbar-w"><div class="lbar" id="lbar"></div></div>
+  <div class="lsub" id="lsub">Đang khởi tạo...</div>
+</div>
+
+<div id="hdr">
+  <div class="logo-ic">⬡</div>
+  <div class="logo">Campus Network 3D</div>
+  <div class="hsub">v4.0 · Thiết Kế Chính Xác · VRRP+HA+StackWise · 40G Full-Mesh Xéo</div>
+  <div class="hbadge live">● LIVE</div>
+  <div class="hbadge">v4.0</div>
+  <span id="view-pwr-btn" class="view-btn" onclick="toggleHeatmap()">🌡 Nhiệt/Điện</span>
+  <div class="search-w">
+    <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#4a6280" stroke-width="2.2"><circle cx="8" cy="8" r="6"/><path d="m14 14 4 4"/></svg>
+    <input type="text" id="si" placeholder="Tìm thiết bị, IP, model, VLAN...">
+  </div>
+</div>
+
+<div id="sr"></div>
+
+<div id="sb">
+  <div class="sb-sec">
+    <div class="sb-hd" onclick="toggleSec('adm')">
+      <span style="width:7px;height:7px;border-radius:2px;background:#0e7490;box-shadow:0 0 5px #0e7490;display:inline-block"></span>
+      TÒA QUẢN TRỊ (Admin/MDF) <span class="cnt" id="c-adm">0</span></div>
+    <div id="adm"></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-hd" onclick="toggleSec('isp')">
+      <span style="width:7px;height:7px;border-radius:2px;background:#f59e0b;box-shadow:0 0 5px #f59e0b;display:inline-block"></span>
+      ISP / WAN / OOB <span class="cnt" id="c-isp">0</span></div>
+    <div id="isp"></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-hd" onclick="toggleSec('w1')">
+      <span style="width:7px;height:7px;border-radius:2px;background:#16a34a;box-shadow:0 0 5px #16a34a;display:inline-block"></span>
+      TÒA LÀM VIỆC 1 (IDF 1) <span class="cnt" id="c-w1">0</span></div>
+    <div id="w1"></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-hd" onclick="toggleSec('w2')">
+      <span style="width:7px;height:7px;border-radius:2px;background:#7c3aed;box-shadow:0 0 5px #7c3aed;display:inline-block"></span>
+      TÒA LÀM VIỆC 2 (IDF 2) <span class="cnt" id="c-w2">0</span></div>
+    <div id="w2"></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-hd" onclick="toggleSec('pwr')">
+      <span style="width:7px;height:7px;border-radius:2px;background:#22d3ee;box-shadow:0 0 5px #22d3ee;display:inline-block"></span>
+      Hệ Thống Điện & Nhiệt <span class="cnt" id="c-pwr">0</span></div>
+    <div id="pwr"></div>
+  </div>
+  <!-- Total power summary -->
+  <div style="padding:10px 12px;border-top:1px solid rgba(0,200,255,.1)">
+    <div style="font-size:8px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:monospace;margin-bottom:6px">TỔNG ĐIỆN TIÊU THỤ</div>
+    <div style="font-size:18px;font-weight:700;color:#ffb300;font-family:monospace" id="total-pwr">0 W</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:2px" id="total-btu">0 BTU/hr tỏa ra</div>
+    <div style="margin-top:8px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden">
+      <div id="pwr-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#22d3ee,#ffb300,#ff4444);border-radius:2px;transition:width 1s"></div>
+    </div>
+  </div>
+</div>
+
+<div id="dp">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+    <div><h3 id="dp-name">—</h3><div class="dp-badge" id="dp-type">—</div></div>
+    <button onclick="closeDP()" style="background:rgba(255,255,255,.05);color:#888;border:1px solid rgba(255,255,255,.1);padding:3px 9px;border-radius:4px;cursor:pointer;font-size:12px">✕</button>
+  </div>
+  <div class="tab-row">
+    <div class="tab active" onclick="showTab('spec')">Thông Số</div>
+    <div class="tab" onclick="showTab('net')">Mạng/VLAN</div>
+    <div class="tab" onclick="showTab('pwr')">Điện/Nhiệt</div>
+  </div>
+  <div id="tab-spec" class="tab-panel active"></div>
+  <div id="tab-net" class="tab-panel"></div>
+  <div id="tab-pwr" class="tab-panel"></div>
+</div>
+
+<div id="leg">
+  <h4>▲ CHÚ GIẢI</h4>
+  <div class="lcat">Thiết bị mạng</div>
+  <div class="li"><div class="ld" style="background:#f97316"></div>MikroTik CCR2216 (VRRP)</div>
+  <div class="li"><div class="ld" style="background:#eab308"></div>FortiGate 600F (HA A/P)</div>
+  <div class="li"><div class="ld" style="background:#2563eb"></div>Cisco 9500 Core (StackWise)</div>
+  <div class="li"><div class="ld" style="background:#16a34a"></div>Cisco 9300 Distribution</div>
+  <div class="li"><div class="ld" style="background:#0ea5e9"></div>Cisco 9200L Access (PoE+)</div>
+  <div class="li"><div class="ld" style="background:#a855f7;border-radius:50%"></div>Server / NVR / NAS</div>
+  <div class="lcat">Kết nối</div>
+  <div class="li"><div class="ll" style="background:#ef4444"></div>StackWise Virtual / HA Sync</div>
+  <div class="li"><div class="ll" style="background:#3b82f6"></div>40G Quang — Full-Mesh Xéo</div>
+  <div class="li"><div class="ll" style="background:#fbbf24"></div>ISP WAN Link</div>
+  <div class="li"><div class="ll" style="background:#ec4899"></div>VRRP Peer / HA Sync</div>
+  <div class="li"><div class="ll" style="background:#8b5cf6"></div>Console OOB RS-232</div>
+  <div class="li"><div class="ll" style="background:#ef4444;opacity:.6;border-top:2px dashed #ef4444;background:none"></div>CCTV VLAN 30</div>
+  <div class="lcat">Hạ tầng</div>
+  <div class="li"><div class="ld" style="background:#22d3ee"></div>UPS Kép A/B</div>
+  <div class="li"><div class="ld" style="background:#f59e0b"></div>Máy phát điện</div>
+  <div class="li"><div class="ld" style="background:#38bdf8"></div>Làm mát / CRAC</div>
+</div>
+
+<div id="tt"><div id="ttm"></div><div class="ts" id="tts"></div><div class="tp" id="ttp"></div></div>
+<div id="bbar">
+  <div class="bstat"><div class="bstatdot"></div><span>ONLINE</span></div>
+  <span class="sep">|</span>
+  <span>Thiết bị: <span class="bv" id="bb-d">0</span></span>
+  <span class="sep">|</span>
+  <span>Kết nối: <span class="bv" id="bb-l">0</span></span>
+  <span class="sep">|</span>
+  <span>Tòa nhà: <span class="bv">3</span></span>
+  <span class="sep">|</span>
+  <span>Tổng điện: <span class="bv" id="bb-pwr">0W</span></span>
+  <span class="sep">|</span>
+  <span class="bv">VRRP+HA · StackWise · 40G Full-Mesh · CCTV VLAN30</span>
+  <div class="key-hints">
+    <span class="kk">Drag</span>Xoay <span class="kk">Scroll</span>Zoom
+    <span class="kk">R-Drag</span>Pan <span class="kk">R</span>Reset
+    <span class="kk">DblClick</span>Chi tiết
+  </div>
+</div>
+<div id="cv"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+window.onerror=function(msg,src,line,col,err){
+  var lo=document.getElementById("lsub");
+  if(lo)lo.textContent="❌ LỖI: "+msg+" (dòng "+line+")";
+  var lb=document.getElementById("lbar");if(lb){lb.style.background="#ff4444";lb.style.width="100%";}
+  document.title="ERROR: "+msg;
+  return false;
+};
+/* THREE.js check */
+if(typeof THREE==="undefined"){
+  document.getElementById("lsub").textContent="❌ Three.js không tải được — kiểm tra mạng";
+  throw new Error("THREE not loaded");
+}
+
+/* ═══════════════════════════════════════════════════════
+   DEVICE DATABASE — Chính xác theo Design.txt v4.0
+   Mỗi thiết bị có đầy đủ: spec, IP, power, thermal, VLAN
+   ═══════════════════════════════════════════════════════ */
+var DB = {
+
+/* ── WAN / ISP ── */
+ISP1:{cat:"isp",type:"ISP Link",name:"ISP 1 — VNPT (Đường chính)",model:"10G Fiber SFP+",
+  ip:"WAN1 (DHCP/Static)",speed:"10 Gbps",role:"Primary WAN",
+  pwr:0,btu:0,color:0xfbbf24,
+  spec:{Nhà_cung_cấp:"VNPT",Băng_thông:"10 Gbps",Giao_thức:"BGP AS65001",Giao_diện:"10G SFP+",Dự_phòng:"ISP2 + LTE/4G"},
+  net:{VLAN:"N/A",Subnet:"WAN1 — Public IP"},
+  note:"Uplink chính — BGP Primary Path"},
+
+ISP2:{cat:"isp",type:"ISP Link",name:"ISP 2 — Viettel (Đường phụ)",model:"10G Fiber SFP+",
+  ip:"WAN2 (DHCP/Static)",speed:"10 Gbps",role:"Backup WAN",
+  pwr:0,btu:0,color:0xfbbf24,
+  spec:{Nhà_cung_cấp:"Viettel",Băng_thông:"10 Gbps",Giao_thức:"BGP AS65001",Giao_diện:"10G SFP+",Dự_phòng:"LTE/4G (Tertiary)"},
+  net:{VLAN:"N/A",Subnet:"WAN2 — Public IP"},
+  note:"Backup WAN — tự động chuyển khi ISP1 down"},
+
+LTE_Modem:{cat:"isp",type:"LTE/4G Modem",name:"LTE/4G Modem (Độc lập)",model:"Industrial 4G LTE Router",
+  ip:"DHCP (4G APN)",speed:"150/50 Mbps",role:"Tertiary WAN — OOB Console",
+  pwr:18,btu:61,color:0xf59e0b,
+  spec:{Nhà_mạng:"Viettel/Mobifone",Chuẩn:"4G LTE Cat.6",Tốc_độ:"150Mbps DL / 50Mbps UL",Antena:"2× MIMO External",IP:"DHCP từ APN",SIM:"Dual SIM Failover"},
+  net:{VLAN:"VLAN 10 (MGMT OOB)",Subnet:"Riêng biệt"},
+  note:"Kết nối độc lập — OOB Console Server Opengear — không qua ISP1/ISP2"},
+
+/* ── EDGE ROUTING ── */
+CCR1:{cat:"adm",type:"Router",name:"MikroTik CCR2216 #1",model:"CCR2216-1G-12XS-2XQ",
+  ip:"10.0.0.1 (VRRP VIP: 10.0.0.254)",role:"VRRP Master · BGP AS65001",ha:"VRRP Master",
+  pwr:42,btu:143,color:0xf97316,
+  spec:{CPU:"16-core Annapurna Alpine AL73400 @ 2GHz",RAM:"16 GB DDR4",Flash:"128 MB NAND",
+    Cổng_12×:"12× 10G SFP+",Cổng_2×:"2× 100G QSFP28",Cổng_Mgmt:"1× 1G RJ45",
+    Điện:"42W max",OS:"RouterOS 7",Vỏ:"1U rack 19\"",Kích_thước:"443×440×44mm"},
+  net:{VLAN_WAN:"ISP1 → WAN1",VLAN_HA:"VRRP peer 10.0.0.2",BGP:"AS65001 — eBGP to ISP",
+    Giao_thức:"OSPF, BGP, ECMP, PBR"},
+  note:"Edge Router #1 — VRRP Master — BGP Primary Path — nhận ISP1"},
+
+CCR2:{cat:"adm",type:"Router",name:"MikroTik CCR2216 #2",model:"CCR2216-1G-12XS-2XQ",
+  ip:"10.0.0.2 (VRRP VIP: 10.0.0.254)",role:"VRRP Backup · BGP AS65001",ha:"VRRP Backup",
+  pwr:42,btu:143,color:0xf97316,
+  spec:{CPU:"16-core Annapurna Alpine AL73400 @ 2GHz",RAM:"16 GB DDR4",Flash:"128 MB NAND",
+    Cổng_12×:"12× 10G SFP+",Cổng_2×:"2× 100G QSFP28",Cổng_Mgmt:"1× 1G RJ45",
+    Điện:"42W max",OS:"RouterOS 7",Vỏ:"1U rack 19\""},
+  net:{VLAN_WAN:"ISP2 → WAN2",VLAN_HA:"VRRP peer 10.0.0.1",BGP:"AS65001 — eBGP to ISP2",
+    Giao_thức:"OSPF, BGP, ECMP, PBR"},
+  note:"Edge Router #2 — VRRP Backup — tự động thay thế CCR1 nếu fail"},
+
+/* ── CONSOLE OOB ── */
+Console:{cat:"adm",type:"Console Server",name:"Console Server OOB",model:"Opengear IM7200",
+  ip:"192.168.250.1 (VLAN 10)",role:"Out-of-Band Management",
+  pwr:18,btu:61,color:0x8b5cf6,
+  spec:{Cổng_Serial:"16× RS-232 DB9 (RJ45 adaptors)",Cổng_Ethernet:"2× GbE",Modem_4G:"Tích_hợp 4G LTE",
+    RAM:"512 MB",Flash:"4 GB",OS:"OpenGear Linux",Bảo_mật:"SSH v2, TLS 1.3, 2FA",
+    Điện:"18W",Vỏ:"1U rack 19\""},
+  net:{Subnet:"192.168.250.0/24 (OOB dedicated)",VLAN:"VLAN 10 MGMT",
+    Kết_nối:"Console → tất cả thiết bị core qua RS-232",OOB:"Qua LTE/4G modem"},
+  note:"Quản lý Out-of-Band 24/7 — SSH qua LTE khi network down — kết nối CCR1+2, FW1+2, Core1+2"},
+
+/* ── SECURITY / NGFW ── */
+FW1:{cat:"adm",type:"Firewall",name:"FortiGate 600F #1",model:"FortiGate 600F",
+  ip:"10.0.1.1 (HA Primary)",role:"Active — HA Primary",ha:"Active/Passive",
+  pwr:100,btu:341,color:0xeab308,
+  spec:{CPU:"NP7 + CP9 ASICs",RAM:"16 GB",Lưu_trữ:"240 GB SSD",
+    NGFW_Throughput:"11.5 Gbps",IPS_Throughput:"6.5 Gbps",IPsec_VPN:"20 Gbps",
+    SSL_VPN:"50.000 sessions đồng thời",ZTNA:"FortiOS 7.4+",
+    Cổng_25G:"8× 25G SFP28",Cổng_10G:"16× 10G SFP+",Cổng_1G:"4× GbE RJ45",
+    HA_Port:"Dedicated HA sync port",Điện:"100W (typ) / 180W (max)",Vỏ:"2U rack 19\""},
+  net:{WAN:"Nhận từ CCR1 (VRRP VIP)",LAN:"→ Core 9500 #1",
+    VLAN_10:"MGMT/OOB",VLAN_20:"Servers (no WAN)",VLAN_30:"CCTV isolated",
+    VLAN_50:"DMZ",VLAN_110_120:"Staff Work Bldg 1+2",VLAN_200:"Guest Captive Portal"},
+  note:"ACTIVE HA — xử lý tất cả traffic — HA Sync real-time với FW2"},
+
+FW2:{cat:"adm",type:"Firewall",name:"FortiGate 600F #2",model:"FortiGate 600F",
+  ip:"10.0.1.2 (HA Secondary)",role:"Passive — HA Secondary",ha:"Active/Passive",
+  pwr:65,btu:222,color:0xd97706,
+  spec:{CPU:"NP7 + CP9 ASICs",RAM:"16 GB",Lưu_trữ:"240 GB SSD",
+    NGFW_Throughput:"11.5 Gbps (standby)",IPS_Throughput:"6.5 Gbps",IPsec_VPN:"20 Gbps",
+    SSL_VPN:"50.000 sessions (failover)",ZTNA:"FortiOS 7.4+",
+    HA_Sync:"Session + Config sync real-time",Điện:"65W (standby) / 180W (active)",Vỏ:"2U"},
+  net:{HA:"Sync từ FW1 — sẵn sàng tiếp quản < 3 giây",
+    VLAN:"Đồng bộ toàn bộ policy từ FW1"},
+  note:"PASSIVE standby — sẵn sàng tiếp quản nếu FW1 fail trong < 3 giây"},
+
+/* ── CORE SWITCHING ── */
+Core1:{cat:"adm",type:"Core Switch",name:"Cisco 9500 Core #1",model:"Catalyst 9500-24Y4C",
+  ip:"10.10.10.1",role:"StackWise Virtual #1 — Primary",ha:"StackWise Virtual",
+  pwr:355,btu:1211,color:0x2563eb,
+  spec:{Cổng_25G:"24× 25G SFP28",Cổng_100G:"4× 100G QSFP28",
+    Switching_Capacity:"25.6 Tbps",Forwarding_Rate:"9.53 Bpps",
+    RAM:"32 GB",Flash:"32 GB",PoE:"Không (core layer)",
+    StackWise:"Virtual 40G Peer Link với Core2",
+    Uplink_Dist1:"40G OM4 → Dist #1 (Primary)",Uplink_Dist3:"40G OM4 → Dist #3 (Primary)",
+    Cross_Backup:"→ Dist #2 & #4 (Backup paths)",
+    Điện:"355W (typ) / 460W (max)",Vỏ:"1U rack 19\""},
+  net:{VLAN_trunk:"Tất cả VLAN 10,15,20,30,50,99,110,120,200",
+    STP:"Disabled (StackWise Virtual)",OSPF:"Area 0 — Core routing",
+    L3:"Inter-VLAN routing chính"},
+  note:"Core #1 — StackWise Virtual với Core2 — Uplink chính → Dist #1 & #3"},
+
+Core2:{cat:"adm",type:"Core Switch",name:"Cisco 9500 Core #2",model:"Catalyst 9500-24Y4C",
+  ip:"10.10.10.2",role:"StackWise Virtual #2 — Secondary",ha:"StackWise Virtual",
+  pwr:355,btu:1211,color:0x1d4ed8,
+  spec:{Cổng_25G:"24× 25G SFP28",Cổng_100G:"4× 100G QSFP28",
+    Switching_Capacity:"25.6 Tbps",Forwarding_Rate:"9.53 Bpps",
+    RAM:"32 GB",Flash:"32 GB",
+    StackWise:"Virtual 40G Peer Link với Core1",
+    Uplink_Dist2:"40G OM4 → Dist #2 (Primary)",Uplink_Dist4:"40G OM4 → Dist #4 (Primary)",
+    Cross_Backup:"→ Dist #1 & #3 (Backup paths)",
+    Điện:"355W (typ) / 460W (max)",Vỏ:"1U"},
+  net:{VLAN_trunk:"Tất cả VLAN 10,15,20,30,50,99,110,120,200",
+    STP:"Disabled (StackWise Virtual)",L3:"Active-Active forwarding với Core1"},
+  note:"Core #2 — StackWise Virtual — Uplink chính → Dist #2 & #4"},
+
+/* ── SERVER FARM (MDF) ── */
+ROSE1:{cat:"adm",type:"Server",name:"ROSE Server #1",model:"Dell PowerEdge R760",
+  ip:"10.0.15.10",role:"Primary — DHCP · DNS · NTP · Docker · Prometheus",
+  pwr:320,btu:1092,color:0xa855f7,
+  spec:{CPU:"2× Intel Xeon Gold 6430 (32C/64T)",RAM:"256 GB DDR5 ECC",
+    Storage:"4× 960GB NVMe SSD (RAID-5)",NIC:"4× 25GbE SFP28",OS:"Ubuntu Server 22.04 LTS",
+    Services:"DHCP, DNS, NTP, Docker, Prometheus, Grafana",
+    HA:"Active-Active với ROSE2 (Keepalived VIP)",Điện:"320W (typ) / 550W (max)",Vỏ:"2U"},
+  net:{IP:"10.0.15.10",VIP:"10.0.15.100 (Keepalived)",VLAN:"VLAN 15 INFRA",
+    Kết_nối:"25G → Core #1"},
+  note:"ROSE Server chính — VIP Keepalived 10.0.15.100 — failover < 2s"},
+
+ROSE2:{cat:"adm",type:"Server",name:"ROSE Server #2",model:"Dell PowerEdge R760",
+  ip:"10.0.15.11",role:"Secondary — Backup · Monitoring · AD secondary",
+  pwr:300,btu:1024,color:0x9333ea,
+  spec:{CPU:"2× Intel Xeon Gold 6430 (32C/64T)",RAM:"256 GB DDR5 ECC",
+    Storage:"4× 960GB NVMe SSD (RAID-5)",NIC:"4× 25GbE SFP28",OS:"Ubuntu Server 22.04 LTS",
+    Services:"Backup, Monitor, Grafana replica",HA:"Keepalived Backup — tiếp quản VIP khi ROSE1 fail",
+    Điện:"300W (typ) / 550W (max)",Vỏ:"2U"},
+  net:{IP:"10.0.15.11",VIP:"10.0.15.100 (standby)",VLAN:"VLAN 15 INFRA",
+    Kết_nối:"25G → Core #2"},
+  note:"ROSE Server dự phòng — tự động tiếp quản VIP"},
+
+AD1:{cat:"adm",type:"Server",name:"AD/DHCP/DNS Server #1",model:"Dell PowerEdge R550",
+  ip:"10.0.20.10",role:"Active Directory Primary · DHCP · DNS · PKI",
+  pwr:250,btu:853,color:0x7c3aed,
+  spec:{CPU:"2× Intel Xeon Silver 4314 (16C/32T)",RAM:"128 GB DDR4 ECC",
+    Storage:"2× 480GB SSD OS + 2TB HDD Data (RAID-5)",NIC:"2× 10GbE SFP+",
+    OS:"Windows Server 2022 Datacenter",
+    Services:"AD DS, DHCP, DNS, PKI CA, DFS, Kerberos",HA:"AD Replication với AD2",
+    Điện:"250W (typ) / 400W (max)",Vỏ:"2U"},
+  net:{IP:"10.0.20.10",DNS:"10.0.20.10 (Primary DNS)",VLAN:"VLAN 20 SERVERS (No WAN)",
+    Kết_nối:"10G → Core #1"},
+  note:"Domain Controller Primary — không có WAN access (VLAN 20 policy)"},
+
+AD2:{cat:"adm",type:"Server",name:"AD/DHCP/DNS Server #2",model:"Dell PowerEdge R550",
+  ip:"10.0.20.11",role:"Active Directory Secondary · DHCP Failover",
+  pwr:230,btu:785,color:0x6d28d9,
+  spec:{CPU:"2× Intel Xeon Silver 4314 (16C/32T)",RAM:"128 GB DDR4 ECC",
+    Storage:"2× 480GB SSD + 2TB HDD (RAID-5)",NIC:"2× 10GbE SFP+",
+    OS:"Windows Server 2022 Datacenter",
+    Services:"AD DS Secondary, DHCP Failover, DNS Secondary",
+    HA:"AD Multi-site Replication — SYSVOL sync",Điện:"230W (typ)",Vỏ:"2U"},
+  net:{IP:"10.0.20.11",DNS:"10.0.20.11 (Secondary DNS)",VLAN:"VLAN 20 SERVERS (No WAN)",
+    Kết_nối:"10G → Core #2"},
+  note:"Domain Controller dự phòng — DHCP Failover active"},
+
+/* ── CAMERA CENTRAL (MDF) ── */
+CentralNVR:{cat:"adm",type:"NVR/VMS",name:"Central NVR/VMS",model:"Milestone XProtect / Genetec",
+  ip:"10.0.30.10",role:"Central Video Management — All Buildings",
+  pwr:280,btu:955,color:0xef4444,
+  spec:{Software:"Milestone XProtect Corporate / Genetec Security Center",
+    Camera_Capacity:"512+ IP Cameras",Resolution:"4MP H.265+ ONVIF",
+    Lưu_trữ:"→ NAS 120TB RAID-6",Phân_tích:"AI Analytics — Face, Plate, Motion",
+    Servers:"2× Dell R550 cluster",Điện:"280W (typ)",VLAN:"VLAN 30 CCTV (Isolated)"},
+  net:{IP:"10.0.30.10",VLAN:"VLAN 30 — cô lập, NO WAN, NO cross-VLAN",
+    Policy:"FortiGate DENY ALL except NVR/VMS → Camera",
+    Kết_nối:"25G → Core #1 (VLAN 30 trunk)"},
+  note:"🔒 VLAN 30 — Cô lập hoàn toàn — Camera → NVR Local → Central NVR — không có WAN"},
+
+StorageNAS:{cat:"adm",type:"NAS Storage",name:"Storage NAS 120TB",model:"Synology / TrueNAS Scale",
+  ip:"10.0.30.11",role:"Camera Archive Storage · Backup · iSCSI",
+  pwr:120,btu:410,color:0x64748b,
+  spec:{Capacity:"120 TB raw (60× 4TB NAS HDD)",RAID:"RAID-6 (2 drive fault tolerance)",
+    Usable:"Approx 100TB usable",Protocol:"iSCSI, NFS, SMB, rsync",
+    Cache:"4× 3.84TB SSD cache",Network:"2× 10GbE bonded",
+    Lưu_trữ_CCTV:"90+ ngày @ 80 cameras 4MP H.265+",
+    Replication:"Sync từ NVR Local Bldg 1+2",Điện:"120W (typ) / 180W (max)"},
+  net:{IP:"10.0.30.11",VLAN:"VLAN 30 (CCTV isolated)",
+    Kết_nối:"10G → Core #2"},
+  note:"Lưu trữ camera tập trung — 90+ ngày — RAID-6 fault tolerance"},
+
+/* ── POWER & COOLING ── */
+UPS_A:{cat:"pwr",type:"UPS",name:"UPS Feed A",model:"Eaton 9PXM 20kVA",
+  ip:"10.0.10.50 (SNMP)",role:"UPS Nguồn A — tất cả thiết bị chẵn",
+  pwr:1000,btu:3412,color:0x22d3ee,
+  spec:{Capacity:"20 kVA / 18 kW",Topology:"Double Conversion Online",
+    Battery_Type:"VRLA AGM sealed",Runtime:"15 phút @ 50% load",
+    Input:"3-phase 200-240V",Output:"3-phase 200-240V",
+    Efficiency:"96% @ 50% load",MTBF:"100.000+ giờ",
+    Management:"SNMP v3 → FortiAnalyzer",Điện_tổn_thất:"~750W @ 96% hiệu suất",Vỏ:"Tower/Rack 19\""},
+  net:{IP:"10.0.10.50",VLAN:"VLAN 10 MGMT",Protocol:"SNMP v3, Modbus"},
+  note:"UPS A — tổn thất nhiệt ~750W tại 96% hiệu suất — runtime 15 phút trước generator"},
+
+UPS_B:{cat:"pwr",type:"UPS",name:"UPS Feed B",model:"Eaton 9PXM 20kVA",
+  ip:"10.0.10.51 (SNMP)",role:"UPS Nguồn B — tất cả thiết bị lẻ",
+  pwr:1000,btu:3412,color:0x06b6d4,
+  spec:{Capacity:"20 kVA / 18 kW",Topology:"Double Conversion Online",
+    Battery_Type:"VRLA AGM sealed",Runtime:"15 phút @ 50% load",ATS:"Auto Transfer Switch tích hợp",
+    Efficiency:"96% @ 50% load",Điện_tổn_thất:"~750W @ 96% hiệu suất"},
+  net:{IP:"10.0.10.51",VLAN:"VLAN 10 MGMT",Protocol:"SNMP v3"},
+  note:"UPS B — dual-feed redundancy với UPS A — ATS chuyển 0ms"},
+
+Generator:{cat:"pwr",type:"Generator",name:"Máy Phát Điện Dự Phòng",model:"Cummins C150D5 150kVA",
+  ip:"N/A (Analog control)",role:"Diesel Generator — khởi động khi mất điện lưới",
+  pwr:0,btu:5000,color:0xf59e0b,
+  spec:{Capacity:"150 kVA / 120 kW",Fuel:"Diesel — bồn 500L",Runtime:"≥ 8 giờ full load",
+    Start_Time:"< 10 giây tự động (ATS)",Engine:"Cummins 6-cylinder turbocharged",
+    Alternator:"Stanford/Leroy Somer",Tần_số:"50 Hz ± 0.5%",
+    Điện_áp:"3-phase 380V / 220V",Kích_thước:"2800×1100×1600mm",Trọng_lượng:"1850 kg"},
+  net:{Control:"ATS — tự chuyển khi lưới mất điện < 10s",Monitor:"Analog"},
+  note:"Khởi động tự động khi điện lưới mất — UPS A+B bridge thời gian khởi động"},
+
+CRAC1:{cat:"pwr",type:"CRAC",name:"CRAC Unit #1",model:"Schneider InRow RD 30kW",
+  ip:"10.0.10.52",role:"In-row cooling — Dãy rack bên trái MDF",
+  pwr:2500,btu:8530,color:0x38bdf8,
+  spec:{Cooling_Capacity:"30 kW",Type:"Direct Expansion (DX) In-Row",
+    Airflow:"3000 CFM",Supply_Temp:"16°C setpoint",Return_Temp:"26°C max",
+    Refrigerant:"R410A",Power_Input:"2.5 kW điện (bơm & control)",
+    COP:"12.0 (30kW cool / 2.5kW elec)",Dimensions:"600×900×2000mm"},
+  net:{IP:"10.0.10.52",VLAN:"VLAN 10 MGMT",Protocol:"SNMP v3, BACnet"},
+  note:"Làm mát hàng rack — COP 12.0 — 30kW tương đương 102.3K BTU/hr"},
+
+CRAC2:{cat:"pwr",type:"CRAC",name:"CRAC Unit #2",model:"Schneider InRow RD 30kW",
+  ip:"10.0.10.53",role:"In-row cooling — Dãy rack bên phải MDF",
+  pwr:2500,btu:8530,color:0x0ea5e9,
+  spec:{Cooling_Capacity:"30 kW",Type:"Direct Expansion (DX) In-Row",
+    Airflow:"3000 CFM",Supply_Temp:"16°C",COP:"12.0",
+    Power_Input:"2.5 kW"},
+  net:{IP:"10.0.10.53",VLAN:"VLAN 10 MGMT"},
+  note:"CRAC dự phòng — chạy song song với CRAC1"},
+
+/* ── DISTRIBUTION — WORK BLDG 1 (IDF 1) ── */
+Dist1:{cat:"w1",type:"Distribution Switch",name:"Cisco 9300 Dist #1 (IDF1)",model:"Catalyst 9300-24S",
+  ip:"10.10.20.1",role:"IDF 1 Distribution — Floor Group A",
+  pwr:110,btu:375,color:0x16a34a,
+  spec:{Cổng_10G:"24× 10G SFP+",Cổng_Uplink:"4× 25G SFP28",
+    Switching_Capacity:"592 Gbps",Forwarding:"440 Mpps",
+    PoE_Budget:"N/A (core dist, no PoE)",Stack:"10G StackWise với Dist2",
+    Uplink:"40G → Core #1 (Primary) + Core #2 (Backup)",
+    RAM:"8 GB",Flash:"4 GB",Điện:"110W (base)",Vỏ:"1U"},
+  net:{VLAN_trunk:"VLAN 10,30,110,200",OSPF:"Area 1 — IDF1",
+    Kết_nối:"40G OM4 → Core1 (primary), Core2 (cross-backup)",Stack:"10G → Dist2"},
+  note:"Distribution #1 — IDF Tòa LV1 — Uplink chính tới Core #1 — cross-backup tới Core #2"},
+
+Dist2:{cat:"w1",type:"Distribution Switch",name:"Cisco 9300 Dist #2 (IDF1)",model:"Catalyst 9300-24S",
+  ip:"10.10.20.2",role:"IDF 1 Distribution — Floor Group B",
+  pwr:110,btu:375,color:0x15803d,
+  spec:{Cổng_10G:"24× 10G SFP+",Cổng_Uplink:"4× 25G SFP28",
+    PoE_Budget:"N/A",Stack:"10G StackWise với Dist1",
+    Uplink:"40G → Core #2 (Primary) + Core #1 (Backup)",
+    Điện:"110W (base)",Vỏ:"1U"},
+  net:{VLAN_trunk:"VLAN 10,30,110,200",
+    Kết_nối:"40G OM4 → Core2 (primary), Core1 (cross-backup)"},
+  note:"Distribution #2 — IDF Tòa LV1 — Uplink chính tới Core #2 — cross-backup tới Core #1"},
+
+NVR1:{cat:"w1",type:"NVR",name:"NVR Camera Local (Tòa LV1)",model:"Hikvision DS-96128NI-I24",
+  ip:"10.0.30.20",role:"Local NVR — Camera Tòa Làm Việc 1",
+  pwr:45,btu:154,color:0xdc2626,
+  spec:{Channels:"128 IP cameras",Resolution:"12MP max, H.265+",
+    Storage_Bays:"16× HDD bays",Local_HDD:"8× 8TB (64TB) RAID-5",
+    Retention:"30 ngày @ 80 cams 4MP H.265+",Bandwidth:"320 Mbps recording",
+    Network:"2× GbE",Điện:"45W",Vỏ:"2U"},
+  net:{IP:"10.0.30.20",VLAN:"VLAN 30 CCTV (isolated)",
+    Kết_nối:"GbE → Dist #1 (VLAN 30 trunk)",Replication:"→ Central NVR (VLAN 30)"},
+  note:"NVR Local Tòa LV1 — ghi 30 ngày local — sync lên Central NVR — VLAN 30 cô lập"},
+
+/* ── DISTRIBUTION — WORK BLDG 2 (IDF 2) ── */
+Dist3:{cat:"w2",type:"Distribution Switch",name:"Cisco 9300 Dist #3 (IDF2)",model:"Catalyst 9300-24S",
+  ip:"10.10.30.1",role:"IDF 2 Distribution — Floor Group A",
+  pwr:110,btu:375,color:0x7c3aed,
+  spec:{Cổng_10G:"24× 10G SFP+",Cổng_Uplink:"4× 25G SFP28",
+    Stack:"10G StackWise với Dist4",
+    Uplink:"40G → Core #1 (Primary) + Core #2 (Backup)",
+    Điện:"110W (base)",Vỏ:"1U"},
+  net:{VLAN_trunk:"VLAN 10,30,120,200",OSPF:"Area 2 — IDF2",
+    Kết_nối:"40G OM4 → Core1 (primary), Core2 (cross-backup)"},
+  note:"Distribution #3 — IDF Tòa LV2 — Uplink chính tới Core #1 — cross-backup tới Core #2"},
+
+Dist4:{cat:"w2",type:"Distribution Switch",name:"Cisco 9300 Dist #4 (IDF2)",model:"Catalyst 9300-24S",
+  ip:"10.10.30.2",role:"IDF 2 Distribution — Floor Group B",
+  pwr:110,btu:375,color:0x6d28d9,
+  spec:{Cổng_10G:"24× 10G SFP+",Cổng_Uplink:"4× 25G SFP28",
+    Stack:"10G StackWise với Dist3",
+    Uplink:"40G → Core #2 (Primary) + Core #1 (Backup)",
+    Điện:"110W (base)",Vỏ:"1U"},
+  net:{VLAN_trunk:"VLAN 10,30,120,200",
+    Kết_nối:"40G OM4 → Core2 (primary), Core1 (cross-backup)"},
+  note:"Distribution #4 — IDF Tòa LV2 — Uplink chính tới Core #2"},
+
+NVR2:{cat:"w2",type:"NVR",name:"NVR Camera Local (Tòa LV2)",model:"Hikvision DS-96128NI-I24",
+  ip:"10.0.30.21",role:"Local NVR — Camera Tòa Làm Việc 2",
+  pwr:45,btu:154,color:0xb91c1c,
+  spec:{Channels:"128 IP cameras",Resolution:"12MP max, H.265+",
+    Storage_Bays:"16× HDD bays",Local_HDD:"8× 8TB (64TB) RAID-5",
+    Retention:"30 ngày @ 80 cams",Bandwidth:"320 Mbps recording",
+    Network:"2× GbE",Điện:"45W"},
+  net:{IP:"10.0.30.21",VLAN:"VLAN 30 CCTV (isolated)",
+    Kết_nối:"GbE → Dist #3 (VLAN 30 trunk)",Replication:"→ Central NVR"},
+  note:"NVR Local Tòa LV2 — ghi 30 ngày local — sync lên Central NVR"}
+};
+
+/* Access switches per floor — generated */
+var FLOORS = [{n:1,label:"Tầng 1"},{n:2,label:"Tầng 2"},{n:3,label:"Tầng 3"}];
+["w1","w2"].forEach(function(b){
+  var vl = b==="w1"?"110":"120";
+  FLOORS.forEach(function(f){
+    for(var s=1;s<=2;s++){
+      var k=b.toUpperCase()+"_F"+f.n+"_SW"+s;
+      DB[k]={cat:b,type:"Access Switch",name:"Cisco 9200L ("+f.label+" "+(b==="w1"?"W1":"W2")+" #"+s+")",
+        model:"Catalyst 9200L-48P-4X",ip:"10."+(b==="w1"?"1":"2")+"."+f.n+"0."+s,
+        role:"Access PoE+ — "+f.label,floor:f.n,pwr:90,btu:307,color:0x0ea5e9,
+        spec:{Cổng_Access:"48× GbE PoE+ (802.3at 30W)",Uplink:"4× 10G SFP+",
+          PoE_Budget:"370W total PoE budget",Switching:"104 Gbps",
+          Tính_năng:"802.1X RADIUS, VLAN, STP, QoS",RAM:"4 GB",Flash:"2 GB",
+          Điện:"90W (base) + PoE devices",Vỏ:"1U"},
+        net:{VLAN_Access:"VLAN "+vl+" (Staff)",VLAN_Guest:"VLAN 200 (Guest port)",
+          VLAN_CCTV:"VLAN 30 (Camera port — tagged)",VLAN_Mgmt:"VLAN 10 (Management)",
+          Uplink:"10G SFP+ → Dist #"+(b==="w1"?(s===1?"1":"2"):(s===1?"3":"4")),
+          "802.1X":"Port auth — VLAN assignment"},
+        note:"Access switch "+f.label+" — PoE+ 370W — 802.1X RADIUS auth"};
+    }
+    var apk=b.toUpperCase()+"_F"+f.n+"_AP1";
+    DB[apk]={cat:b,type:"AP",name:"Aruba 610 Wi-Fi 6E ("+f.label+")",model:"Aruba 610",
+      ip:"10."+(b==="w1"?"1":"2")+"."+f.n+"0.200",role:"Wi-Fi 6E AP — "+f.label,
+      floor:f.n,pwr:25,btu:85,color:0x8b5cf6,
+      spec:{Standard:"Wi-Fi 6E (802.11ax) 2.4/5/6 GHz",Max_Speed:"6 Gbps",
+        MIMO:"4×4:4 Tri-band",Security:"WPA3-Enterprise, 802.1X",
+        PoE:"802.3at (25W)",Management:"Aruba Central Cloud",Điện:"25W via PoE+"},
+      net:{SSID_Staff:"CORP_WIFI — VLAN "+vl,SSID_Guest:"GUEST_WIFI — VLAN 200",
+        RADIUS:"→ ROSE Server 10.0.15.100"},
+      note:"Wi-Fi 6E — WPA3 Enterprise — VLAN per SSID"};
+    var camk=b.toUpperCase()+"_F"+f.n+"_CAM1";
+    DB[camk]={cat:b,type:"CCTV Camera",name:"IP Camera 4MP ("+f.label+")",model:"Hikvision IPC-HFW5442H",
+      ip:"10.0.30."+((b==="w1"?50:70)+f.n*10),role:"IP Camera CCTV — VLAN 30 Cô lập",
+      floor:f.n,pwr:12,btu:41,color:0xef4444,
+      spec:{Resolution:"4 Megapixel (2688×1520)",Codec:"H.265+, H.264, MJPEG",
+        FPS:"25fps @ 4MP",IR_Range:"60m IR night vision",
+        Protection:"IP67, IK10",PoE:"802.3af (12W)",FOV:"102° horizontal",
+        ONVIF:"Profile S/G/T",Điện:"12W via PoE"},
+      net:{IP:"10.0.30.x (VLAN 30)",VLAN:"VLAN 30 — Isolated",
+        "Kết nối":"PoE+ port → 9200L → Dist → Core → NVR Local → Central NVR"},
+      note:"🔒 VLAN 30 — Cô lập — chỉ kết nối NVR — NO Internet, NO cross-VLAN"};
+  });
+});
+
+/* VLAN reference */
+var VLANS = [
+  {id:10, name:"MGMT/OOB",    subnet:"10.0.10.0/24",   color:"#6d28d9"},
+  {id:15, name:"INFRA_SVC",   subnet:"10.0.15.0/24",   color:"#0e7490"},
+  {id:20, name:"SERVERS",     subnet:"10.0.20.0/24",   color:"#065f46"},
+  {id:30, name:"CCTV_CAM",    subnet:"10.0.30.0/24",   color:"#991b1b",iso:true},
+  {id:50, name:"DMZ",         subnet:"172.16.50.0/24", color:"#92400e"},
+  {id:99, name:"VPN_POOL",    subnet:"10.99.0.0/21",   color:"#1e3a5f"},
+  {id:110,name:"STAFF_W1",    subnet:"10.1.10.0/22",   color:"#14532d"},
+  {id:120,name:"STAFF_W2",    subnet:"10.1.20.0/22",   color:"#3b0764"},
+  {id:200,name:"GUEST",       subnet:"10.2.0.0/22",    color:"#7c2d12"}
+];
+
+/* Total power calc */
+var totalPwr=0, totalBtu=0;
+Object.keys(DB).forEach(function(k){totalPwr+=DB[k].pwr||0; totalBtu+=DB[k].btu||0;});
+
+/* ═══════════════════════════════
+   THREE.JS SCENE SETUP
+   ═══════════════════════════════ */
+var cont=document.getElementById("cv");
+var W=cont.clientWidth||window.innerWidth-276,H=cont.clientHeight||(window.innerHeight-76);
+var renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(W,H);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setClearColor(0x01030c);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.1;
+cont.appendChild(renderer.domElement);
+
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x01030c,0.0004);
+var cam=new THREE.PerspectiveCamera(48,W/H,0.5,2500);
+cam.up.set(0,0,1);
+
+/* Starfield */
+(function(){
+  var sg=new THREE.BufferGeometry(),pts=[];
+  for(var i=0;i<5000;i++) pts.push((Math.random()-.5)*2000,(Math.random()-.5)*2000,Math.random()*500+30);
+  sg.setAttribute("position",new THREE.Float32BufferAttribute(pts,3));
+  scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.6,transparent:true,opacity:.45,sizeAttenuation:true})));
+})();
+
+/* Skydome */
+(function(){
+  var c=document.createElement("canvas");c.width=1024;c.height=1024;
+  var ctx=c.getContext("2d"),g=ctx.createLinearGradient(0,0,0,1024);
+  g.addColorStop(0,"#162348");g.addColorStop(.25,"#0e1a36");g.addColorStop(.6,"#050c1a");g.addColorStop(1,"#010207");
+  ctx.fillStyle=g;ctx.fillRect(0,0,1024,1024);
+  var dome=new THREE.Mesh(new THREE.SphereGeometry(1200,32,24),
+    new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),side:THREE.BackSide,transparent:true,opacity:.8,depthWrite:false}));
+  dome.position.z=120;scene.add(dome);
+})();
+
+/* Grid */
+var grid=new THREE.GridHelper(600,300,0x0a1830,0x060e1e);
+grid.rotation.x=Math.PI/2;grid.position.z=-.02;scene.add(grid);
+
+/* Lighting */
+scene.add(new THREE.AmbientLight(0x0a1535,3.2));
+var sun=new THREE.DirectionalLight(0xfff5e0,1.6);
+sun.position.set(120,80,160);sun.castShadow=true;
+sun.shadow.mapSize.set(4096,4096);sun.shadow.camera.left=-300;sun.shadow.camera.right=300;
+sun.shadow.camera.top=300;sun.shadow.camera.bottom=-300;sun.shadow.camera.far=700;
+sun.shadow.bias=-.001;scene.add(sun);
+scene.add(new THREE.DirectionalLight(0x4488cc,.65)).position.set(-90,-55,100);
+scene.add(new THREE.HemisphereLight(0x1a3060,0x040812,1.3));
+
+/* Building glows */
+var adminGl=new THREE.PointLight(0x00c8ff,2.8,90);adminGl.position.set(0,5,18);scene.add(adminGl);
+var w1Gl=new THREE.PointLight(0x16a34a,2.2,80);w1Gl.position.set(-74,12,18);scene.add(w1Gl);
+var w2Gl=new THREE.PointLight(0x7c3aed,2.2,80);w2Gl.position.set(74,12,18);scene.add(w2Gl);
+
+/* State */
+var meshes=[],devMap={},lines=[];
+var heatmapOn=false;
+
+/* ── MATERIAL HELPERS ── */
+function Mat(c,r,m,ec,ei){var o={color:c,roughness:r!=null?r:.38,metalness:m!=null?m:.5};if(ec){o.emissive=ec;o.emissiveIntensity=ei||.28;}return new THREE.MeshStandardMaterial(o);}
+function mkShadow(){return {type:"outer",blur:8,offset:2,angle:135,color:"000000",opacity:.1};}
+
+/* ── 3D MODEL FACTORIES ── */
+function makeSwitch(col,s){
+  s=s||1;var g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(4*s,.7*s,.5*s),Mat(col,.22,.7,col,.18))).castShadow=true;
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(3.6*s,.02*s,.38*s),Mat(0x0a0a14,.3,.4));
+  panel.position.set(0,-.36*s,0);g.add(panel);
+  for(var i=0;i<16;i++){var p=new THREE.Mesh(new THREE.BoxGeometry(.16*s,.02*s,.1*s),Mat(0x2a2a44));p.position.set(-1.7*s+i*.24*s,-.37*s,.1*s);g.add(p);}
+  for(var j=0;j<10;j++){var lc=j%4===3?0xffaa00:j%4===0?0xff4444:0x00ff88;var l=new THREE.Mesh(new THREE.SphereGeometry(.04*s,5,4),new THREE.MeshBasicMaterial({color:lc}));l.position.set(-1.5*s+j*.36*s,-.37*s,-.13*s);g.add(l);}
+  return g;
+}
+function makeRouter(col,s){
+  s=s||1;var g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(3.2*s,.68*s,.8*s),Mat(col,.22,.65,col,.22))).castShadow=true;
+  for(var i=-1;i<=1;i+=2){var a=new THREE.Mesh(new THREE.CylinderGeometry(.025*s,.025*s,1.2*s,6),Mat(0x333344));a.rotation.x=Math.PI/2;a.position.set(i*1.2*s,0,.9*s);g.add(a);var t=new THREE.Mesh(new THREE.SphereGeometry(.048*s,6,6),new THREE.MeshBasicMaterial({color:0x00ff88}));t.position.set(i*1.2*s,0,1.5*s);g.add(t);}
+  for(var j=0;j<8;j++){var lc=j<5?0x00ff88:0xffaa00;var l=new THREE.Mesh(new THREE.SphereGeometry(.04*s,5,4),new THREE.MeshBasicMaterial({color:lc}));l.position.set(-1.0*s+j*.3*s,-.35*s,.2*s);g.add(l);}
+  return g;
+}
+function makeFirewall(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(3.6*s,.88*s,.8*s),Mat(0xd97706,.2,.65,0xeab308,.28));body.castShadow=true;g.add(body);
+  var sh=new THREE.Mesh(new THREE.BoxGeometry(.48*s,.02*s,.42*s),new THREE.MeshBasicMaterial({color:0xff4444}));sh.position.set(0,-.46*s,.18*s);g.add(sh);
+  for(var j=0;j<8;j++){var lc=[0x00ff88,0x00ff88,0x00ff88,0x00ff88,0xff4444,0xff4444,0xffaa00,0x00ff88][j];var l=new THREE.Mesh(new THREE.SphereGeometry(.038*s,5,4),new THREE.MeshBasicMaterial({color:lc}));l.position.set(-.9*s+j*.28*s,-.46*s,-.18*s);g.add(l);}
+  var lbl=new THREE.Mesh(new THREE.BoxGeometry(1.8*s,.02*s,.2*s),new THREE.MeshBasicMaterial({color:0xeab308}));lbl.position.set(0,-.46*s,.28*s);g.add(lbl);
+  return g;
+}
+function makeServer(col,s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.1*s,1.65*s,3.0*s),Mat(col,.3,.5,col,.12));body.position.z=1.5*s;body.castShadow=true;g.add(body);
+  var bez=new THREE.Mesh(new THREE.BoxGeometry(.02*s,1.45*s,2.7*s),Mat(0x111122,.3,.4));bez.position.set(-.57*s,0,1.5*s);g.add(bez);
+  for(var r=0;r<5;r++){var bay=new THREE.Mesh(new THREE.BoxGeometry(.02*s,1.1*s,.3*s),Mat(0x1a1a2e));bay.position.set(-.58*s,0,.4*s+r*.55*s);g.add(bay);}
+  var strip=new THREE.Mesh(new THREE.BoxGeometry(.02*s,1.1*s,.06*s),new THREE.MeshBasicMaterial({color:col}));strip.position.set(-.58*s,0,2.7*s);g.add(strip);
+  var btn=new THREE.Mesh(new THREE.CylinderGeometry(.055*s,.055*s,.03*s,8),new THREE.MeshBasicMaterial({color:0x00ff88}));btn.rotation.z=Math.PI/2;btn.position.set(-.58*s,.58*s,2.75*s);g.add(btn);
+  return g;
+}
+function makeRack(s){
+  s=s||1;var g=new THREE.Group();
+  var frame=new THREE.Mesh(new THREE.BoxGeometry(1.25*s,.9*s,3.0*s),Mat(0x0d1020,.5,.5));frame.position.z=1.5*s;frame.castShadow=true;g.add(frame);
+  var door=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.82*s,2.9*s),Mat(0x1a2035,.3,.65,0x001a3a,.32));door.position.set(-.64*s,0,1.5*s);g.add(door);
+  var strip=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.05*s,2.2*s),new THREE.MeshBasicMaterial({color:0x00c8ff}));strip.position.set(-.65*s,-.3*s,1.5*s);g.add(strip);
+  var uc=[0x2563eb,0x16a34a,0x0ea5e9,0xa855f7,0xf97316,0xeab308,0x0ea5e9,0xa855f7];
+  for(var j=0;j<6;j++){var u=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.72*s,.34*s),Mat(uc[j%8],.3,.5,uc[j%8],.2));u.position.set(-.64*s,.4*s-j*.15*s,0.5*s+j*.42*s);g.add(u);}
+  return g;
+}
+function makeAP(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.4*s,.44*s,.095*s,20),Mat(0xdde0ee,.22,.28));body.rotation.x=Math.PI/2;body.castShadow=true;g.add(body);
+  var led=new THREE.Mesh(new THREE.RingGeometry(.05*s,.12*s,16),new THREE.MeshBasicMaterial({color:0x00aaff,side:THREE.DoubleSide}));led.position.z=.058*s;g.add(led);
+  for(var i=1;i<=3;i++){var r=new THREE.Mesh(new THREE.RingGeometry(.18*s*i,.18*s*i+.012*s,24),new THREE.MeshBasicMaterial({color:0x8b5cf6,transparent:true,opacity:.22/i,side:THREE.DoubleSide}));r.position.z=.07*s+.09*s*i;g.add(r);}
+  return g;
+}
+function makeCCTV(s){
+  s=s||1;var g=new THREE.Group();
+  var mount=new THREE.Mesh(new THREE.BoxGeometry(.1*s,.1*s,.24*s),Mat(0x444444,.5,.5));g.add(mount);
+  var arm=new THREE.Mesh(new THREE.BoxGeometry(.04*s,.3*s,.04*s),Mat(0x555555));arm.position.set(0,-.15*s,-.06*s);g.add(arm);
+  var cam=new THREE.Mesh(new THREE.CylinderGeometry(.055*s,.09*s,.24*s,8),Mat(0xcccccc,.3,.4));cam.rotation.z=Math.PI/2;cam.position.set(0,-.3*s,-.06*s);g.add(cam);
+  var lens=new THREE.Mesh(new THREE.SphereGeometry(.04*s,8,6),new THREE.MeshBasicMaterial({color:0x081522}));lens.position.set(0,-.3*s,-.18*s);g.add(lens);
+  var ir=new THREE.Mesh(new THREE.RingGeometry(.016*s,.038*s,8),new THREE.MeshBasicMaterial({color:0xff2200,side:THREE.DoubleSide}));ir.position.set(0,-.36*s,-.06*s);g.add(ir);
+  return g;
+}
+function makeUPS(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.5*s,.9*s,3.0*s),Mat(0x0a2030,.35,.5,0x001a2a,.2));body.position.z=1.5*s;body.castShadow=true;g.add(body);
+  var pan=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.82*s,2.7*s),Mat(0x0d2035,.3,.4));pan.position.set(-.77*s,0,1.5*s);g.add(pan);
+  var disp=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.44*s,.26*s),new THREE.MeshBasicMaterial({color:0x22d3ee}));disp.position.set(-.78*s,0,2.5*s);g.add(disp);
+  for(var i=0;i<5;i++){var bar=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.07*s,.17*s),new THREE.MeshBasicMaterial({color:i<4?0x00e060:0xffaa00}));bar.position.set(-.78*s,-.18*s+i*.09*s,2.2*s);g.add(bar);}
+  return g;
+}
+function makeGenerator(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(4.2*s,2.0*s,2.0*s),Mat(0x2d3a0a,.6,.3));body.position.z=1.0*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<5;i++){var lv=new THREE.Mesh(new THREE.BoxGeometry(3.4*s,.02*s,.22*s),Mat(0x1a2208));lv.position.set(0,-.98*s,.26*s+i*.38*s);g.add(lv);}
+  var exh=new THREE.Mesh(new THREE.CylinderGeometry(.12*s,.12*s,.9*s,8),Mat(0x444444));exh.rotation.x=Math.PI/2;exh.position.set(1.4*s,0,2.15*s);g.add(exh);
+  return g;
+}
+function makeCRAC(s){
+  s=s||1;var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.25*s,.9*s,3.0*s),Mat(0xd0d4e6,.32,.28,0x38bdf8,.04));body.position.z=1.5*s;body.castShadow=true;g.add(body);
+  for(var i=0;i<5;i++){var v=new THREE.Mesh(new THREE.BoxGeometry(1.0*s,.02*s,.15*s),Mat(0x7788aa));v.position.set(0,-.46*s,.4*s+i*.5*s);g.add(v);}
+  var dp=new THREE.Mesh(new THREE.BoxGeometry(.02*s,.4*s,.24*s),new THREE.MeshBasicMaterial({color:0x38bdf8}));dp.position.set(-.64*s,0,2.6*s);g.add(dp);
+  return g;
+}
+
+/* ── CABLE HELPERS ── */
+function cable(p1,p2,col,thick){
+  thick=thick||.05;col=col||0x00ffcc;
+  var a=new THREE.Vector3(p1.x,p1.y,p1.z),b=new THREE.Vector3(p2.x,p2.y,p2.z);
+  var dxy=Math.hypot(a.x-b.x,a.y-b.y);
+  var zl=Math.min(2.0,Math.max(.6,dxy*.065));
+  var mid=new THREE.Vector3((a.x+b.x)/2,(a.y+b.y)/2,Math.max(a.z,b.z)+zl);
+  var mat=new THREE.MeshStandardMaterial({color:col,roughness:.32,metalness:.05,transparent:true,opacity:.82,emissive:new THREE.Color(col),emissiveIntensity:.22});
+  var m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([a,mid,b]),22,thick,6,false),mat);
+  lines.push(m);scene.add(m);return m;
+}
+function cableRoute(pts,col,thick){
+  col=col||0x00c8ff;thick=thick||.035;
+  var vpts=pts.map(function(p){return new THREE.Vector3(p.x,p.y,p.z)});
+  var mat=new THREE.MeshStandardMaterial({color:col,roughness:.32,metalness:.05,transparent:true,opacity:.82,emissive:new THREE.Color(col),emissiveIntensity:.24});
+  var m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(vpts),26,thick,6,false),mat);
+  lines.push(m);scene.add(m);return m;
+}
+function fiberUnderground(p1,p2,col,thick){
+  thick=thick||.1;col=col||0x3b82f6;
+  var a=new THREE.Vector3(p1.x,p1.y,p1.z),b=new THREE.Vector3(p2.x,p2.y,p2.z);
+  var curve=new THREE.CatmullRomCurve3([a,new THREE.Vector3(a.x,a.y,-2.8),new THREE.Vector3(b.x,b.y,-2.8),b]);
+  var mat=new THREE.MeshStandardMaterial({color:col,roughness:.4,transparent:true,opacity:.78,emissive:new THREE.Color(col),emissiveIntensity:.55});
+  var m=new THREE.Mesh(new THREE.TubeGeometry(curve,44,thick,8,false),mat);
+  lines.push(m);scene.add(m);return m;
+}
+
+/* ── LABEL SPRITES ── */
+function label3d(txt,pos,col,sc){
+  var sw=Math.max(320,txt.length*13);var sh=54;
+  var c=document.createElement("canvas");c.width=sw;c.height=sh;
+  var ctx=c.getContext("2d");ctx.clearRect(0,0,sw,sh);
+  ctx.shadowColor=col||"#00c8ff";ctx.shadowBlur=14;
+  ctx.fillStyle=col||"#00c8ff";
+  ctx.font="700 "+Math.round(sh*.5)+"px 'Orbitron','Courier New',monospace";
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.strokeStyle="rgba(1,3,12,.8)";ctx.lineWidth=4;ctx.strokeText(txt,sw/2,sh/2);
+  ctx.fillText(txt,sw/2,sh/2);
+  var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+  sp.position.set(pos.x,pos.y,pos.z);var sz=Math.min(sc||5,6.5);sp.scale.set(sz*(sw/sh)*.3,sz*.3,1);
+  scene.add(sp);return sp;
+}
+function smallLabel(txt,pos,col,sc){
+  var c=document.createElement("canvas");c.width=280;c.height=58;
+  var ctx=c.getContext("2d");ctx.clearRect(0,0,280,58);
+  ctx.shadowColor=col||"#a5f3fc";ctx.shadowBlur=9;
+  ctx.fillStyle=col||"#a5f3fc";ctx.font="600 17px 'Exo 2','Segoe UI',sans-serif";
+  ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(txt,140,29);
+  var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+  sp.position.set(pos.x,pos.y,pos.z);sp.scale.set(sc||3.6,(sc||3.6)*.21,1);scene.add(sp);return sp;
+}
+
+/* ── ADD DEVICE HELPER ── */
+function addDev(mesh,key,parent){
+  mesh.userData.dk=key;
+  mesh.traverse(function(c){if(c.isMesh)c.userData.dk=key});
+  devMap[key]=mesh;meshes.push(mesh);
+  if(parent)parent.add(mesh);else scene.add(mesh);
+  return mesh;
+}
+
+/* ══════════════════════════════════════════
+   BUILDING FACTORY
+   ══════════════════════════════════════════ */
+var FH=8;
+var AX=0,AY=0,AW=44,AD=32;  /* Admin: wider for server farm */
+var W1X=-78,W1Y=10,W1W=36,W1D=28;
+var W2X=78,W2Y=10,W2W=36,W2D=28;
+
+function makeBuilding(x,y,w,d,floors,wallCol,lbl){
+  var g=new THREE.Group();g.position.set(x,y,0);
+  var floorM=new THREE.MeshStandardMaterial({color:0x0e1820,roughness:.6,metalness:.2});
+  var wallM=new THREE.MeshStandardMaterial({color:wallCol||0x1e3050,roughness:.3,metalness:.4,transparent:true,opacity:.5,side:THREE.DoubleSide});
+  var glassM=new THREE.MeshStandardMaterial({color:0x7dd3fc,roughness:.04,metalness:.05,transparent:true,opacity:.25,side:THREE.DoubleSide,depthWrite:false});
+  var frameM=new THREE.MeshStandardMaterial({color:0x334a5e,roughness:.25,metalness:.6});
+  var pillarM=new THREE.MeshStandardMaterial({color:0x3a5068,roughness:.2,metalness:.65,emissive:new THREE.Color(wallCol||0x1e3050),emissiveIntensity:.08});
+  var ec=wallCol===0x7c3aed?0xc084fc:wallCol===0x16a34a?0x4ade80:wallCol===0x0e7490?0x22d3ee:0x60a5fa;
+  var edgeM=new THREE.MeshBasicMaterial({color:ec,transparent:true,opacity:.75});
+  for(var f=0;f<floors;f++){
+    var fz=f*FH;
+    var slab=new THREE.Mesh(new THREE.BoxGeometry(w,d,.36),floorM);slab.position.z=fz+.18;slab.receiveShadow=true;slab.castShadow=true;g.add(slab);
+    /* Neon floor edges */
+    [[-d/2,w+.3,0,0,.1,.1],[d/2,w+.3,0,0,.1,.1]].forEach(function(e){var em=new THREE.Mesh(new THREE.BoxGeometry(e[1],e[4],e[5]),edgeM);em.position.set(0,e[0],fz+.4);g.add(em);});
+    var fe1=new THREE.Mesh(new THREE.BoxGeometry(w,0,.1),edgeM);fe1.position.set(0,-d/2,fz+.4);g.add(fe1);
+    var fe2=new THREE.Mesh(new THREE.BoxGeometry(w,0,.1),edgeM);fe2.position.set(0,d/2,fz+.4);g.add(fe2);
+    var fe3=new THREE.Mesh(new THREE.BoxGeometry(0,d,.1),edgeM);fe3.position.set(-w/2,0,fz+.4);g.add(fe3);
+    var fe4=new THREE.Mesh(new THREE.BoxGeometry(0,d,.1),edgeM);fe4.position.set(w/2,0,fz+.4);g.add(fe4);
+    /* Walls */
+    var wl1=new THREE.Mesh(new THREE.BoxGeometry(w,.22,FH-.4),wallM);wl1.position.set(0,-d/2,fz+FH/2);g.add(wl1);
+    var wl2=new THREE.Mesh(new THREE.BoxGeometry(w,.22,FH-.4),wallM);wl2.position.set(0,d/2,fz+FH/2);g.add(wl2);
+    var wl3=new THREE.Mesh(new THREE.BoxGeometry(.22,d,FH-.4),wallM);wl3.position.set(-w/2,0,fz+FH/2);g.add(wl3);
+    var wl4=new THREE.Mesh(new THREE.BoxGeometry(.22,d,FH-.4),wallM);wl4.position.set(w/2,0,fz+FH/2);g.add(wl4);
+    /* Corner pillars */
+    for(var cx=-1;cx<=1;cx+=2)for(var cy=-1;cy<=1;cy+=2){
+      var pl=new THREE.Mesh(new THREE.BoxGeometry(.7,.7,FH-.2),pillarM);pl.position.set(cx*(w/2-.34),cy*(d/2-.34),fz+FH/2);g.add(pl);
+      var vs=new THREE.Mesh(new THREE.BoxGeometry(.06,.06,FH-.2),edgeM);vs.position.set(cx*(w/2-.34),cy*(d/2-.34)+cy*.3,fz+FH/2);g.add(vs);
+    }
+    /* Glass windows */
+    var nw=Math.floor(w/4);
+    for(var wi=0;wi<nw;wi++)for(var side=-1;side<=1;side+=2){
+      var wf=new THREE.Mesh(new THREE.BoxGeometry(2.5,.14,3.8),frameM);wf.position.set(-w/2+2.5+wi*4,side*(d/2+.1),fz+FH/2+.2);g.add(wf);
+      var wg=new THREE.Mesh(new THREE.PlaneGeometry(2.3,3.6),glassM);wg.position.set(-w/2+2.5+wi*4,side*(d/2+.16),fz+FH/2+.2);g.add(wg);
+    }
+    var ns=Math.floor(d/4);
+    for(var si=0;si<ns;si++)for(var sx=-1;sx<=1;sx+=2){
+      var sf=new THREE.Mesh(new THREE.BoxGeometry(.14,2.5,3.8),frameM);sf.position.set(sx*(w/2+.1),-d/2+2.5+si*4,fz+FH/2+.2);g.add(sf);
+      var swg=new THREE.Mesh(new THREE.PlaneGeometry(2.3,3.6),glassM);swg.rotation.y=Math.PI/2;swg.position.set(sx*(w/2+.16),-d/2+2.5+si*4,fz+FH/2+.2);g.add(swg);
+    }
+  }
+  /* Roof */
+  var roofSlab=new THREE.Mesh(new THREE.BoxGeometry(w+.8,d+.8,.5),new THREE.MeshStandardMaterial({color:0x253040,roughness:.5,metalness:.4}));roofSlab.position.z=floors*FH+.25;g.add(roofSlab);
+  var re=new THREE.MeshBasicMaterial({color:ec,transparent:true,opacity:.5});
+  var rne1=new THREE.Mesh(new THREE.BoxGeometry(w+1.5,.07,.07),re);rne1.position.set(0,-(d/2+.26),floors*FH+1.2);g.add(rne1);
+  var rne2=new THREE.Mesh(new THREE.BoxGeometry(w+1.5,.07,.07),re);rne2.position.set(0,(d/2+.26),floors*FH+1.2);g.add(rne2);
+  var rne3=new THREE.Mesh(new THREE.BoxGeometry(.07,d+1.5,.07),re);rne3.position.set(-(w/2+.26),0,floors*FH+1.2);g.add(rne3);
+  var rne4=new THREE.Mesh(new THREE.BoxGeometry(.07,d+1.5,.07),re);rne4.position.set((w/2+.26),0,floors*FH+1.2);g.add(rne4);
+  /* Entrance */
+  var dm=new THREE.MeshStandardMaterial({color:0x38bdf8,roughness:.05,transparent:true,opacity:.4,side:THREE.DoubleSide});
+  var ent1=new THREE.Mesh(new THREE.BoxGeometry(4.5,.16,5.5),dm);ent1.position.set(0,-d/2-.06,2.75);g.add(ent1);
+  var ent2=new THREE.Mesh(new THREE.BoxGeometry(7,.16,.16),edgeM);ent2.position.set(0,-d/2-.04,5.5);g.add(ent2);
+  scene.add(g);
+  label3d(lbl,{x:x,y:y-d/2-5.5,z:floors*FH+3.5},new THREE.Color(ec).getStyle(),4.8);
+  return g;
+}
+
+/* ══════════════════════════════════════════
+   BUILD ADMIN BUILDING
+   ══════════════════════════════════════════ */
+function buildAdmin(){
+  makeBuilding(AX,AY,AW,AD,2,0x0e7490,"TOA QUAN TRI — ADMIN / MDF");
+  var tz=5.8; /* cable tray Z height */
+
+  /* Floor 1: Network core zone */
+  /* ISP group — far right back */
+  var isp1=makeRouter(0xfbbf24,1.0);isp1.position.set(AX+17,AY+9.5,2.4);addDev(isp1,"ISP1");
+  var isp2=makeRouter(0xfbbf24,1.0);isp2.position.set(AX+17,AY+6.5,2.4);addDev(isp2,"ISP2");
+  var lte=makeRouter(0xf59e0b,.8);lte.position.set(AX+17,AY+3.8,2.3);addDev(lte,"LTE_Modem");
+  smallLabel("WAN / ISP",{x:AX+17,y:AY+12,z:5.5},"#fbbf24",2.4);
+
+  /* Console Server OOB — right side, separate */
+  var con=makeServer(0x8b5cf6,.7);con.position.set(AX+12.5,AY+1.5,.55);addDev(con,"Console");
+  smallLabel("OOB Console",{x:AX+12.5,y:AY+1.5,z:4.5},"#8b5cf6",2.2);
+
+  /* CCR routers */
+  var ccr1=makeRouter(0xf97316,1.2);ccr1.position.set(AX+9,AY+9.5,2.5);addDev(ccr1,"CCR1");
+  var ccr2=makeRouter(0xf97316,1.2);ccr2.position.set(AX+9,AY+6.5,2.5);addDev(ccr2,"CCR2");
+  smallLabel("CCR2216 VRRP",{x:AX+9,y:AY+12,z:5.5},"#f97316",2.4);
+
+  /* FortiGates */
+  var fw1=makeFirewall(1.1);fw1.position.set(AX+2,AY+9.5,2.5);addDev(fw1,"FW1");
+  var fw2=makeFirewall(1.1);fw2.position.set(AX+2,AY+6.5,2.5);addDev(fw2,"FW2");
+  smallLabel("FortiGate 600F HA",{x:AX+2,y:AY+12,z:5.5},"#eab308",2.4);
+
+  /* Core Switches */
+  var core1=makeSwitch(0x2563eb,1.3);core1.position.set(AX-6,AY+9.5,2.5);addDev(core1,"Core1");
+  var core2=makeSwitch(0x1d4ed8,1.3);core2.position.set(AX-6,AY+6.5,2.5);addDev(core2,"Core2");
+  smallLabel("9500 StackWise",{x:AX-6,y:AY+12,z:5.5},"#2563eb",2.4);
+
+  /* Cable tray routes */
+  function rt(a,b,col,t){cableRoute([{x:a.x,y:a.y,z:a.z+.5},{x:a.x,y:a.y,z:tz},{x:b.x,y:b.y,z:tz},{x:b.x,y:b.y,z:b.z+.45}],col,t||.033);}
+
+  /* ISP → CCR (WAN links) */
+  rt(isp1.position,ccr1.position,0xfbbf24,.036);
+  rt(isp2.position,ccr2.position,0xfbbf24,.036);
+  /* LTE → Console OOB */
+  rt(lte.position,con.position,0x8b5cf6,.025);
+  /* CCR VRRP peer */
+  rt(ccr1.position,ccr2.position,0xec4899,.048);
+  /* CCR → FW */
+  rt(ccr1.position,fw1.position,0xf97316,.034);
+  rt(ccr2.position,fw2.position,0xf97316,.034);
+  /* FW HA Sync */
+  rt(fw1.position,fw2.position,0xec4899,.05);
+  /* FW → Core */
+  rt(fw1.position,core1.position,0xeab308,.036);
+  rt(fw2.position,core2.position,0xeab308,.036);
+  /* Core StackWise */
+  rt(core1.position,core2.position,0xef4444,.055);
+  /* Console → Core (OOB management) */
+  rt(con.position,core1.position,0x8b5cf6,.022);
+
+  /* UPS & cooling — left zone */
+  var upsA=makeUPS(1.05);upsA.position.set(AX-17,AY-8,.55);addDev(upsA,"UPS_A");
+  var upsB=makeUPS(1.05);upsB.position.set(AX-13.5,AY-8,.55);addDev(upsB,"UPS_B");
+  var crac1=makeCRAC(.98);crac1.position.set(AX-17,AY+8,.55);addDev(crac1,"CRAC1");
+  var crac2=makeCRAC(.98);crac2.position.set(AX-13.5,AY+8,.55);addDev(crac2,"CRAC2");
+  var gen=makeGenerator(1.0);gen.position.set(AX+19,AY-9,.55);addDev(gen,"Generator");
+  smallLabel("UPS A/B + ATS",{x:AX-15,y:AY-9,z:5.2},"#22d3ee",2.2);
+  smallLabel("CRAC Làm Mát",{x:AX-15,y:AY+12,z:4.8},"#38bdf8",2.1);
+  smallLabel("Generator 150kVA",{x:AX+18.5,y:AY-12,z:4.5},"#f59e0b",2.1);
+
+  /* Power cables */
+  cableRoute([{x:upsA.position.x,y:upsA.position.y,z:3.4},{x:AX-6,y:AY+9,z:3.4}],0x22d3ee,.028);
+  cableRoute([{x:upsB.position.x,y:upsB.position.y,z:3.2},{x:AX-6,y:AY+6,z:3.2}],0x06b6d4,.028);
+  cableRoute([{x:gen.position.x,y:gen.position.y,z:2.5},{x:upsA.position.x,y:upsA.position.y,z:2.5}],0xef4444,.032);
+  cableRoute([{x:gen.position.x,y:gen.position.y,z:2.3},{x:upsB.position.x,y:upsB.position.y,z:2.3}],0xef4444,.032);
+
+  /* Floor 2: Server Farm + Camera Central */
+  var f2z=FH+.55;
+  var srv1=makeServer(0xa855f7,.92);srv1.position.set(AX-14,AY+7.5,f2z);addDev(srv1,"ROSE1");
+  var srv2=makeServer(0x9333ea,.92);srv2.position.set(AX-10,AY+7.5,f2z);addDev(srv2,"ROSE2");
+  var ad1=makeServer(0x7c3aed,.85);ad1.position.set(AX-6,AY+7.5,f2z);addDev(ad1,"AD1");
+  var ad2=makeServer(0x6d28d9,.85);ad2.position.set(AX-2.5,AY+7.5,f2z);addDev(ad2,"AD2");
+  smallLabel("SERVER FARM",{x:AX-8,y:AY+11.5,z:f2z+4.5},"#a855f7",2.8);
+
+  var cnvr=makeServer(0xef4444,.92);cnvr.position.set(AX+5,AY+7.5,f2z);addDev(cnvr,"CentralNVR");
+  var nas=makeServer(0x64748b,.88);nas.position.set(AX+9.5,AY+7.5,f2z);addDev(nas,"StorageNAS");
+  smallLabel("CAMERA CENTRAL",{x:AX+7.2,y:AY+11.5,z:f2z+4.5},"#ef4444",2.6);
+
+  /* Racks on floor 2 */
+  for(var ri=0;ri<5;ri++){var rk=makeRack(.95);rk.position.set(AX-13+ri*4.8,AY-4,f2z);scene.add(rk);}
+
+  /* Server → Core cables (via riser) */
+  function sc(sv,core,col){cableRoute([{x:sv.position.x,y:sv.position.y,z:sv.position.z+1.2},{x:sv.position.x,y:sv.position.y,z:tz+FH},{x:core.position.x,y:core.position.y,z:tz+FH},{x:core.position.x,y:core.position.y,z:core.position.z+.45}],col,.025);}
+  sc(srv1,core1,0xa855f7);sc(srv2,core2,0x9333ea);
+  sc(ad1,core1,0x7c3aed);sc(ad2,core2,0x6d28d9);
+  sc(cnvr,core1,0xef4444);sc(nas,core2,0x64748b);
+
+  /* Rack labels */
+  for(var ri2=0;ri2<5;ri2++) makeRack(.95).position.set(AX-12+ri2*5,AY-3.5,f2z);
+}
+
+/* ══════════════════════════════════════════
+   BUILD WORK BUILDING GENERIC
+   ══════════════════════════════════════════ */
+function buildWork(bx,by,bw,bd,bcat,d1k,d2k,nvk,vlanStaff,lblStr){
+  makeBuilding(bx,by,bw,bd,4,bcat==="w1"?0x16a34a:0x7c3aed,lblStr);
+  var col=bcat==="w1"?0x16a34a:0x7c3aed;
+  var pre=bcat==="w1"?"W1":"W2";
+
+  /* IDF floor 0 */
+  var ds1=makeSwitch(col,1.05);ds1.position.set(bx-8,by+5,1.7);addDev(ds1,d1k);
+  var ds2=makeSwitch(col,1.05);ds2.position.set(bx+8,by+5,1.7);addDev(ds2,d2k);
+  /* Stack link dist#1↔#2 */
+  cableRoute([{x:ds1.position.x,y:ds1.position.y,z:3.5},{x:ds2.position.x,y:ds2.position.y,z:3.5}],col,.048);
+  smallLabel("Dist "+d1k+"+"+d2k,{x:bx,y:by+5,z:5.2},new THREE.Color(col).getStyle(),2.4);
+
+  /* NVR Local */
+  var nvr=makeServer(0xef4444,.78);nvr.position.set(bx,by+9,.5);addDev(nvr,nvk);
+  /* NVR → Dist (VLAN 30) */
+  cable(nvr.position,ds1.position,0xef4444,.022);
+  cable(nvr.position,ds2.position,0xef4444,.018);
+  smallLabel("NVR Local",{x:bx,y:by+11.5,z:4.0},"#ef4444",2.0);
+
+  /* IDF rack cabinets */
+  for(var ri=0;ri<3;ri++){var rk=makeRack(.88);rk.position.set(bx-7+ri*7,by+9.5,.45);scene.add(rk);}
+
+  /* Vertical risers */
+  var rL={x:bx-bw*.22,y:by+2,z:.7},rR={x:bx+bw*.22,y:by+2,z:.7};
+  var riserM=new THREE.MeshStandardMaterial({color:0x354b63,metalness:.55,roughness:.35});
+  var rs1=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,4*FH-1,10),riserM);rs1.rotation.x=Math.PI/2;rs1.position.set(rL.x,rL.y,2*FH-.1);scene.add(rs1);
+  var rs2=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,4*FH-1,10),riserM);rs2.rotation.x=Math.PI/2;rs2.position.set(rR.x,rR.y,2*FH-.1);scene.add(rs2);
+
+  /* Dist → Riser */
+  cableRoute([{x:ds1.position.x,y:ds1.position.y,z:2.5},{x:rL.x,y:rL.y,z:2.5}],col,.03);
+  cableRoute([{x:ds2.position.x,y:ds2.position.y,z:2.5},{x:rR.x,y:rR.y,z:2.5}],col,.03);
+
+  /* Office floors 1–3 */
+  FLOORS.forEach(function(fl){
+    var fz=fl.n*FH;var devZ=fz+.55;
+    var sw1k=pre+"_F"+fl.n+"_SW1",sw2k=pre+"_F"+fl.n+"_SW2";
+    var sw1=makeSwitch(0x0ea5e9,.9);sw1.position.set(bx-7,by+8.5,devZ+1.0);addDev(sw1,sw1k);
+    var sw2=makeSwitch(0x0ea5e9,.9);sw2.position.set(bx+7,by+8.5,devZ+1.0);addDev(sw2,sw2k);
+
+    /* Access → Riser uplinks */
+    var rz=devZ+1.8;
+    cableRoute([{x:sw1.position.x,y:sw1.position.y,z:sw1.position.z+.4},{x:sw1.position.x,y:sw1.position.y,z:rz},{x:rL.x,y:rL.y,z:rz},{x:rL.x,y:rL.y,z:2.5}],0x0ea5e9,.022);
+    cableRoute([{x:sw2.position.x,y:sw2.position.y,z:sw2.position.z+.4},{x:sw2.position.x,y:sw2.position.y,z:rz},{x:rR.x,y:rR.y,z:rz},{x:rR.x,y:rR.y,z:2.5}],0x0ea5e9,.022);
+
+    /* AP */
+    var apk=pre+"_F"+fl.n+"_AP1";
+    var ap=makeAP(.7);ap.position.set(bx,by,fz+FH-.55);addDev(ap,apk);
+    cableRoute([{x:ap.position.x,y:ap.position.y,z:ap.position.z-.1},{x:ap.position.x,y:by+8,z:devZ+1.5}],0x8b5cf6,.011);
+
+    /* Camera (VLAN 30) */
+    var camk=pre+"_F"+fl.n+"_CAM1";
+    var cam=makeCCTV(.65);cam.position.set(bx-bw/2+3.5,by-bd/2+3,fz+FH-.55);addDev(cam,camk);
+    cableRoute([{x:cam.position.x,y:cam.position.y,z:cam.position.z-.1},{x:cam.position.x,y:by+8,z:devZ+1.5}],0xef4444,.01);
+
+    smallLabel("TẦNG "+fl.n,{x:bx,y:by-bd/2-.8,z:fz+FH/2},bcat==="w1"?"#86efac":"#c4b5fd",2.0);
+  });
+}
+
+/* ══════════════════════════════════════════
+   40G FULL-MESH XÉO UPLINKS (Design.txt chính xác)
+   Core#1 → Dist#1 (Primary), Core#1 → Dist#3 (Primary)
+   Core#2 → Dist#2 (Primary), Core#2 → Dist#4 (Primary)
+   Core#1 → Dist#2 (Cross Backup), Core#2 → Dist#1 (Cross Backup)
+   Core#1 → Dist#4 (Cross Backup), Core#2 → Dist#3 (Cross Backup)
+   ══════════════════════════════════════════ */
+function buildFiber(){
+  /* Get dist positions from devMap after building */
+  var c1={x:AX-6,y:AY+9.5,z:2.5},c2={x:AX-6,y:AY+6.5,z:2.5};
+  var d1={x:W1X-8,y:W1Y+5,z:1.7},d2={x:W1X+8,y:W1Y+5,z:1.7};
+  var d3={x:W2X-8,y:W2Y+5,z:1.7},d4={x:W2X+8,y:W2Y+5,z:1.7};
+
+  /* Primary uplinks (thick) */
+  fiberUnderground(c1,d1,0x3b82f6,.1);  /* Core1 → Dist1 */
+  fiberUnderground(c2,d2,0x1d4ed8,.1);  /* Core2 → Dist2 */
+  fiberUnderground(c1,d3,0x3b82f6,.1);  /* Core1 → Dist3 */
+  fiberUnderground(c2,d4,0x1d4ed8,.1);  /* Core2 → Dist4 */
+
+  /* Cross backup uplinks (thinner, different color) */
+  fiberUnderground(c2,d1,0x22d3ee,.065); /* Core2 → Dist1 Cross */
+  fiberUnderground(c1,d2,0x0ea5e9,.065); /* Core1 → Dist2 Cross */
+  fiberUnderground(c2,d3,0x22d3ee,.065); /* Core2 → Dist3 Cross */
+  fiberUnderground(c1,d4,0x0ea5e9,.065); /* Core1 → Dist4 Cross */
+
+  /* Visual conduit trench */
+  var cm=new THREE.MeshStandardMaterial({color:0x1e2a3a,roughness:.9,transparent:true,opacity:.18});
+  var ct1=new THREE.Mesh(new THREE.BoxGeometry(220,3.0,.45),cm);ct1.position.set(0,W1Y+5,-1.1);scene.add(ct1);
+  var ct2=new THREE.Mesh(new THREE.BoxGeometry(3.0,Math.abs(AY-(W1Y+5))+5,.45),cm);ct2.position.set(AX-6,(AY+W1Y+5)/2,-1.1);scene.add(ct2);
+  var ct3=new THREE.Mesh(new THREE.BoxGeometry(3.0,Math.abs(AY-(W2Y+5))+5,.45),cm);ct3.position.set(AX-6,(AY+W2Y+5)/2,-1.1);scene.add(ct3);
+
+  /* Manholes */
+  var mm=Mat(0x4a5568,.8);
+  [{x:AX-6,y:AY},{x:W1X+8,y:W1Y+5},{x:W1X-8,y:W1Y+5},{x:W2X+8,y:W2Y+5},{x:W2X-8,y:W2Y+5},{x:0,y:W1Y+5}].forEach(function(p){
+    var mh=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.3,.2,16),mm);mh.rotation.x=Math.PI/2;mh.position.set(p.x,p.y,.1);scene.add(mh);
+    var mk=new THREE.Mesh(new THREE.RingGeometry(.9,1.25,16),new THREE.MeshBasicMaterial({color:0x3b82f6,side:THREE.DoubleSide}));mk.position.set(p.x,p.y,.12);scene.add(mk);
+  });
+
+  label3d("40G FULL-MESH XÉO — Core#1↔Dist#1+#3 · Core#2↔Dist#2+#4",{x:0,y:W1Y+9,z:-0.5},"#3b82f6",7.5);
+}
+
+/* ══════════════════════════════════════════
+   GROUND & LANDSCAPE
+   ══════════════════════════════════════════ */
+function buildGround(){
+  /* Main ground */
+  var gnd=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshStandardMaterial({color:0x0d1420,roughness:.75,metalness:.1}));gnd.receiveShadow=true;scene.add(gnd);
+  /* Plaza */
+  var paveM=new THREE.MeshStandardMaterial({color:0x131d2e,roughness:.85,metalness:.05});
+  var pave=new THREE.Mesh(new THREE.BoxGeometry(250,96,.07),paveM);pave.position.set(0,5,.035);scene.add(pave);
+  /* Campus border neon */
+  var bm=new THREE.MeshBasicMaterial({color:0x00c8ff,transparent:true,opacity:.3});
+  var bn1=new THREE.Mesh(new THREE.BoxGeometry(252,.12,.04),bm);bn1.position.set(0,-40,.1);scene.add(bn1);
+  var bn2=new THREE.Mesh(new THREE.BoxGeometry(252,.12,.04),bm);bn2.position.set(0,50,.1);scene.add(bn2);
+  var bn3=new THREE.Mesh(new THREE.BoxGeometry(.12,90,.04),bm);bn3.position.set(-127,5,.1);scene.add(bn3);
+  var bn4=new THREE.Mesh(new THREE.BoxGeometry(.12,90,.04),bm);bn4.position.set(127,5,.1);scene.add(bn4);
+  /* Road */
+  var rdM=new THREE.MeshStandardMaterial({color:0x181820,roughness:.9});
+  var rd=new THREE.Mesh(new THREE.BoxGeometry(300,8,.08),rdM);rd.position.set(0,-32,.04);scene.add(rd);
+  /* Road dashes */
+  for(var i=-140;i<=140;i+=10){var d=new THREE.Mesh(new THREE.BoxGeometry(5,.18,.02),new THREE.MeshBasicMaterial({color:0xeeee00}));d.position.set(i,-32,.1);scene.add(d);}
+  /* Road edges */
+  var re1=new THREE.Mesh(new THREE.BoxGeometry(300,.2,.02),new THREE.MeshBasicMaterial({color:0xffffff}));re1.position.set(0,-36,.1);scene.add(re1);
+  var re2=new THREE.Mesh(new THREE.BoxGeometry(300,.2,.02),new THREE.MeshBasicMaterial({color:0xffffff}));re2.position.set(0,-28,.1);scene.add(re2);
+  /* Street lights */
+  [{x:-55,y:-32},{x:-20,y:-32},{x:20,y:-32},{x:55,y:-32},{x:-110,y:5},{x:110,y:5},{x:-24,y:34},{x:24,y:34}].forEach(function(p){
+    var pole=new THREE.Mesh(new THREE.CylinderGeometry(.1,.14,8,8),new THREE.MeshStandardMaterial({color:0x445566,roughness:.4,metalness:.8}));pole.rotation.x=Math.PI/2;pole.position.set(p.x,p.y,4);scene.add(pole);
+    var lp=new THREE.PointLight(0xffdd88,.7,20);lp.position.set(p.x+1.5,p.y,8);scene.add(lp);
+    var lamp=new THREE.Mesh(new THREE.BoxGeometry(.7,.4,.3),new THREE.MeshStandardMaterial({color:0x334455}));lamp.position.set(p.x+1.5,p.y,8.1);scene.add(lamp);
+  });
+  /* Trees */
+  var trM1=new THREE.MeshStandardMaterial({color:0x4a2810,roughness:.9});
+  var lfCols=[0x1a4d1a,0x1d5c1d,0x155215,0x2a6a2a];
+  [{x:W1X-26,y:22},{x:W1X-18,y:30},{x:W2X+26,y:22},{x:W2X+18,y:30},{x:-24,y:36},{x:24,y:36},{x:-60,y:-22},{x:60,y:-22},{x:-110,y:6},{x:110,y:6}].forEach(function(p,i){
+    var h=3.5+Math.random()*2;var tr=new THREE.Mesh(new THREE.CylinderGeometry(.15,.2,h,7),trM1);tr.rotation.x=Math.PI/2;tr.position.set(p.x,p.y,h/2);scene.add(tr);
+    var lf=new THREE.Mesh(new THREE.SphereGeometry(1.8+Math.random()*.8,10,8),new THREE.MeshStandardMaterial({color:lfCols[i%4],roughness:.8}));lf.position.set(p.x,p.y,h+1.2);scene.add(lf);
+  });
+  /* Gate */
+  var gm=new THREE.MeshStandardMaterial({color:0x00c8ff,roughness:.2,metalness:.7,transparent:true,opacity:.45});
+  var ga1=new THREE.Mesh(new THREE.BoxGeometry(5,.28,3.8),gm);ga1.position.set(-5,-40,1.9);scene.add(ga1);
+  var ga2=new THREE.Mesh(new THREE.BoxGeometry(5,.28,3.8),gm);ga2.position.set(5,-40,1.9);scene.add(ga2);
+  var gpm=new THREE.MeshStandardMaterial({color:0x0e7490,roughness:.2,metalness:.6,emissive:new THREE.Color(0x00c8ff),emissiveIntensity:.28});
+  var gp1=new THREE.Mesh(new THREE.BoxGeometry(.7,.7,5),gpm);gp1.position.set(-9,-40,2.5);scene.add(gp1);
+  var gp2=new THREE.Mesh(new THREE.BoxGeometry(.7,.7,5),gpm);gp2.position.set(9,-40,2.5);scene.add(gp2);
+  var gbar=new THREE.Mesh(new THREE.BoxGeometry(19,.1,.1),new THREE.MeshBasicMaterial({color:0x00c8ff}));gbar.position.set(0,-40,5.1);scene.add(gbar);
+  label3d("CỔNG CHÍNH",{x:0,y:-43.5,z:4.8},"#00c8ff",5);
+}
+
+/* BUILD ALL */
+buildAdmin();
+buildWork(W1X,W1Y,W1W,W1D,"w1","Dist1","Dist2","NVR1",110,"TOA LAM VIEC 1 — IDF 1");
+buildWork(W2X,W2Y,W2W,W2D,"w2","Dist3","Dist4","NVR2",120,"TOA LAM VIEC 2 — IDF 2");
+buildFiber();
+buildGround();
+
+/* ══════════════════════════════════════════
+   DATA PARTICLES
+   ══════════════════════════════════════════ */
+var particles=[];
+(function(){
+  var origins=[{x:AX,y:AY,z:4},{x:AX-6,y:AY+8,z:4},{x:W1X,y:W1Y,z:4},{x:W2X,y:W2Y,z:4}];
+  var cols=[0x00c8ff,0x7c3aed,0x2563eb,0x16a34a,0xef4444,0xfbbf24];
+  for(var i=0;i<70;i++){
+    var o=origins[i%origins.length];
+    var pm=new THREE.Mesh(new THREE.SphereGeometry(.12,4,4),new THREE.MeshBasicMaterial({color:cols[i%cols.length],transparent:true,opacity:.7}));
+    pm.position.set(o.x+(Math.random()-.5)*14,o.y+(Math.random()-.5)*14,o.z+Math.random()*4*FH);
+    pm.userData.vel=new THREE.Vector3((Math.random()-.5)*.06,(Math.random()-.5)*.06,Math.random()*.04+.015);
+    pm.userData.ox=o.x;pm.userData.oy=o.y;pm.userData.bz=o.z;pm.userData.mz=4*FH+5;
+    scene.add(pm);particles.push(pm);
+  }
+})();
+
+/* ══════════════════════════════════════════
+   SIDEBAR POPULATION
+   ══════════════════════════════════════════ */
+var typeColorMap={
+  "Router":0xf97316,"ISP Link":0xfbbf24,"LTE/4G Modem":0xf59e0b,
+  "Firewall":0xeab308,"Core Switch":0x2563eb,"Distribution Switch":0x16a34a,
+  "Access Switch":0x0ea5e9,"Server":0xa855f7,"NVR/VMS":0xef4444,"NVR":0xef4444,
+  "NAS Storage":0x64748b,"Console Server":0x8b5cf6,
+  "UPS":0x22d3ee,"Generator":0xf59e0b,"CRAC":0x38bdf8,
+  "AP":0x8b5cf6,"CCTV Camera":0xef4444
+};
+function typeToIcon(t){
+  if(t==="Router"||t==="ISP Link"||t==="LTE/4G Modem")return "⬡";
+  if(t==="Firewall")return "⬛";
+  if(t.includes("Switch"))return "▦";
+  if(t==="Server"||t==="NVR/VMS"||t==="NVR"||t==="NAS Storage")return "⊞";
+  if(t==="Console Server")return "⌨";
+  if(t==="UPS"||t==="Generator"||t==="CRAC")return "⚡";
+  if(t==="AP")return "◎";
+  if(t==="CCTV Camera")return "⊛";
+  return "■";
+}
+function hx(n){return("#"+n.toString(16).padStart(6,"0"))}
+
+function buildSidebar(){
+  var cats={adm:[],isp:[],w1:[],w2:[],pwr:[]};
+  var tp=0;
+  Object.keys(DB).forEach(function(k){
+    var d=DB[k];tp+=d.pwr||0;
+    if(d.cat&&cats[d.cat])cats[d.cat].push(k);
+  });
+  Object.keys(cats).forEach(function(cat){
+    var el=document.getElementById(cat);if(!el)return;
+    var html="";var cnt=0;
+    cats[cat].forEach(function(k){
+      var d=DB[k];cnt++;
+      var c=hx(typeColorMap[d.type]||0x22d3ee);
+      var pstr=d.pwr?d.pwr+"W":"";
+      html+='<div class="di" id="di_'+k+'" onclick="sel(\''+k+'\')">'
+        +'<div class="di-ic" style="background:'+c+'"></div>'
+        +'<span class="di-name">'+typeToIcon(d.type)+' '+k+'</span>'
+        +(pstr?'<span class="di-pwr">'+pstr+'</span>':'')
+        +'</div>';
+    });
+    el.innerHTML=html;
+    var countEl=document.getElementById("c-"+cat);if(countEl)countEl.textContent=cnt;
+  });
+  /* Total power */
+  var tpEl=document.getElementById("total-pwr");if(tpEl)tpEl.textContent=tp.toLocaleString()+" W";
+  var tbEl=document.getElementById("total-btu");if(tbEl)tbEl.textContent=Math.round(tp*3.412).toLocaleString()+" BTU/hr tỏa ra";
+  var pbar=document.getElementById("pwr-bar");if(pbar)pbar.style.width=Math.min(100,tp/500*100)+"%";
+  document.getElementById("bb-d").textContent=Object.keys(devMap).length;
+  document.getElementById("bb-l").textContent=lines.length;
+  document.getElementById("bb-pwr").textContent=tp.toLocaleString()+"W";
+}
+buildSidebar();
+
+/* ══════════════════════════════════════════
+   DETAIL PANEL
+   ══════════════════════════════════════════ */
+var curDev=null,curTab="spec";
+function showTab(t){
+  curTab=t;
+  ["spec","net","pwr"].forEach(function(n){
+    document.getElementById("tab-"+n).classList.toggle("active",n===t);
+    document.querySelectorAll(".tab").forEach(function(el,i){if(["spec","net","pwr"][i]===t)el.classList.add("active");else el.classList.remove("active");});
+  });
+}
+function sel(k){
+  if(curDev&&devMap[curDev]){devMap[curDev].traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});}
+  curDev=k;var mesh=devMap[k];
+  if(mesh){mesh.traverse(function(c){if(c.isMesh){c.userData._om=c.material;var m=c.material.clone();m.emissive=new THREE.Color(0x00c8ff);m.emissiveIntensity=.65;c.material=m;}});}
+  camTgt.copy(mesh?mesh.position:new THREE.Vector3(0,0,12));camDist=32;updateCam();
+  document.querySelectorAll(".di").forEach(function(el){el.classList.remove("sel")});
+  var el=document.getElementById("di_"+k);if(el)el.classList.add("sel");
+  renderDetail(k);
+}
+function renderDetail(k){
+  var d=DB[k];if(!d){document.getElementById("dp").style.display="none";return;}
+  document.getElementById("dp").style.display="block";
+  document.getElementById("dp-name").textContent=d.name;
+  var c=hx(typeColorMap[d.type]||0x22d3ee);
+  document.getElementById("dp-type").textContent=d.type;
+  document.getElementById("dp-type").style.borderColor=c+"44";
+  document.getElementById("dp-type").style.color=c;
+  /* SPEC tab */
+  var sh="";
+  if(d.spec){Object.keys(d.spec).forEach(function(kk){sh+='<div class="dp-row"><span class="dp-k">'+kk.replace(/_/g," ")+'</span><span class="dp-v">'+d.spec[kk]+'</span></div>';});}
+  if(d.note)sh+='<div style="margin-top:10px;padding:8px;border-radius:5px;background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.12);font-size:10px;color:#7dd3fc;line-height:1.5">ℹ️ '+d.note+'</div>';
+  document.getElementById("tab-spec").innerHTML=sh;
+  /* NET tab */
+  var nh="";
+  if(d.net){Object.keys(d.net).forEach(function(kk){nh+='<div class="dp-row"><span class="dp-k">'+kk.replace(/_/g," ")+'</span><span class="dp-v">'+d.net[kk]+'</span></div>';});}
+  /* VLAN tags */
+  nh+='<div class="dp-vlan-block"><div class="dp-vlan-title">VLAN Reference</div>';
+  VLANS.forEach(function(v){
+    var rel=false;
+    if(d.net){var ns=JSON.stringify(d.net);if(ns.indexOf(""+v.id)!==-1||ns.toLowerCase().indexOf(v.name.toLowerCase())!==-1)rel=true;}
+    if(rel)nh+='<span class="vlan-tag" style="background:'+v.color+'22;border:1px solid '+v.color+'44;color:'+v.color+'">VLAN '+v.id+' — '+v.name+'</span>';
+  });
+  nh+='</div>';
+  document.getElementById("tab-net").innerHTML=nh;
+  /* POWER tab */
+  var pw=d.pwr||0,bt=d.btu||0;
+  var maxPwr=2500;
+  var ph='<div class="dp-pwr-block"><div class="dp-pwr-title">⚡ Điện Năng & Nhiệt Độ</div>';
+  ph+='<div class="dp-meter"><span class="dp-meter-lbl">Tiêu thụ</span><div class="dp-meter-bar"><div class="dp-meter-fill" style="width:'+Math.min(100,pw/maxPwr*100)+'%;background:linear-gradient(90deg,#22d3ee,#fbbf24)"></div></div><span class="dp-meter-val" style="color:#fbbf24">'+pw+' W</span></div>';
+  ph+='<div class="dp-meter"><span class="dp-meter-lbl">Tỏa nhiệt</span><div class="dp-meter-bar"><div class="dp-meter-fill" style="width:'+Math.min(100,bt/8530*100)+'%;background:linear-gradient(90deg,#38bdf8,#f97316)"></div></div><span class="dp-meter-val" style="color:#f97316">'+bt+' BTU/hr</span></div>';
+  ph+='<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  ph+='<div style="text-align:center;padding:8px;background:rgba(255,255,255,.04);border-radius:5px;border:1px solid rgba(255,255,255,.08)"><div style="font-size:18px;font-weight:700;color:#fbbf24;font-family:monospace">'+pw+'</div><div style="font-size:9px;color:var(--muted)">Watt (điện)</div></div>';
+  ph+='<div style="text-align:center;padding:8px;background:rgba(255,255,255,.04);border-radius:5px;border:1px solid rgba(255,255,255,.08)"><div style="font-size:18px;font-weight:700;color:#f97316;font-family:monospace">'+bt+'</div><div style="font-size:9px;color:var(--muted)">BTU/hr (nhiệt)</div></div>';
+  ph+='</div>';
+  ph+='<div style="margin-top:10px;font-size:9.5px;color:var(--muted)">1W = 3.412 BTU/hr · Nhiệt tỏa ra = '+Math.round(pw*3.412)+' BTU/hr</div>';
+  ph+='</div>';
+  /* Add building totals note */
+  ph+='<div style="margin-top:12px;padding:8px;border-radius:5px;background:rgba(255,179,0,.05);border:1px solid rgba(255,179,0,.12)">';
+  ph+='<div style="font-size:9px;color:#ffb300;font-weight:700;margin-bottom:4px;font-family:monospace">TỔNG TOÀN HỆ THỐNG</div>';
+  ph+='<div style="font-size:11px;color:#fde68a">'+totalPwr.toLocaleString()+' W — '+Math.round(totalBtu).toLocaleString()+' BTU/hr</div>';
+  ph+='</div>';
+  document.getElementById("tab-pwr").innerHTML=ph;
+  showTab(curTab);
+}
+function closeDP(){
+  document.getElementById("dp").style.display="none";
+  if(curDev&&devMap[curDev])devMap[curDev].traverse(function(c){if(c.isMesh&&c.userData._om)c.material=c.userData._om;});
+  curDev=null;
+  document.querySelectorAll(".di").forEach(function(el){el.classList.remove("sel")});
+}
+
+/* ══════════════════════════════════════════
+   HEATMAP MODE
+   ══════════════════════════════════════════ */
+var origMats={};
+function toggleHeatmap(){
+  heatmapOn=!heatmapOn;
+  document.getElementById("view-pwr-btn").classList.toggle("on",heatmapOn);
+  if(heatmapOn){
+    Object.keys(devMap).forEach(function(k){
+      var d=DB[k];var pwr=d?d.pwr||0:0;
+      var t=Math.min(1,pwr/400);
+      var r=Math.round(t*255),g2=Math.round((1-t)*200),b=20;
+      var col=new THREE.Color(r/255,g2/255,b/255);
+      devMap[k].traverse(function(c){if(c.isMesh){origMats[c.uuid]=c.material;var m=c.material.clone();m.color=col;m.emissive=col;m.emissiveIntensity=.5;c.material=m;}});
+    });
+  }else{
+    Object.keys(devMap).forEach(function(k){
+      devMap[k].traverse(function(c){if(c.isMesh&&origMats[c.uuid])c.material=origMats[c.uuid];});
+    });
+    origMats={};
+  }
+}
+
+/* ══════════════════════════════════════════
+   SEARCH
+   ══════════════════════════════════════════ */
+document.getElementById("si").addEventListener("input",function(){
+  var q=this.value.toLowerCase().trim();
+  var sr=document.getElementById("sr");
+  if(!q){sr.style.display="none";return;}
+  var hits=[];
+  Object.keys(DB).forEach(function(k){
+    var d=DB[k];
+    var s=k+" "+(d.name||"")+" "+(d.model||"")+" "+(d.type||"")+" "+(d.ip||"")+" "+(JSON.stringify(d.spec||{}))+" "+(JSON.stringify(d.net||{}));
+    if(s.toLowerCase().indexOf(q)!==-1)hits.push(k);
+  });
+  if(!hits.length){sr.innerHTML='<div style="padding:8px 12px;color:#555">Không tìm thấy</div>';sr.style.display="block";return;}
+  var h="";hits.slice(0,12).forEach(function(k){
+    var d=DB[k];
+    h+='<div class="sr-item" onclick="sel(\''+k+'\');document.getElementById(\'si\').value=\'\';document.getElementById(\'sr\').style.display=\'none\'">'
+      +'<span style="color:'+hx(typeColorMap[d.type]||0x22d3ee)+'">'+typeToIcon(d.type)+'</span> '
+      +k+' <span style="color:#4a6280"> — '+d.name+'</span>'
+      +(d.pwr?'<span style="color:#ffb300;margin-left:4px">'+d.pwr+'W</span>':'')+'</div>';
+  });
+  sr.innerHTML=h;sr.style.display="block";
+});
+document.addEventListener("click",function(e){if(!e.target.closest("#sr")&&!e.target.closest("#si"))document.getElementById("sr").style.display="none";});
+
+/* ══════════════════════════════════════════
+   SIDEBAR TOGGLE
+   ══════════════════════════════════════════ */
+function toggleSec(id){var el=document.getElementById(id);if(el)el.style.display=el.style.display==="none"?"block":"none";}
+
+/* ══════════════════════════════════════════
+   CAMERA CONTROLS
+   ══════════════════════════════════════════ */
+var camTheta=-Math.PI/5.2,camPhi=Math.PI/4.1,camDist=250;
+var camTgt=new THREE.Vector3(0,9,14);
+var isDrag=false,isRDrag=false,lmx=0,lmy=0,lastAct=0;
+
+function updateCam(){
+  cam.position.set(
+    camTgt.x+camDist*Math.sin(camPhi)*Math.cos(camTheta),
+    camTgt.y+camDist*Math.sin(camPhi)*Math.sin(camTheta),
+    camTgt.z+camDist*Math.cos(camPhi));
+  cam.lookAt(camTgt);
+}
+updateCam();
+
+var cvs=renderer.domElement;
+cvs.addEventListener("mousedown",function(e){if(e.button===0)isDrag=true;else if(e.button===2)isRDrag=true;lmx=e.clientX;lmy=e.clientY;lastAct=performance.now();});
+cvs.addEventListener("mousemove",function(e){
+  var dx=e.clientX-lmx,dy=e.clientY-lmy;
+  if(isDrag){camTheta-=dx*.005;camPhi=Math.max(.1,Math.min(Math.PI*.47,camPhi-dy*.005));updateCam();}
+  if(isRDrag){var fwd=new THREE.Vector3();cam.getWorldDirection(fwd);fwd.z=0;fwd.normalize();var r=new THREE.Vector3();r.crossVectors(fwd,new THREE.Vector3(0,0,1)).normalize();camTgt.addScaledVector(r,-dx*.16);camTgt.addScaledVector(fwd,dy*.16);updateCam();}
+  lmx=e.clientX;lmy=e.clientY;lastAct=performance.now();
+  /* Tooltip */
+  var rect=cvs.getBoundingClientRect();
+  var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+  var ray=new THREE.Raycaster();ray.setFromCamera(mouse,cam);
+  var hits=ray.intersectObjects(meshes,true);
+  var tt=document.getElementById("tt");
+  if(hits.length){var obj=hits[0].object;while(obj.parent&&!obj.userData.dk)obj=obj.parent;if(obj.userData.dk){var d=DB[obj.userData.dk]||{};
+    document.getElementById("ttm").textContent=obj.userData.dk;
+    document.getElementById("tts").textContent=d.name||"";
+    document.getElementById("ttp").textContent=d.pwr?"⚡ "+d.pwr+"W · "+d.btu+" BTU/hr":"";
+    tt.style.display="block";tt.style.left=(e.clientX+16)+"px";tt.style.top=(e.clientY+10)+"px";
+  }else tt.style.display="none";}else tt.style.display="none";
+});
+window.addEventListener("mouseup",function(){isDrag=false;isRDrag=false;});
+cvs.addEventListener("wheel",function(e){camDist=Math.max(8,Math.min(550,camDist+e.deltaY*.08));updateCam();lastAct=performance.now();e.preventDefault();},{passive:false});
+cvs.addEventListener("contextmenu",function(e){e.preventDefault();});
+cvs.addEventListener("dblclick",function(e){
+  var rect=cvs.getBoundingClientRect();
+  var mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+  var ray=new THREE.Raycaster();ray.setFromCamera(mouse,cam);
+  var hits=ray.intersectObjects(meshes,true);
+  if(hits.length){var obj=hits[0].object;while(obj.parent&&!obj.userData.dk)obj=obj.parent;if(obj.userData.dk)sel(obj.userData.dk);}
+});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="INPUT")return;
+  var spd=3,fwd=new THREE.Vector3();cam.getWorldDirection(fwd);fwd.z=0;fwd.normalize();
+  var r=new THREE.Vector3();r.crossVectors(fwd,new THREE.Vector3(0,0,1)).normalize();
+  if(e.key==="w"||e.key==="W")camTgt.addScaledVector(fwd,spd);
+  if(e.key==="s"||e.key==="S")camTgt.addScaledVector(fwd,-spd);
+  if(e.key==="a"||e.key==="A")camTgt.addScaledVector(r,-spd);
+  if(e.key==="d"||e.key==="D")camTgt.addScaledVector(r,spd);
+  if(e.key==="r"||e.key==="R"){camTheta=-Math.PI/5.2;camPhi=Math.PI/4.1;camDist=250;camTgt.set(0,9,14);}
+  if(e.key==="Escape")closeDP();
+  if(e.key==="h"||e.key==="H")toggleHeatmap();
+  updateCam();lastAct=performance.now();
+});
+window.addEventListener("resize",function(){var w=cont.clientWidth,h=cont.clientHeight;cam.aspect=w/h;cam.updateProjectionMatrix();renderer.setSize(w,h);});
+
+/* ══════════════════════════════════════════
+   BEACONS
+   ══════════════════════════════════════════ */
+var beacons=[];
+function addBeacon(x,y,z,col){
+  var pole=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,3.2,8),new THREE.MeshStandardMaterial({color:0x1f2f45,roughness:.4,metalness:.6}));
+  pole.rotation.x=Math.PI/2;pole.position.set(x,y,z+1.6);scene.add(pole);
+  var orb=new THREE.Mesh(new THREE.SphereGeometry(.26,10,8),new THREE.MeshBasicMaterial({color:col}));orb.position.set(x,y,z+3.4);scene.add(orb);
+  var light=new THREE.PointLight(col,1.1,30);light.position.copy(orb.position);scene.add(light);
+  beacons.push({light,orb});
+}
+addBeacon(-20,-14,0,0x00c8ff);addBeacon(20,-14,0,0x00c8ff);
+addBeacon(-90,-4,0,0x16a34a);addBeacon(90,-4,0,0x7c3aed);
+
+/* ══════════════════════════════════════════
+   ANIMATION LOOP
+   ══════════════════════════════════════════ */
+var clock=new THREE.Clock();
+
+/* Loading sequence */
+setTimeout(function(){
+  var steps=["Khởi tạo scene 3D...","Xây dựng tòa nhà...","Đặt thiết bị...","Vẽ cáp quang...","Tải dữ liệu thiết bị...","Hoàn tất!"];
+  var si=0,lb=document.getElementById("lbar"),ls=document.getElementById("lsub");
+  var iv=setInterval(function(){lb.style.width=(si+1)/steps.length*100+"%";ls.textContent=steps[si];si++;
+    if(si>=steps.length){clearInterval(iv);setTimeout(function(){var lo=document.getElementById("load");lo.style.opacity="0";setTimeout(function(){lo.style.display="none";},900);},400);}},250);
+},100);
+
+(function animate(){
+  requestAnimationFrame(animate);
+  var t=clock.getElapsedTime();
+
+  /* Cable pulse */
+  lines.forEach(function(l,i){if(l.material){l.material.opacity=.72+.1*Math.sin(t*.9+i*.1);l.material.emissiveIntensity=.18+.07*Math.sin(t*.8+i*.1);}});
+
+  /* Building glow */
+  adminGl.intensity=2.2+.9*Math.sin(t*.7);
+  w1Gl.intensity=1.8+.7*Math.sin(t*.8+1);
+  w2Gl.intensity=1.8+.7*Math.sin(t*.8+2);
+
+  /* Beacons */
+  beacons.forEach(function(b,i){b.light.intensity=.9+.6*Math.sin(t*2.2+i);b.orb.scale.setScalar(.9+.14*Math.sin(t*2.5+i));});
+
+  /* Particles */
+  particles.forEach(function(p,i){
+    p.position.add(p.userData.vel);
+    if(p.position.z>p.userData.mz){p.position.z=p.userData.bz;p.position.x=p.userData.ox+(Math.random()-.5)*14;p.position.y=p.userData.oy+(Math.random()-.5)*14;}
+    p.material.opacity=.35+.45*Math.sin(t*2+i*.28);
+  });
+
+  /* Idle cinematic camera */
+  if(performance.now()-lastAct>4000&&!isDrag&&!isRDrag){
+    camTheta+=.0006;camPhi=Math.max(.45,Math.min(1.05,camPhi+Math.sin(t*.16)*.0004));updateCam();
+  }
+
+  renderer.render(scene,cam);
+})();
+
+console.log("%c✅ Campus Network 3D v4.0 loaded","color:#00c8ff;font-weight:bold;font-size:13px");
+console.log("Thiết bị:",Object.keys(devMap).length,"Kết nối:",lines.length,"Tổng điện:",totalPwr,"W");
+</script>
+</body>
+</html>
